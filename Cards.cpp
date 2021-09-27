@@ -29,5 +29,5 @@ Deck::Deck()
 }
 
 void Deck::printDeck(Deck myDeck) {
-    cout << "Penis";
+    cout << "Test";
 }
