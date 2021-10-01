@@ -11,7 +11,13 @@ enum Type { BOMB, REINFORCEMENT, BLOCKADE, AIRLIFT, DIPLOMACY };
 
 struct Order {
 	string name;
+
+	// Constructor
 	Order();
+	Order(string s);
+
+	// Copy Constructor
+	Order(const Order& o);
 
 	// Stream Insertion
 	friend ostream& operator << (ostream& out, const Order& p);
@@ -30,31 +36,7 @@ struct OrdersList {
 	void addOrder(Order* other);
 };
 
-struct Card {
-
-	// Data Members
-	Type cardType;
-
-	// Constructors
-	Card(); 
-	Card(int type);
-
-	// Copy constructor
-	Card(const Card& copy);
-
-	// Assignment Operators
-	void setCardtype(int cardType);
-
-	// Stream Insertions
-	friend ostream& operator << (ostream& out, const Card& p);
-	friend istream& operator >> (istream& in, Card& p);
-
-	// Methods
-	//void play(Player& p, Deck& d);
-
-	// Destructor
-	// ~Card();
-};
+struct Card; 
 
 struct Hand {
 
@@ -128,4 +110,31 @@ struct Deck {
 
 	// Destructor
 	// ~Deck();
+};
+
+struct Card {
+
+	// Data Members
+	Type cardType;
+	int cardID;
+
+	// Constructors
+	Card();
+	Card(int type);
+
+	// Copy constructor
+	Card(const Card& copy);
+
+	// Assignment Operators
+	void setCardtype(int cardType);
+
+	// Stream Insertions
+	friend ostream& operator << (ostream& out, const Card& p);
+	friend istream& operator >> (istream& in, Card& p);
+
+	// Methods
+	void play(Player& p, Deck& d);
+
+	// Destructor
+	// ~Card();
 };
