@@ -1,0 +1,3 @@
+﻿  Map.cpp
+C:\Users\luiza\Desktop\COMP345_A1_Submission\Part 1 - Map\Map.cpp(167,7): warning C4101: 'wasVisited': unreferenced local variable
+  COMP345_A1_Maps2.vcxproj -> C:\Users\luiza\Desktop\COMP345_A1_Submission\Part 1 - Map\Debug\COMP345_A1_Maps2.exe
