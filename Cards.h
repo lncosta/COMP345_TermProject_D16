@@ -6,10 +6,13 @@ using std::ostream;
 using std::istream;
 using std::vector; 
 
+// Global
 enum Type { BOMB, REINFORCEMENT, BLOCKADE, AIRLIFT, DIPLOMACY };
 
-
-struct Order {
+// dummy class 
+class Order { 
+public: 
+	// Data members
 	string name;
 
 	// Constructor
@@ -21,33 +24,40 @@ struct Order {
 
 	// Stream Insertion
 	friend ostream& operator << (ostream& out, const Order& p);
-	friend istream& operator >> (istream& in, Order& p);
 };
 
-struct OrdersList {
+// dummy class 
+class OrdersList {
+public:
+	// Data members
 	vector<Order*> listOfOrders;
+
+	// Constructor
 	OrdersList();
 
 	// Stream Insertion
 	friend ostream& operator << (ostream& out, const OrdersList& p);
-	friend istream& operator >> (istream& in, OrdersList& p);
 
 	// Methods
 	void addOrder(Order* other);
 };
 
-struct Card; 
+class Card; // forward declaration
 
-struct Hand {
-
-	// Data Members
+class Hand {
+private:
+	// Data members
 	vector<Card*> handOfCards;
 
+public:
 	// Constructors
 	Hand();
 
 	// Copy constructor
 	Hand(const Hand& copy);
+
+	//Accessor methods:
+	vector<Card*> getHandOfCards();
 
 	// Assignment Operators
 	void setHandOfCards(vector<Card*>& cards);
@@ -56,12 +66,16 @@ struct Hand {
 	friend ostream& operator << (ostream& out, const Hand& p);
 	friend istream& operator >> (istream& in, Hand& p);
 
+	//Methods
+	void addCard(Card* card);
+	Card* eraseCard(Card* card);
 	// Destructor
 	// ~Hand();
 };
 
-struct Player {
-
+// dummy class 
+class Player {
+public:
 	// Data Members
 	Hand* playerHand;
 	OrdersList* playerOrders; 
@@ -69,32 +83,35 @@ struct Player {
 	// Constructors
 	Player();
 
-	// Copy constructor
-	Player(const Player& copy);
-
-	// Assignment Operators
-	void setPlayerHand(Hand* hand);
-	void setOrdersList(OrdersList* orders);
-
 	// Stream Insertions
 	friend ostream& operator << (ostream& out, const Player& p);
-	friend istream& operator >> (istream& in, Player& p);
+
+	// Methods
+	void addCard(Card* card);
+	void addOrder(Order* order);
+	vector<Card*> getHandOfCards();
+
 
 	// Destructor
 	// ~Player();
 };
 
-struct Deck {
+class Deck {
+private:
 	// Data Members
 	vector<Card*> deckOfCards;
 	int maxDeckSize;
 
+public:
 	// Constructors
 	Deck();
 	
-
 	// Copy constructor
 	Deck(const Deck& copy);
+
+	// Accessor methods:
+	vector<Card*> getDeckOfCards();
+	int getMaxDeckSize();
 
 	// Assignment Operators
 	void setDeckOfCards(vector<Card*>& cards);
@@ -107,17 +124,19 @@ struct Deck {
 	// Methods
 	Card draw(Player& p);
 	void printDeck();
+	void addCard(Card* card);
 
 	// Destructor
 	// ~Deck();
 };
 
-struct Card {
-
+class Card {
+private:
 	// Data Members
 	Type cardType;
 	int cardID;
 
+public:
 	// Constructors
 	Card();
 	Card(int type);
@@ -125,8 +144,13 @@ struct Card {
 	// Copy constructor
 	Card(const Card& copy);
 
+	// Accessor methods:
+	Type getType();
+	int getCardID();
+
 	// Assignment Operators
-	void setCardtype(int cardType);
+	void setCardType(Type cardType);
+	void setCardID(int cardID);
 
 	// Stream Insertions
 	friend ostream& operator << (ostream& out, const Card& p);

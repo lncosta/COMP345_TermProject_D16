@@ -1,11 +1,10 @@
 /*
-play() still doesn't work but the rest seems to be working. I'm currently using the .cpp as a driver but 
+I'm currently using the .cpp as a driver but 
 I'll split it once I'm done my implementation. 
 
 missing some stream insertions (istream), copy constructors and assignment operators
 
-*** The randomizer isn't random, this will get fixed later *** 
-
+Player Order's out stream doesn't work... need to fix it 
 */
 
 #include "Cards.h";
@@ -17,8 +16,41 @@ using std::endl;
 int numberOfTypes = 5;
 int numberOfPlayers = 5;
 
-void OrdersList::addOrder(Order* order) {
-	listOfOrders.push_back(order);
+// Accessor methods:
+Type Card::getType() {
+	return cardType;
+}
+int Card::getCardID() {
+	return cardID;
+}
+vector<Card*> Player::getHandOfCards() {
+	return this->playerHand->getHandOfCards();
+}
+vector<Card*> Hand::getHandOfCards() {
+	return handOfCards;
+}
+vector<Card*> Deck::getDeckOfCards() {
+	return deckOfCards;
+}
+int Deck::getMaxDeckSize() {
+	return maxDeckSize;
+}
+
+//Assignment operators
+void Card::setCardID(int cardID) {
+	this->cardID;
+}
+void Card::setCardType(Type cardType) {
+	this->cardType;
+}
+void Hand::setHandOfCards(vector<Card*>& cards) {
+	this->handOfCards = cards;
+}
+void Deck::setDeckOfCards(vector<Card*>& cards) {
+	this->deckOfCards = cards;
+}
+void Deck::setMaxDeckSize(int maxDeckSize) {
+	this->maxDeckSize = maxDeckSize;
 }
 
 // Constructors
@@ -38,14 +70,13 @@ OrdersList::OrdersList() {}
 Player::Player(){ playerHand = new Hand(); playerOrders = new OrdersList();}
 
 Deck::Deck() {
-	int maxDeckSize = numberOfPlayers * numberOfTypes * 3;
+	maxDeckSize = numberOfPlayers * numberOfTypes * 3;
 	int counter = 0; 
 	for (int types = 0; types < numberOfTypes; types++) {
-		for (int cards = 0; cards < (3 * numberOfPlayers); cards++) {
+		for (int cards = 0; cards < (3 * numberOfPlayers); cards++) { // creates 3 cards per player per type of card
 			counter++; // the first card has ID == 1
-			Card c;
-			c.cardType = Type(types);
-			c.cardID = counter; 
+			Card c(types); 
+			c.setCardID(counter);
 			Card* pointer = new Card(c); 
 			deckOfCards.push_back(pointer);
 		}
@@ -53,6 +84,24 @@ Deck::Deck() {
 }
 
 // Methods
+
+// Basic add card/order methods
+void Hand::addCard(Card* card) {
+	handOfCards.push_back(card);
+}
+void Deck::addCard(Card* card) {
+	deckOfCards.push_back(card);
+}
+void Player::addCard(Card* card) {
+	this->playerHand->addCard(card);
+}
+void Player::addOrder(Order* order) {
+	this->playerOrders->addOrder(order);
+}
+void OrdersList::addOrder(Order* order) {
+	listOfOrders.push_back(order);
+}
+
 Card Deck::draw(Player& p) {
 
 	// Fisher-Yates shuffle algorithm
@@ -63,37 +112,45 @@ Card Deck::draw(Player& p) {
 	}
 
 	// add the pointer to the last card in the deck to the player's hand
-	p.playerHand->handOfCards.push_back(deckOfCards.back());
+	p.addCard(getDeckOfCards().back());
 	// remove that pointer from the deck
-	deckOfCards.pop_back();
+	getDeckOfCards().pop_back();
 	// return the card that was just added to the player's hand
-	return *(p.playerHand->handOfCards.back());
+	return *(p.playerHand->getHandOfCards().back()); // broken
 }
+
+// method to find and erase a Card* in a hand. It will take a Card*, find it in the hand, erase it and then return it
+Card* Hand::eraseCard(Card* card) {
+	std::vector<Card*>::iterator it = std::find(handOfCards.begin(), handOfCards.end(), card);
+	if (it != handOfCards.end()) {
+		int index = std::distance(handOfCards.begin(), it);
+		Card* cardPlayed = handOfCards[index];
+		handOfCards.erase(it);
+		return cardPlayed;
+	}
+}
+
 
 void Card::play(Player& p, Deck& d) {
 		Order ord; // Should be able to trim those lines and change the order directly from the pointer
-		ord.name = Type(cardType); // Does not do what I want  
+		ord.name = "TESTTTTTT"; // Does not do what I want  
 		Order* ordPointer = &ord;
-		p.playerOrders->listOfOrders.push_back(ordPointer);
+		p.addOrder(ordPointer);
 
-		std::vector<Card*>::iterator it = std::find(p.playerHand->handOfCards.begin(), p.playerHand->handOfCards.end(), this);
-		if (it != p.playerHand->handOfCards.end()) {
-			int index = std::distance(p.playerHand->handOfCards.begin(), it);
-			Card* cardPlayed = p.playerHand->handOfCards[index];
-
-			// add to card* to the deck
-			d.deckOfCards.push_back(cardPlayed);
-			p.playerHand->handOfCards.erase(it);
-			cout << "The card played is of type: " << *cardPlayed << endl;
-		}
-		else cout << "ERROR..." << endl;
+		// new pointer that points to the card
+		Card* cardPointer = this;
+		// erase the pointer that was in the player's hand
+		(*(p.playerHand)).eraseCard(cardPointer); 
+		// add the new pointer to the deck (same card, no leak) 
+		d.addCard(cardPointer);
+		cout << "The card played is of type: " << *cardPointer << endl;
 	}
 
 // Ostreams
 
 ostream& operator<<(ostream& out, const Card& p)
 {
-	if (p.cardType == 0) {
+	if (p.cardType == 0 || p.cardType == BOMB) {
 		out << "bomb" << endl;
 	}
 	else if (p.cardType == 1) {
@@ -110,19 +167,6 @@ ostream& operator<<(ostream& out, const Card& p)
 	}
 	else out << "Unknown card type" << endl;
 
-	return out;
-}
-
-ostream& operator << (ostream& out, const Hand& p) {
-	if (p.handOfCards.size() <= 0) {
-		cout << "The player doesn't have any cards" << endl;
-	}
-	else {
-		out << "The player currently has these cards: " << endl;
-		for (Card* c : p.handOfCards) {
-			out << *c;
-		}
-	}
 	return out;
 }
 
@@ -146,7 +190,20 @@ ostream& operator<<(ostream& out, const Order& p)
 
 }
 
-ostream& operator<<(ostream& out, const OrdersList& p)
+ostream& operator << (ostream& out, const Hand& p) {
+	if (p.handOfCards.size() <= 0) {
+		cout << "The player doesn't have any cards" << endl;
+	}
+	else {
+		out << "The player currently has these cards: " << endl;
+		for (Card* c : p.handOfCards) {
+			out << *c;
+		}
+	}
+	return out;
+}
+
+ostream& operator << (ostream& out, const OrdersList& p)
 {
 	if (p.listOfOrders.size() <= 0) {
 		cout << "The player doesn't have any orders" << endl;
@@ -171,6 +228,7 @@ ostream& operator << (ostream& out, const Player& p) {
 
 int main() {
 
+	srand(time(0)); // initialize the seed for the random number generator
 	Card c1(2);
 
 	cout << "Type of card c1 is: " << c1 << endl;
@@ -178,6 +236,11 @@ int main() {
 //	//cout << Type(c1.cardType) << "    Output" << endl;
 	Deck d1;
 	Player p1;
+	/*Card* cPointer = &c1;
+	cout << "Before: " << p1 << endl;
+	p1.addCard(cPointer);
+	cout << "After: " << p1 << endl;*/
+
 //	for (int i = 0; i < 5; i++) {
 //		Card* pointer = new Card(i); 
 //		p1.playerHand->handOfCards.push_back(pointer);
@@ -190,24 +253,32 @@ int main() {
 //
 //	cout << p1 << endl; 
 
-	cout << "ACards/Orders for p1 (should be empty): " << p1 << endl;
-	cout << "Size of the deck before cards are drawn: " << d1.deckOfCards.size() << endl;
-	cout << "The drawn cars if of type: " << d1.draw(p1) << endl;
-	cout << "The drawn cars if of type: " << d1.draw(p1) << endl;
-	cout << "The drawn cars if of type: " << d1.draw(p1) << endl;
-	cout << "The drawn cars if of type: " << d1.draw(p1) << endl;
-	cout << "The drawn cars if of type: " << d1.draw(p1) << endl;
-	cout << "Size of the deck after drawing 5 cards: " << d1.deckOfCards.size() << endl;
-	cout << "Size of the player's hand after drawing 5 cards: " << p1.playerHand->handOfCards.size() << endl;
-	cout << p1; 
-	Card* cPointer = &c1;
-	p1.playerHand->handOfCards.push_back(cPointer);
+	/*cout << "Cards/Orders for p1 (should be empty): " << endl << p1 << endl;
+	cout << "Size of the deck before cards are drawn: " << d1.getDeckOfCards().size() << endl;
 
-	cout << "Size of the deck before a player plays a card: " << d1.deckOfCards.size() << endl;
+	cout << "The drawn card is of type: " << d1.draw(p1) << endl;
+	cout << "The drawn card is of type: " << d1.draw(p1) << endl;
+	cout << "The drawn card is of type: " << d1.draw(p1) << endl;
+	cout << "The drawn card is of type: " << d1.draw(p1) << endl;
+	cout << "The drawn card is of type: " << d1.draw(p1) << endl;
+
+	cout << "Size of the deck after drawing 5 cards: " << d1.getDeckOfCards().size() << endl;
+	cout << "Size of the player's hand after drawing 5 cards: " << p1.playerHand->getHandOfCards().size() << endl;
+	cout << *(p1.playerHand); */
+
+	Card* cPointer = &c1;
+	p1.addCard(cPointer);
+	cout << "Size of the deck before a player plays a card: " << d1.getDeckOfCards().size() << endl;
 	cout << "Player hand before playing a card: " << *(p1.playerHand) << endl; 
 	(*cPointer).play(p1, d1);
 	cout << "Player hand after playing a card: " << *(p1.playerHand) << endl;
-	cout << "Size of the deck after a player plays a card: " << d1.deckOfCards.size() << endl;
+	cout << "Size of the deck after a player plays a card: " << d1.getDeckOfCards().size() << endl;
 
+	OrdersList ol1; 
+	Order o1; 
+	o1.name = "OLALALA";
+	Order* op1 = &o1; 
+	ol1.addOrder(op1);
+	cout << ol1; 
 	cout << "-THE END" << endl; 
 }
