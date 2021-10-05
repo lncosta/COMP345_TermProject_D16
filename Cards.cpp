@@ -1,20 +1,18 @@
 /*
-I'm currently using the .cpp as a driver but 
-I'll split it once I'm done my implementation. 
 
-missing some stream insertions (istream), copy constructors and assignment operators
+Currently missing some stream insertions (istream), copy constructors and assignment operators
 
-Player Order's out stream doesn't work... need to fix it 
+*** Make destructors and check for memory leaks ***
+
 */
-
 #include "Cards.h";
 #include <iostream>;
-
 using std::cout;
 using std::endl;
 
+// Temporary for assignment 1
 int numberOfTypes = 5;
-int numberOfPlayers = 5;
+int numberOfPlayers = 3;
 
 // Accessor methods:
 Type Card::getType() {
@@ -73,7 +71,7 @@ Deck::Deck() {
 	maxDeckSize = numberOfPlayers * numberOfTypes * 3;
 	int counter = 0; 
 	for (int types = 0; types < numberOfTypes; types++) {
-		for (int cards = 0; cards < (3 * numberOfPlayers); cards++) { // creates 3 cards per player per type of card
+		for (int cards = 0; cards < (1 * numberOfPlayers); cards++) { // creates 3 cards (1 card per for the demo only) per player per type of card
 			counter++; // the first card has ID == 1
 			Card c(types); 
 			c.setCardID(counter);
@@ -92,14 +90,14 @@ void Hand::addCard(Card* card) {
 void Deck::addCard(Card* card) {
 	deckOfCards.push_back(card);
 }
+void OrdersList::addOrder(Order* order) {
+	listOfOrders.push_back(order);
+}
 void Player::addCard(Card* card) {
 	this->playerHand->addCard(card);
 }
 void Player::addOrder(Order* order) {
 	this->playerOrders->addOrder(order);
-}
-void OrdersList::addOrder(Order* order) {
-	listOfOrders.push_back(order);
 }
 
 Card Deck::draw(Player& p) {
@@ -130,12 +128,11 @@ Card* Hand::eraseCard(Card* card) {
 	}
 }
 
-
 void Card::play(Player& p, Deck& d) {
-		Order ord; // Should be able to trim those lines and change the order directly from the pointer
-		ord.name = "TESTTTTTT"; // Does not do what I want  
-		Order* ordPointer = &ord;
-		p.addOrder(ordPointer);
+		Order ord;
+		ord.name = "- A " + this->type() + " order";
+		Order* ordPointer = new Order(ord); // fixed if new 
+		p.addOrder(ordPointer); 
 
 		// new pointer that points to the card
 		Card* cardPointer = this;
@@ -144,10 +141,18 @@ void Card::play(Player& p, Deck& d) {
 		// add the new pointer to the deck (same card, no leak) 
 		d.addCard(cardPointer);
 		cout << "The card played is of type: " << *cardPointer << endl;
-	}
+}
+
+string Card::type() {
+	if (cardType == 0)	return "bomb";
+	else if (cardType == 1)	return "reinforcement";
+	else if (cardType == 2) return "blockade";
+	else if (cardType == 3) return "airlift";
+	else if (cardType == 4) return "diplomacy";
+	else return "Unknown card type";
+}
 
 // Ostreams
-
 ostream& operator<<(ostream& out, const Card& p)
 {
 	if (p.cardType == 0 || p.cardType == BOMB) {
@@ -183,9 +188,9 @@ ostream& operator << (ostream& out, const Deck& p) {
 	return out;
 }
 
-ostream& operator<<(ostream& out, const Order& p)
+ostream& operator << (ostream& out, const Order& o)
 {
-	out << p.name << endl;
+	out << o.name << endl;
 	return out;
 
 }
@@ -223,62 +228,4 @@ ostream& operator << (ostream& out, const Player& p) {
 	out << *(p.playerOrders) << endl;
 
 	return out;
-}
-
-
-int main() {
-
-	srand(time(0)); // initialize the seed for the random number generator
-	Card c1(2);
-
-	cout << "Type of card c1 is: " << c1 << endl;
-	cout << endl << endl; 
-//	//cout << Type(c1.cardType) << "    Output" << endl;
-	Deck d1;
-	Player p1;
-	/*Card* cPointer = &c1;
-	cout << "Before: " << p1 << endl;
-	p1.addCard(cPointer);
-	cout << "After: " << p1 << endl;*/
-
-//	for (int i = 0; i < 5; i++) {
-//		Card* pointer = new Card(i); 
-//		p1.playerHand->handOfCards.push_back(pointer);
-//}
-//	cout << p1 << endl << endl;
-//
-//	Order testOrder("testing");
-//	Order* ordPointer = &testOrder; 
-//	p1.playerOrders->listOfOrders.push_back(ordPointer);
-//
-//	cout << p1 << endl; 
-
-	/*cout << "Cards/Orders for p1 (should be empty): " << endl << p1 << endl;
-	cout << "Size of the deck before cards are drawn: " << d1.getDeckOfCards().size() << endl;
-
-	cout << "The drawn card is of type: " << d1.draw(p1) << endl;
-	cout << "The drawn card is of type: " << d1.draw(p1) << endl;
-	cout << "The drawn card is of type: " << d1.draw(p1) << endl;
-	cout << "The drawn card is of type: " << d1.draw(p1) << endl;
-	cout << "The drawn card is of type: " << d1.draw(p1) << endl;
-
-	cout << "Size of the deck after drawing 5 cards: " << d1.getDeckOfCards().size() << endl;
-	cout << "Size of the player's hand after drawing 5 cards: " << p1.playerHand->getHandOfCards().size() << endl;
-	cout << *(p1.playerHand); */
-
-	Card* cPointer = &c1;
-	p1.addCard(cPointer);
-	cout << "Size of the deck before a player plays a card: " << d1.getDeckOfCards().size() << endl;
-	cout << "Player hand before playing a card: " << *(p1.playerHand) << endl; 
-	(*cPointer).play(p1, d1);
-	cout << "Player hand after playing a card: " << *(p1.playerHand) << endl;
-	cout << "Size of the deck after a player plays a card: " << d1.getDeckOfCards().size() << endl;
-
-	OrdersList ol1; 
-	Order o1; 
-	o1.name = "OLALALA";
-	Order* op1 = &o1; 
-	ol1.addOrder(op1);
-	cout << ol1; 
-	cout << "-THE END" << endl; 
 }

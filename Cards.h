@@ -23,7 +23,7 @@ public:
 	Order(const Order& o);
 
 	// Stream Insertion
-	friend ostream& operator << (ostream& out, const Order& p);
+	friend ostream& operator << (ostream& out, const Order& o);
 };
 
 // dummy class 
@@ -158,6 +158,7 @@ public:
 
 	// Methods
 	void play(Player& p, Deck& d);
+	string type();
 
 	// Destructor
 	// ~Card();
