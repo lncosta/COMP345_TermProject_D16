@@ -42,10 +42,7 @@ public:
 		this->id = order.id;
 	};
 
-	friend ostream& operator<<(ostream& output, const Order& order) {
-		output << order.id << "\n" << order.getName() << "\n" << order.getDesc() << endl;
-		return output;
-	};
+	friend ostream& operator<<(ostream& output, const Order& order);
 private:
 	const string nameOfOrder = "Unspecified Order";
 	const string description = "Unspecified order description";
@@ -81,10 +78,7 @@ public:
 		return *this;
 	};
 
-	friend ostream& operator<<(ostream& output, const DeployOrder& dorder) {
-		output << dorder.id << "\n" << dorder.getName() << "\n" << dorder.getDesc() << endl;
-		return output;
-	}
+	friend ostream& operator<<(ostream& output, const DeployOrder& dorder); 
 };
 
 /*
@@ -116,10 +110,7 @@ public:
 		return *this;
 	};
 
-	friend ostream& operator<<(ostream& output, const AdvanceOrder& aorder) {
-		output << aorder.id << "\n" << aorder.getName() << "\n" << aorder.getDesc() << endl;
-		return output;
-	}
+	friend ostream& operator<<(ostream& output, const AdvanceOrder& aorder); 
 };
 
 /*
@@ -151,10 +142,7 @@ public:
 		return *this;
 	};
 
-	friend ostream& operator<<(ostream& output, const BombOrder& border) {
-		output << border.id << "\n" << border.getName() << "\n" << border.getDesc() << endl;
-		return output;
-	}
+	friend ostream& operator<<(ostream& output, const BombOrder& border);
 };
 
 /*
@@ -186,10 +174,7 @@ public:
 		return *this;
 	};
 
-	friend ostream& operator<<(ostream& output, const BlockadeOrder& border) {
-		output << border.id << "\n" << border.getName() << "\n" << border.getDesc() << endl;
-		return output;
-	}
+	friend ostream& operator<<(ostream& output, const BlockadeOrder& border); 
 };
 
 /*
@@ -221,10 +206,7 @@ public:
 		return *this;
 	};
 
-	friend ostream& operator<<(ostream& output, const AirliftOrder& aorder) {
-		output << aorder.id << "\n" << aorder.getName() << "\n" << aorder.getDesc() << endl;
-		return output;
-	}
+	friend ostream& operator<<(ostream& output, const AirliftOrder& aorder);
 };
 
 /*
@@ -256,10 +238,7 @@ public:
 		return *this;
 	};
 
-	friend ostream& operator<<(ostream& output, const NegotiateOrder& norder) {
-		output << norder.id << "\n" << norder.getName() << "\n" << norder.getDesc() << endl;
-		return output;
-	}
+	friend ostream& operator<<(ostream& output, const NegotiateOrder& norder);
 };
 
 /*
@@ -280,7 +259,8 @@ public:
 	void remove(int toRemove);
 	int getCount() { orderList.size(); }
 
-	OrdersList& operator=(const OrdersList& olist) {
+	OrdersList& operator=(const OrdersList& olist)
+	{
 		// first check if lhs is equal to rhs
 		if (this == &olist) {
 			return *this;
@@ -321,15 +301,6 @@ public:
 		cout << "AO - Copied OrdersList object successfully." << endl;
 		return *this;
 	};
-
-	friend ostream& operator<<(ostream& output, const OrdersList& list) {
-		std::vector<Order*> vectorlist = list.getOrderList();
-		for (int i = 0; i < vectorlist.size(); i++) {
-			output << vectorlist.at(i)->id << endl;
-			output << vectorlist.at(i)->getName() << endl;
-			output << vectorlist.at(i)->getDesc() << endl;
-		}
-		return output;
-	};
-
+	
+	friend ostream& operator<<(ostream& output, const OrdersList& list); 
 };
