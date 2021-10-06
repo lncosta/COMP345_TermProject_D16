@@ -40,16 +40,19 @@ public:
 class Order {
 public:
 	string name;
+	~Order(void);
 };
 
 class OrdersList {
 public:
-	vector<Order> listOfOrders;
+	vector<Order*> listOfOrders;
 	int count;
-	void addOrder(Order& other);
+	//void addOrder(Order& other);
+	void addOrder(Order* other);
 	friend ostream& operator << (ostream& out, const OrdersList& p);
 	friend istream& operator >> (istream& in, OrdersList& p);
 	OrdersList(void);
+	~OrdersList(void);
 };
 
 
@@ -92,7 +95,8 @@ public:
 	~Player(void);
 	//Methods:
 	void printOrderList(void);
-	void discoverOrderType(string x, Order& issued);
+	void discoverOrderType(string x, Order* issued);
+	//void discoverOrderType(string x, Order& issued);
 	vector<Territory*> toDefend();
 	vector<Territory*> toAttack();
 	void issueOrder();

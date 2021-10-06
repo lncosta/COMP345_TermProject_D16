@@ -68,6 +68,7 @@ void example(void) { //This method demonstrates the basic functionalities of the
 		cout << "Player " << (*p).getPlayerID() << " - " << (*p).getName() << endl;
 	}
 	//Demonstrating copy constructor functionality:
+	cout << "----------------------------------------------" << endl;
 	cout << "Creating a Player using its copy constructor: " << endl;
 	Player* copiedPlayer = new Player(*players[0]); 
 	copiedPlayer->setPlayerID(102);
@@ -75,41 +76,46 @@ void example(void) { //This method demonstrates the basic functionalities of the
 	players[0]->addTerritory(&a);
 	players[0]->addCard(&ace);
 	players[0]->addCard(&spade);
-
+	cout << "----------------------------------------------" << endl;
+	cout << "Issuing orders for Players:" << endl;
 	//Issuing orders for example Player:
-	while (round) {
-		players[0]->issueOrder();
-		cout << "Would you like to issue more orders? Y/N" << endl;
-		cin >> result;
-		while (result != "N" && result != "n" && result != "y" && result != "Y") {
+	for (auto p : players) {
+		cout << "Player - " << p->getName() << endl;
+		round = true;
+		while (round) {
+			p->issueOrder();
+			cout << "Would you like to issue more orders? Y/N" << endl;
 			cin >> result;
+			while (result != "N" && result != "n" && result != "y" && result != "Y") {
+				cin >> result;
+			}
+			if (result == "N" || result == "n") {
+				round = false;
+			}
 		}
-		if (result == "N" || result == "n") {
-			round = false;
-		}
+		cout << *p << endl;
 	}
 
-	cout << *players[0] << endl;
-
+	cout << "----------------------------------------------" << endl;
 	//Demonstrating toAttack():
 	cout << "Territories to Attack:" << endl;
 	for (Territory* p : players[0]->toAttack()) {
 		cout << *p;
 	}
 	cout << endl;
-
+	cout << "----------------------------------------------" << endl;
 	//Demonstrating toDefend():
 	cout << "Territories to Defend:" << endl;
 	for (Territory* p : players[0]->toDefend()) {
 		cout << *p;
 	}
 	cout << endl;
-
+	cout << "----------------------------------------------" << endl;
 	//Comparing the copied Players:
 	cout << "Comparing the copied Players:" << endl;
 	cout << *players[0] << endl;
 	cout << *copiedPlayer << endl;
-	
+	cout << "----------------------------------------------" << endl;
 	//Creating a copy using the assignment operator:
 	if (players.size() > 1) {
 		Territory temp;
@@ -120,11 +126,17 @@ void example(void) { //This method demonstrates the basic functionalities of the
 		cout << "Creating a copy using the assignment operator:" << endl;
 		cout << temp2 << endl;
 	}
-
+	cout << "----------------------------------------------" << endl;
+	cout << "Freeing the memory:" << endl;
 	//Deallocating the memory:
-	delete copiedPlayer;
+	if (copiedPlayer) {
+		delete copiedPlayer;
+		copiedPlayer = NULL;
+	}
 	for (Player* p : players) {
-		delete p;
+		if (p != nullptr) {
+			delete p;
+		}	
 	}
 
 }

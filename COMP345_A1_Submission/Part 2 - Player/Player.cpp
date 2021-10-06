@@ -14,14 +14,103 @@ Luiza Nogueira Costa 40124771
 Tomas Pereira 40128504
 */
 
+
+//Stream insertions:
+
+
+istream& operator>>(istream& in, Player& p)
+{
+	in >> p.name;
+	return in;
+}
+
+ostream& operator<<(ostream& out, const Territory& p)
+{
+	out << p.name << endl;
+	return out;
+}
+
+istream& operator>>(istream& in, Territory& p)
+{
+	in >> p.name;
+	return in;
+}
+
+ostream& operator<<(ostream& out, const Cards& p)
+{
+	out << p.name << endl;
+	return out;
+}
+
+
+istream& operator>>(istream& in, Cards& p)
+{
+	in >> p.name;
+	return in;
+}
+
+
+
+ostream& operator<<(ostream& out, const Order& p)
+{
+	out << p.name << endl;
+	return out;
+
+}
+
+ostream& operator<<(ostream& out, const OrdersList& p)
+{
+	out << "The player has the following list of orders:" << endl;
+	for (auto i : p.listOfOrders) {
+		out << *i;
+	}
+	return out;
+
+}
+
+istream& operator>>(istream& in, OrdersList& p)
+{
+	in >> p.count;
+	return in;
+}
+ostream& operator<<(ostream& out, const Player& p)
+{
+	out << "Player: " << p.name << endl;
+	out << "ID: " << p.playerID << endl;
+	out << "Territories owned: " << endl;
+	for (Territory* i : p.towned) {
+		out << *i;
+	}
+	out << endl;
+	out << "Cards owned: " << endl;
+	for (Cards* i : p.cards) {
+		out << *i;
+	}
+	out << endl;
+	out << "Orders issued: " << endl; 
+	for (Order* k : p.orders->listOfOrders) {
+		out << *k;
+	}
+	return out;
+}
+
 //Definitions for temporary classes:
 
-void OrdersList::addOrder(Order& other) {
+void OrdersList::addOrder(Order* other) {
 	listOfOrders.push_back(other);
 	count++;
 }
+Order::~Order(void) {
+	cout << "Order " << name << " will be deleted." << endl;
+}
 OrdersList::OrdersList(void) {
 	count = 0;
+}
+OrdersList::~OrdersList(void) {
+	cout << "This list of orders will be deleted." << endl;
+	for (auto p : listOfOrders) {
+		delete p;
+	}
 }
 Territory::Territory(Territory& other) {
 	name = other.name;
@@ -32,7 +121,7 @@ Territory::Territory(void) {
 	id = "0";
 }
 Territory::~Territory(void) {
-	cout <<"The territory was deleted" << endl;
+	cout <<"The territory " << name <<" was deleted." << endl;
 }
 Cards::Cards(Cards& other) {
 	name = other.name;
@@ -41,7 +130,7 @@ Cards::Cards(void) {
 	name = "Default";
 }
 Cards::~Cards(void) {
-	cout << "The Card was deleted" << endl;
+	cout << "The Card " << name << " was deleted." << endl;
 }
 
 
@@ -71,23 +160,24 @@ Player::Player(const Player& other)
 		cards.push_back(temp);
 		
 	}
-	OrdersList copiedList; 
+	orders = new OrdersList(); 
 	for (auto p : other.orders->listOfOrders) {
-		Order temp;
-		temp.name = p.name;
-		copiedList.addOrder(temp);
+		Order* temp = new Order();
+		temp->name = p->name;
+		orders->addOrder(temp);
 	}
-	orders = &copiedList;
+	
 }
 
 //Destructor:
 Player::~Player() { 
 	cout << "Player " << this->getName() << " will now be destroyed." << endl;
-	if (orders->listOfOrders.size() > 0) {
-		orders->listOfOrders.clear();
-		delete orders;	
+	if (orders != NULL) {
+		delete orders;
 	}
-	orders = NULL;	
+	towned.clear();
+	cards.clear();
+	
 }
 
 //Assignment operators:
@@ -103,13 +193,12 @@ Player& Player::operator =(const Player& other) {
 		addCard(temp);
 
 	}
-	OrdersList copiedList;
+	orders = new OrdersList();
 	for (auto p : other.orders->listOfOrders) {
-		Order temp;
-		temp.name = p.name;
-		copiedList.addOrder(temp);
+		Order* temp = new Order();
+		temp->name = p->name;
+		orders->addOrder(temp);
 	}
-	orders = &copiedList;
 	return *this;
 }
 
@@ -205,108 +294,38 @@ void Player::printOrderList(void) {
 	cout << "----------------------------------" << endl;
 }
 
-void Player::discoverOrderType(string x, Order& issued) {
+void Player::discoverOrderType(string x, Order* issued) {
 	string options[] = { "DEPLOY", "ADVANCE", "TARGET", "BOMB", "AIRLIFT", "NEGOTIATE" };
 
 	for (int i = 0; i < 6; i++)
 	{
 		if (options[i].compare(x) == 0) {
-			issued.name = options[i];
+			issued->name = options[i];
 			return;
 		}
 	}
 
-	issued.name = "UNKOWN ORDER";
+	issued->name = "UNKOWN ORDER";
 	return;
 }
 
 void Player::issueOrder()
 {
-	Order issued;
+	Order* issued = new Order();
 	string x;
 
 	printOrderList();
 	cout << "Please type out the order you would like to issue: " << endl;
 	cin >> x;
 	discoverOrderType(x, issued);
-	(*orders).addOrder(issued);
-	cout << "Order was issued: " << issued.name << endl;
-}
-
-//Stream insertions:
-ostream& operator<<(ostream& out, const Player& p)
-{
-	out << "Player: " << p.name << endl;
-	out << "ID: " << p.playerID << endl;
-	out << "Territories owned: " << endl;
-	for (Territory* i : p.towned) {
-		out << *i;
+	orders->addOrder(issued);
+	cout << "Order was issued: " << issued->name << endl;
+	cout << "Current Player orders: " << endl;
+	for (auto p : orders->listOfOrders) {
+		cout << *p; 
 	}
-	out << endl;
-	out << "Cards owned: " << endl;
-	for (Cards* i : p.cards) {
-		out << *i;
-	}
-	out << endl;
-	out << *(p.orders);
-	return out;
 }
 
-istream& operator>>(istream& in, Player& p)
-{
-	in >> p.name;
-	return in;
-}
-
-ostream& operator<<(ostream& out, const Territory& p)
-{
-	out << p.name << endl;
-	return out;
-}
-
-istream& operator>>(istream& in, Territory& p)
-{
-	in >> p.name;
-	return in;
-}
-
-ostream& operator<<(ostream& out, const Cards& p)
-{
-	out << p.name << endl;
-	return out;
-}
-
-
-istream& operator>>(istream& in, Cards& p)
-{
-	in >> p.name;
-	return in;
-}
-
-
-
-ostream& operator<<(ostream& out, const Order& p)
-{
-	out << p.name << endl;
-	return out;
-
-}
-
-ostream& operator<<(ostream& out, const OrdersList& p)
-{
-	out << "The player has the following list of orders:" << endl;
-	for (Order i : p.listOfOrders) {
-		out << i;
-	}
-	return out;
-
-}
-
-istream& operator>>(istream& in, OrdersList& p)
-{
-	in >> p.count;
-	return in;
-}
 
 template <typename T>
 void printVector(vector<T> vec) {
