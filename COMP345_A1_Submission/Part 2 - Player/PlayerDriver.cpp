@@ -99,14 +99,16 @@ void example(void) { //This method demonstrates the basic functionalities of the
 	cout << "----------------------------------------------" << endl;
 	//Demonstrating toAttack():
 	cout << "Territories to Attack:" << endl;
-	for (Territory* p : players[0]->toAttack()) {
+	vector<Territory*> attc = players[0]->toAttack();
+	for (Territory* p : attc) {
 		cout << *p;
 	}
 	cout << endl;
 	cout << "----------------------------------------------" << endl;
 	//Demonstrating toDefend():
 	cout << "Territories to Defend:" << endl;
-	for (Territory* p : players[0]->toDefend()) {
+	vector<Territory*> def = players[0]->toDefend();
+	for (Territory* p : def) {
 		cout << *p;
 	}
 	cout << endl;
@@ -137,6 +139,16 @@ void example(void) { //This method demonstrates the basic functionalities of the
 		if (p != nullptr) {
 			delete p;
 		}	
+	}
+	for (Territory* p : attc) {
+		if (p != nullptr) {
+			delete p;
+		}
+	}
+	for (Territory* p : def) {
+		if (p != nullptr) {
+			delete p;
+		}
 	}
 
 }
