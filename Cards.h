@@ -36,7 +36,7 @@ public:
 	OrdersList();
 
 	// Stream Insertion
-	friend ostream& operator << (ostream& out, const OrdersList& p);
+	friend ostream& operator << (ostream& out, const OrdersList& ol);
 
 	// Methods
 	void addOrder(Order* other);
@@ -56,21 +56,24 @@ public:
 	// Copy constructor
 	Hand(const Hand& copy);
 
-	//Accessor methods:
+	//Accessor methods
 	vector<Card*> getHandOfCards();
 
-	// Assignment Operators
+	// Mutator methods
 	void setHandOfCards(vector<Card*>& cards);
 
+	// Assignment Operators
+	Hand& operator =(const Hand& h);
+
 	// Stream Insertions
-	friend ostream& operator << (ostream& out, const Hand& p);
-	friend istream& operator >> (istream& in, Hand& p);
+	friend ostream& operator << (ostream& out, const Hand& h);
+	friend istream& operator >> (istream& in, Hand& h);
 
 	//Methods
 	void addCard(Card* card);
 	Card* eraseCard(Card* card);
 	// Destructor
-	// ~Hand();
+	~Hand();
 };
 
 // dummy class 
@@ -90,17 +93,12 @@ public:
 	void addCard(Card* card);
 	void addOrder(Order* order);
 	vector<Card*> getHandOfCards();
-
-
-	// Destructor
-	// ~Player();
 };
 
 class Deck {
 private:
 	// Data Members
 	vector<Card*> deckOfCards;
-	int maxDeckSize;
 
 public:
 	// Constructors
@@ -109,25 +107,25 @@ public:
 	// Copy constructor
 	Deck(const Deck& copy);
 
-	// Accessor methods:
+	// Accessor methods
 	vector<Card*> getDeckOfCards();
-	int getMaxDeckSize();
+
+	// Mutator methods
+	void setDeckOfCards(vector<Card*>& cards);
 
 	// Assignment Operators
-	void setDeckOfCards(vector<Card*>& cards);
-	void setMaxDeckSize(int maxDeckSize);
+	Deck& operator =(const Deck& d);
 
 	// Stream Insertions
-	friend ostream& operator << (ostream& out, const Deck& p);
-	friend istream& operator >> (istream& in, Deck& p);
+	friend ostream& operator << (ostream& out, const Deck& d);
+	friend istream& operator >> (istream& in, Deck& d);
 
 	// Methods
 	Card draw(Player& p);
-	void printDeck();
 	void addCard(Card* card);
 
 	// Destructor
-	// ~Deck();
+	//~Deck();
 };
 
 class Card {
@@ -140,26 +138,30 @@ public:
 	// Constructors
 	Card();
 	Card(int type);
+	Card(int type, int id);
 
 	// Copy constructor
 	Card(const Card& copy);
 
-	// Accessor methods:
+	// Accessor methods
 	Type getType();
 	int getCardID();
 
-	// Assignment Operators
+	// Mutator methods
 	void setCardType(Type cardType);
 	void setCardID(int cardID);
 
+	// Assignment Operators
+	Card& operator =(const Card& c);
+
 	// Stream Insertions
-	friend ostream& operator << (ostream& out, const Card& p);
-	friend istream& operator >> (istream& in, Card& p);
+	friend ostream& operator << (ostream& out, const Card& c);
+	friend istream& operator >> (istream& in, Card& c);
 
 	// Methods
 	void play(Player& p, Deck& d);
 	string type();
 
 	// Destructor
-	// ~Card();
+	~Card();
 };
