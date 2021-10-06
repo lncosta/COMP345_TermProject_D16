@@ -1,6 +1,0 @@
-﻿  GameEngine.cpp
-  GameEngine.h
-  Generating Code...
-C:\Users\yupei\source\repos\GameEngine\GameEngine\GameEngine.cpp(179): warning C4715: 'GameEngine::menu': not all control paths return a value
-Debug\GameEngine.obj : warning LNK4042: object specified more than once; extras ignored
-  GameEngine.vcxproj -> C:\Users\yupei\source\repos\GameEngine\Debug\GameEngine.exe
