@@ -21,16 +21,8 @@ public:
 	//Stream Insertion:
 	friend ostream& operator << (ostream& out, const GameEngine& g);
 	friend istream& operator >> (istream& in, GameEngine& g);
-
-	//Destructors:
-	//~GameEngine(void);
 	
 	//Methods:
 	int menu(int i);
 
-
-	
-
-
-	
 };
