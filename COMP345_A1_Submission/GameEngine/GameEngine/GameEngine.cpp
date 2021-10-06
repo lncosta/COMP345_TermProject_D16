@@ -32,7 +32,6 @@ ostream& operator<<(ostream& out, const GameEngine& g)
 	return out;
 }
 
-//GameEngine::~GameEngine() {  };
 
 int GameEngine::menu(int i) {
 	string input;
