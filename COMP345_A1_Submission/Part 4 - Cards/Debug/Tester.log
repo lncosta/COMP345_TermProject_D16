@@ -1,0 +1,8 @@
+﻿  Cards.cpp
+C:\Users\Zob\Documents\GitHub\COMP345_TermProject_D16\Cards.cpp(6,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\Zob\Documents\GitHub\COMP345_TermProject_D16\Cards.cpp(7,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  CardsDriver.cpp
+C:\Users\Zob\Documents\GitHub\COMP345_TermProject_D16\CardsDriver.cpp(7,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Generating Code...
+C:\Users\Zob\Documents\GitHub\COMP345_TermProject_D16\Cards.cpp(157): warning C4715: 'Hand::eraseCard': not all control paths return a value
+  Tester.vcxproj -> C:\Users\Zob\source\repos\Tester\Debug\Tester.exe
