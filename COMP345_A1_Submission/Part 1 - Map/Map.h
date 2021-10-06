@@ -1,9 +1,9 @@
 #pragma once
-#include <list>
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
+
 using namespace std;
 
 /*COMP 345 Section D - Assignment #1
@@ -17,7 +17,7 @@ Luiza Nogueira Costa 40124771
 Tomas Pereira 40128504
 */
 
-// Temp Classes
+
 
 //Simplified Player Class
 class Territory; // So that player is aware of the Territory Class
@@ -34,93 +34,116 @@ public:
 	Player(void);
 	Player(const Player& other);
 
+	//Destructors:
+	~Player(void);
+
 	//Stream Insertions:
 	friend ostream& operator << (ostream& out, const Player& p);
 	friend istream& operator >> (istream& in, Player& p);
-
-	//Destructors:
-	~Player(void);
 };
 
 
-class Continent {
-public:
+struct Continent {
 	int id;
 	string name;
 	int armyValue;
+	vector<Territory*> subGraph;
+	vector<int> subGraphIndex;
+	// friend class
+	friend class MapLoader; // so MapLoader can store data in subGraph's vectors
+	friend class Map;
+
 };
 
 // Territory Class, acts as the nodes for the Map class
 class Territory {
+private:
+	//Data members:
+	int territoryID;
+	string name;
+	Player* owner;
+	vector<Territory*> adjTerritories; // works as edges
+	int armiesPlaced;
+
+	int continentID; // should be changed to Continent object
+	Continent* cont; //Must keep track of Continent it belongs to. 
+
 public:
+	//Constructors:
 	Territory(int tID, int cID);
 	Territory(int tID, int cID, string name);
 	Territory(const Territory& other);
+
+	//Destructors:
 	~Territory(void);
+	string getTerritoryName(void);
 	int getContinentID(void);
 	int getTerritoryID(void);
 	vector<Territory*> getAdjTerritories(void);
+	void addAdj(Territory* o);
+	void setOwner(Player* o);
+	bool operator==(const Territory& other);
 
 	//Stream Insertions:
 	friend ostream& operator << (ostream& out, const Territory& p);
 	friend istream& operator >> (istream& in, Territory& p);
-private:
-	Player* owner;
-	string name;
-	int continentID;
-	int territoryID;
-	vector<Territory*> adjTerritories;
-	int armiesPlaced;
-
-	Continent* cont; //Must keep track of Continent it belongs to. 
 };
 
-// Stores Map Edges between two nodes
-struct Edge {
-	int start, end;
-};
+
 
 // Map Class, represents the actual game map being played
 class Map {
 private:
-	int numNodes;
-	list<Territory> countryList;
-	list<Continent> continentList; 
+	// Data members
+	vector<Continent*> continentVector;
+	vector<Territory*> territoryVector;
+
 public:
+	bool* wasVisited; // a boolean vector keeps track if a node/territory was visited
+	int numTerritories;
+	vector<int>* neighbors; // a vector points to border index collected when loading the map
+
+	// friend class
+	friend class MapLoader; // so MapLoader can store data in Map's vectors
+	// constructors 
 	Map(void);
 	~Map(void);
+
+	//Destructors:
 	Map(const Map& toCopy);
-	void addEdge(Territory* start, Territory* end);
-	void addNode(Territory theTerritory);
-	void addContinent(Continent * theContinent);
-	int getNumNodes(void);
 
-	Territory* getNode(int territoryID);
-	list<Territory> getCountryList(void);
+	//Stream insertion:
+	friend ostream& operator << (ostream& out, const Map& p);
 
+	void addContinent(Continent* theContinent);
+	Territory* getTerritory(int territoryID);
+	vector<Territory*> getTerritoyVector(void);
+	void printMap(void);
+
+
+	//methods related to validate()
 	void DFS(int s);
 	void DFS_helper(int s, bool* wasVisited);
-
-	// Must check the following 3 functions
-	bool validate(void);
-	// Test to the see if the map is a connected graph
-	bool isConnected(void);
-	// Test to see that continents are connected subgraphs
-	bool continentSubgraphs(void);
-	// Test to see that each country belongs to only one continent
-	bool countryToContinentRelation(void);
+	bool validate(void);// Must check the following 3 functions	
+	bool isConnected(void);// Test to the see if the map is a connected graph	
+	bool continentSubgraphs(Map* map); // Test to see that continents are connected subgraphs	
+	bool countryToContinentRelation(void); // Test to see that each country belongs to only one continent
+	void DFS1(int s, int bond, vector<Territory*> trr);
+	void DFS_helper1(int s, bool* visitedOrNot, vector<Territory*> trr);
 };
 
 // Map Loader Class, used to create a map object from a given file
 class MapLoader {
 private:
-	string fileName; 
-	Map loadedMap; 
+	string fileName;
+	Map loadedMap;
 public:
 	MapLoader();
 	MapLoader(string MapFile);
 	~MapLoader();
-	Map* getMap(void); 
+	Map* getMap(void);
 
-	Map loadMap(string MapFile);
+	Map* loadMap(string MapFile);
+
+
 };
