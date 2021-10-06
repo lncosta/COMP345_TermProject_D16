@@ -1,0 +1,5 @@
+﻿  GameEngine.cpp
+  GameEngine.h
+  Generating Code...
+C:\Users\yupei\source\repos\GameEngine\GameEngine\GameEngine.cpp(182): warning C4715: 'GameEngine::menu': not all control paths return a value
+  GameEngine.vcxproj -> C:\Users\yupei\source\repos\GameEngine\Debug\GameEngine.exe
