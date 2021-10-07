@@ -507,6 +507,7 @@ void Map::DFS_helper1(int s, bool* visitedOrNot, vector<Territory*> trr) {
 bool Map::countryToContinentRelation() {
 	//This method checks only for copies of Territory objects. Two Territories of the same name, but stored at different addresses, will not count as copies. 
 	int sum = 0;
+	cout << "Checking Relation between Territories and Continents" << endl;
 	for (Territory* currentTerritory : territoryVector) {
 		sum = 0;
 		for (Continent* p : continentVector) {
@@ -516,20 +517,21 @@ bool Map::countryToContinentRelation() {
 				return obj->getTerritoryName() == terrName; });
 			if (it != contains.end()) {
 				sum++;
-				cout << "Found " << currentTerritory->getTerritoryName() << " in " << p->name << ". It has been found in " << sum << " continents." << endl;
+				cout << "\tFound " << currentTerritory->getTerritoryName() << " in " << p->name << ". It has been found in " << sum << " continents." << endl;
 
 			}
 			if (sum > 1) {
-				cout << "Territory " << currentTerritory->getTerritoryName() << " belongs to more than one continent." << endl;
+				cout << "\tTerritory " << currentTerritory->getTerritoryName() << " belongs to more than one continent." << endl;
 				return false;
 			}
 		}
 		if (sum > 1) {
-			cout << "Territory " << currentTerritory->getTerritoryName() << " belongs to more than one continent." << endl;
+			cout << "\tTerritory " << currentTerritory->getTerritoryName() << " belongs to more than one continent." << endl;
 			return false;
 		}
 
 	}
+	cout << "Each Territory on the Map Belongs on One and Only One Continent" << endl;
 	return true;
 }
 
