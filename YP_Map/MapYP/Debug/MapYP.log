@@ -1,0 +1,4 @@
+﻿  Map.cpp
+C:\Users\luiza\Desktop\COMP345_A1_Submission\Part 1 - Map\YP\Map.cpp(295,26): warning C4018: '<': signed/unsigned mismatch
+C:\Users\luiza\Desktop\COMP345_A1_Submission\Part 1 - Map\YP\Map.cpp(487,20): warning C4018: '<': signed/unsigned mismatch
+  MapYP.vcxproj -> C:\Users\luiza\Desktop\COMP345_A1_Submission\Part 1 - Map\YP\MapYP\Debug\MapYP.exe
