@@ -53,12 +53,16 @@ demonstrates that the above features are available.
 	list3.addOrder(d9);
 
 	cout << list3;
-	cout << endl;
 	cout << "Size of list3: " << list3.getOrderList().size() << endl; //6
+	cout << endl;
 
 	OrdersList list2(list);
+	cout << endl;
 	cout << list2;
-	list2 = list;
+	cout << endl;
+
+	list2 = list3;
+
 	cout << endl;
 	cout << list2;
 	cout << "Size of list2: " << list2.getOrderList().size() << endl; //6
@@ -72,11 +76,13 @@ demonstrates that the above features are available.
 	cout << endl;
 
 	for (int i = 0; i < list.getOrderList().size(); i++) {
-		(*list.getOrderList().at(i)).execute();
+		(*list.getOrderList().at(i)).execute(); //execute() calls validate()
 	}
 	cout << endl;
-	list.remove(1);
-	list.remove(3);
+
+	list.remove(1); //valid
+	list.remove(3); //valid
+	list.remove(5); //invalid because out of bounds
 	cout << endl;
 	cout << list;
 	//cout << list2;
