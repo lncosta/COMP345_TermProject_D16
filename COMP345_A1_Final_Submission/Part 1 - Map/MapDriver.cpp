@@ -46,5 +46,8 @@ int main() {
 		}
 	}
 	system("pause");
+	for (auto p : mapsCreated) {
+		delete(p);
+	}
 	return 0;
 }
