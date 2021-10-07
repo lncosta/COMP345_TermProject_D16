@@ -1,7 +1,12 @@
-/*
-Double check Card and Deck constructor. Needs a destructor for playerOrders
-*** Make destructors and check for memory leaks ***
-
+/*COMP 345 Section D - Assignment #1
+* Fall 2021
+* Due October 8th, 2021
+Written by
+Yupei Hsu 40139071
+Sarah-Noemie Laurin 40150861
+Arie Naccache 40099156
+Luiza Nogueira Costa 40124771
+Tomas Pereira 40128504
 */
 #include "Cards.h";
 #include <iostream>;
@@ -40,7 +45,7 @@ Player::Player() { playerHand = new Hand(); playerOrders = new OrdersList(); }
 Deck::Deck() {
 	int counter = 0;
 	for (int types = 0; types < numberOfTypes; types++) {
-		for (int cards = 0; cards < (1 * numberOfPlayers); cards++) { // creates 3 cards (1 card per for the demo only) per player per type of card
+		for (int cards = 0; cards < (1 * numberOfPlayers); cards++) { // creates 3 cards (1 card for the demo only) per player per type of card
 			counter++; // the first card has ID == 1
 
 			Card* pointer = new Card(types, counter);
@@ -94,6 +99,17 @@ Card& Card::operator =(const Card& c) {
 	return *this;
 }
 Deck& Deck::operator =(const Deck& d) {
+	// check if both objects are the same 
+	if (this == &d) {
+		return *this;
+	}
+	// delete current pointers to not create a memory leak
+	for (Card* pointer : deckOfCards) {
+		delete pointer;
+		pointer = nullptr;
+	}
+	deckOfCards.clear();
+
 	for (Card* pointer : d.deckOfCards) {
 		Card* temp = new Card(*pointer);
 		deckOfCards.push_back(temp);
@@ -101,6 +117,17 @@ Deck& Deck::operator =(const Deck& d) {
 	return *this;
 }
 Hand& Hand::operator =(const Hand& h) {
+	// check if both objects are the same 
+	if (this == &h) {
+		return *this;
+	}
+	// delete current pointers to not create a memory leak
+	for (Card* pointer : handOfCards) {
+		delete pointer;
+		pointer = nullptr;
+	}
+	handOfCards.clear();
+
 	for (Card* pointer : h.handOfCards) {
 		Card* temp = new Card(*pointer);
 		handOfCards.push_back(temp);
@@ -140,7 +167,7 @@ Card Deck::draw(Player& p) {
 	// add the pointer to the last card in the deck to the player's hand
 	p.addCard(getDeckOfCards().back());
 	// remove that pointer from the deck
-	getDeckOfCards().pop_back();
+	deckOfCards.pop_back();
 	// return the card that was just added to the player's hand
 	return *(p.playerHand->getHandOfCards().back());
 }
@@ -149,6 +176,7 @@ Card Deck::draw(Player& p) {
 Card* Hand::eraseCard(Card* card) {
 	std::vector<Card*>::iterator it = std::find(handOfCards.begin(), handOfCards.end(), card);
 	if (it != handOfCards.end()) {
+		// find the index of the Card*
 		int index = std::distance(handOfCards.begin(), it);
 		Card* cardPlayed = handOfCards[index];
 		handOfCards.erase(it);
@@ -288,7 +316,7 @@ istream& operator >> (istream& in, Card& c) {
 }
 
 // Destructors
-Card::~Card() { cout << "Card deleted" << endl; };
+Card::~Card() {};
 
 Hand::~Hand() {
 	for (Card* pointer : handOfCards) {
@@ -298,10 +326,27 @@ Hand::~Hand() {
 	handOfCards.clear();
 };
 
-//Deck::~Deck() {
-//	for (Card* pointer : deckOfCards) {
-//		delete pointer;
-//		pointer = nullptr;
-//	}
-//	deckOfCards.clear();
-//};
+Deck::~Deck() {
+	for (Card* pointer : deckOfCards) {
+		delete pointer;
+		pointer = nullptr;
+	}
+	deckOfCards.clear();
+};
+
+Player::~Player() { 
+	delete playerHand;
+	playerHand = nullptr;
+	delete playerOrders;
+	playerOrders = nullptr;
+}
+
+OrdersList::~OrdersList() {
+	for (Order* pointer : listOfOrders) {
+		delete pointer;
+		pointer = nullptr;
+	}
+	listOfOrders.clear();
+}
+
+Order::~Order() {}
