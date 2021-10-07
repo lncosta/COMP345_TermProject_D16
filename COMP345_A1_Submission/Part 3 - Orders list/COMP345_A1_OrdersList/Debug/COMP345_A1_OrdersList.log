@@ -1,1 +1,17 @@
-﻿
+﻿  Orders.cpp
+D:\Documents\Concordia\Semester4-Fall2021\comp345\Assign1\Orders\COMP345_A1_OrdersList\COMP345_A1_OrdersList\Orders.cpp(35,20): warning C4018:  '<': signed/unsigned mismatch
+D:\Documents\Concordia\Semester4-Fall2021\comp345\Assign1\Orders\COMP345_A1_OrdersList\COMP345_A1_OrdersList\Orders.cpp(74,20): warning C4018:  '<': signed/unsigned mismatch
+D:\Documents\Concordia\Semester4-Fall2021\comp345\Assign1\Orders\COMP345_A1_OrdersList\COMP345_A1_OrdersList\Orders.cpp(120,27): warning C4018:  '>': signed/unsigned mismatch
+D:\Documents\Concordia\Semester4-Fall2021\comp345\Assign1\Orders\COMP345_A1_OrdersList\COMP345_A1_OrdersList\Orders.cpp(120,83): warning C4018:  '>': signed/unsigned mismatch
+D:\Documents\Concordia\Semester4-Fall2021\comp345\Assign1\Orders\COMP345_A1_OrdersList\COMP345_A1_OrdersList\Orders.cpp(137,31): warning C4018:  '>': signed/unsigned mismatch
+  OrdersDriver.cpp
+D:\Documents\Concordia\Semester4-Fall2021\comp345\Assign1\Orders\COMP345_A1_OrdersList\COMP345_A1_OrdersList\Orders.cpp(559,20): warning C4018:  '<': signed/unsigned mismatch
+  Generating Code...
+D:\Documents\Concordia\Semester4-Fall2021\comp345\Assign1\Orders\COMP345_A1_OrdersList\COMP345_A1_OrdersList\OrdersDriver.cpp(74,20): warning C4018:  '<': signed/unsigned mismatch
+D:\Documents\Concordia\Semester4-Fall2021\comp345\Assign1\Orders\COMP345_A1_OrdersList\COMP345_A1_OrdersList\Orders.cpp(224): warning C4715:  'DeployOrder::validate': not all control paths return a value
+D:\Documents\Concordia\Semester4-Fall2021\comp345\Assign1\Orders\COMP345_A1_OrdersList\COMP345_A1_OrdersList\Orders.cpp(286): warning C4715:  'AdvanceOrder::validate': not all control paths return a value
+D:\Documents\Concordia\Semester4-Fall2021\comp345\Assign1\Orders\COMP345_A1_OrdersList\COMP345_A1_OrdersList\Orders.cpp(348): warning C4715:  'BombOrder::validate': not all control paths return a value
+D:\Documents\Concordia\Semester4-Fall2021\comp345\Assign1\Orders\COMP345_A1_OrdersList\COMP345_A1_OrdersList\Orders.cpp(410): warning C4715:  'BlockadeOrder::validate': not all control paths return a value
+D:\Documents\Concordia\Semester4-Fall2021\comp345\Assign1\Orders\COMP345_A1_OrdersList\COMP345_A1_OrdersList\Orders.cpp(472): warning C4715:  'AirliftOrder::validate': not all control paths return a value
+D:\Documents\Concordia\Semester4-Fall2021\comp345\Assign1\Orders\COMP345_A1_OrdersList\COMP345_A1_OrdersList\Orders.cpp(534): warning C4715:  'NegotiateOrder::validate': not all control paths return a value
+  COMP345_A1_OrdersList.vcxproj -> D:\Documents\Concordia\Semester4-Fall2021\comp345\Assign1\Orders\COMP345_A1_OrdersList\Debug\COMP345_A1_OrdersList.exe

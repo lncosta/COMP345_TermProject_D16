@@ -58,6 +58,48 @@ OrdersList::OrdersList(const OrdersList& olist) {
 	cout << "CC - Copied OrdersList object successfully." << endl;
 }
 /*
+	Orderlist Assignment Operator
+*/
+OrdersList& OrdersList::operator=(const OrdersList& olist) //olist is rhs
+{
+	//empty current list to start the copy
+	for (Order* individualOrder : orderList) {
+		delete individualOrder;
+		individualOrder = nullptr;
+	}
+	orderList.clear();
+	
+	//fill the vector with the copy
+	std::vector<Order*> vectorlist = olist.getOrderList();
+	for (int i = 0; i < vectorlist.size(); i++) {
+
+		switch ((*vectorlist.at(i)).getOrderType()) {
+		case OrderType::Deploy:
+			orderList.push_back(new DeployOrder(*vectorlist.at(i)));
+			break;
+		case OrderType::Advance:
+			orderList.push_back(new AdvanceOrder(*vectorlist.at(i)));
+			break;
+		case OrderType::Bomb:
+			orderList.push_back(new BombOrder(*vectorlist.at(i)));
+			break;
+		case OrderType::Blockade:
+			orderList.push_back(new BlockadeOrder(*vectorlist.at(i)));
+			break;
+		case OrderType::Airlift:
+			orderList.push_back(new AirliftOrder(*vectorlist.at(i)));
+			break;
+		case OrderType::Negotiate:
+			orderList.push_back(new NegotiateOrder(*vectorlist.at(i)));
+			break;
+		}
+
+	}
+	cout << "AO - Copied OrdersList object successfully." << endl;
+	
+	return *this;
+};
+/*
 	OrdersList addOrder function
 	It allows us to add a derived order object to the list of orders.
 	-Parameters-
@@ -128,6 +170,13 @@ Order::~Order() { }
 Order::Order(const Order& order) {
 	this->id = order.id;
 }
+/*
+	Order Assignment Operator
+*/
+Order& Order::operator=(const Order& order) {
+	this->id = order.id;
+	return *this;
+};
 
 
 /*
@@ -150,6 +199,13 @@ DeployOrder::~DeployOrder() {  }
 DeployOrder::DeployOrder(const DeployOrder& order) {
 	this->id = order.id;
 }
+/*
+	DeployOrder Assignment Operator
+*/
+DeployOrder& DeployOrder::operator=(const DeployOrder& order) {
+	this->id = order.id;
+	return *this;
+};
 /*
 	DeployOrder Constructor Overloading for passing a base class to the derived class.
 */
@@ -206,6 +262,13 @@ AdvanceOrder::AdvanceOrder(const AdvanceOrder& order) {
 	this->id = order.id;
 }
 /*
+	AdvanceOrder Assignment Operator
+*/
+AdvanceOrder& AdvanceOrder::operator=(const AdvanceOrder& order) {
+	this->id = order.id;
+	return *this;
+};
+/*
 	AdvanceOrder Constructor Overloading for passing a base class to the derived class.
 */
 AdvanceOrder::AdvanceOrder(const Order& order) {
@@ -260,6 +323,13 @@ BombOrder::~BombOrder() {  }
 BombOrder::BombOrder(const BombOrder& order) {
 	this->id = order.id;
 }
+/*
+	BombOrder Assignment Operator
+*/
+BombOrder& BombOrder::operator=(const BombOrder& order) {
+	this->id = order.id;
+	return *this;
+};
 /*
 	BombOrder Constructor Overloading for passing a base class to the derived class.
 */
@@ -316,6 +386,13 @@ BlockadeOrder::BlockadeOrder(const BlockadeOrder& order) {
 	this->id = order.id;
 }
 /*
+	BlockadeOrder Assignment Operator
+*/
+BlockadeOrder& BlockadeOrder::operator=(const BlockadeOrder& order) {
+	this->id = order.id;
+	return *this;
+};
+/*
 	BlockadeOrder Constructor Overloading for passing a base class to the derived class.
 */
 BlockadeOrder::BlockadeOrder(const Order& order) {
@@ -370,6 +447,13 @@ AirliftOrder::~AirliftOrder() {  }
 AirliftOrder::AirliftOrder(const AirliftOrder& order) {
 	this->id = order.id;
 }
+/*
+	AirliftOrder Assignment Operator
+*/
+AirliftOrder& AirliftOrder::operator=(const AirliftOrder& order) {
+	this->id = order.id;
+	return *this;
+};
 /*
 	AirliftOrder Constructor Overloading for passing a base class to the derived class.
 */
@@ -426,6 +510,13 @@ NegotiateOrder::NegotiateOrder(const NegotiateOrder& order) {
 	this->id = order.id;
 }
 /*
+	NegotiateOrder Assignment Operator
+*/
+NegotiateOrder& NegotiateOrder::operator=(const NegotiateOrder& order) {
+	this->id = order.id;
+	return *this;
+};
+/*
 	NegotiateOrder Constructor Overloading for passing a base class to the derived class.
 */
 NegotiateOrder::NegotiateOrder(const Order& order) {
@@ -459,6 +550,7 @@ void NegotiateOrder::execute() {
 		cout << "This execution was successful!" << endl;
 	}
 }
+
 /*
 	Stream insertions
 */

@@ -38,9 +38,7 @@ public:
 	virtual string getName() const { return nameOfOrder; }
 	virtual string getDesc() const { return description; }
 	virtual OrderType getOrderType() { return type; }
-	void operator=(const Order& order) {
-		this->id = order.id;
-	};
+	Order& operator=(const Order& order);
 
 	friend ostream& operator<<(ostream& output, const Order& order);
 private:
@@ -73,10 +71,7 @@ public:
 	void setId(int theId) { this->id = theId; }
 	OrderType getOrderType() { return type; }
 
-	DeployOrder& operator=(const DeployOrder& order) {
-		this->id = order.id;
-		return *this;
-	};
+	DeployOrder& operator=(const DeployOrder& order);
 
 	friend ostream& operator<<(ostream& output, const DeployOrder& dorder); 
 };
@@ -105,10 +100,7 @@ public:
 	void setId(int theId) { this->id = theId; }
 	OrderType getOrderType() { return type; }
 
-	AdvanceOrder& operator=(const AdvanceOrder& order) {
-		this->id = order.id;
-		return *this;
-	};
+	AdvanceOrder& operator=(const AdvanceOrder& order);
 
 	friend ostream& operator<<(ostream& output, const AdvanceOrder& aorder); 
 };
@@ -137,10 +129,7 @@ public:
 	void setId(int theId) { this->id = theId; }
 	OrderType getOrderType() { return type; }
 
-	BombOrder& operator=(const BombOrder& order) {
-		this->id = order.id;
-		return *this;
-	};
+	BombOrder& operator=(const BombOrder& order); 
 
 	friend ostream& operator<<(ostream& output, const BombOrder& border);
 };
@@ -169,10 +158,7 @@ public:
 	void setId(int theId) { this->id = theId; }
 	OrderType getOrderType() { return type; }
 
-	BlockadeOrder& operator=(const BlockadeOrder& order) {
-		this->id = order.id;
-		return *this;
-	};
+	BlockadeOrder& operator=(const BlockadeOrder& order); 
 
 	friend ostream& operator<<(ostream& output, const BlockadeOrder& border); 
 };
@@ -201,10 +187,7 @@ public:
 	void setId(int theId) { this->id = theId; }
 	OrderType getOrderType() { return type; }
 
-	AirliftOrder& operator=(const AirliftOrder& order) {
-		this->id = order.id;
-		return *this;
-	};
+	AirliftOrder& operator=(const AirliftOrder& order); 
 
 	friend ostream& operator<<(ostream& output, const AirliftOrder& aorder);
 };
@@ -233,10 +216,7 @@ public:
 	OrderType getOrderType() { return type; }
 	void setId(int theId) { this->id = theId; }
 
-	NegotiateOrder& operator=(const NegotiateOrder& order) {
-		this->id = order.id;
-		return *this;
-	};
+	NegotiateOrder& operator=(const NegotiateOrder& order); 
 
 	friend ostream& operator<<(ostream& output, const NegotiateOrder& norder);
 };
@@ -259,48 +239,7 @@ public:
 	void remove(int toRemove);
 	int getCount() { orderList.size(); }
 
-	OrdersList& operator=(const OrdersList& olist)
-	{
-		// first check if lhs is equal to rhs
-		if (this == &olist) {
-			return *this;
-		}
-		//empty current list to start the copy
-		for (Order* individualOrder : orderList) {
-			delete individualOrder;
-			individualOrder = nullptr;
-		}
-		orderList.clear();
-
-		//fill the vector with the copy
-		std::vector<Order*> vectorlist = olist.getOrderList();
-		for (int i = 0; i < vectorlist.size(); i++) {
-
-			switch ((*vectorlist.at(i)).getOrderType()) {
-			case OrderType::Deploy:
-				this->orderList.push_back(new DeployOrder(*vectorlist.at(i)));
-				break;
-			case OrderType::Advance:
-				this->orderList.push_back(new AdvanceOrder(*vectorlist.at(i)));
-				break;
-			case OrderType::Bomb:
-				this->orderList.push_back(new BombOrder(*vectorlist.at(i)));
-				break;
-			case OrderType::Blockade:
-				this->orderList.push_back(new BlockadeOrder(*vectorlist.at(i)));
-				break;
-			case OrderType::Airlift:
-				this->orderList.push_back(new AirliftOrder(*vectorlist.at(i)));
-				break;
-			case OrderType::Negotiate:
-				this->orderList.push_back(new NegotiateOrder(*vectorlist.at(i)));
-				break;
-			}
-
-		}
-		cout << "AO - Copied OrdersList object successfully." << endl;
-		return *this;
-	};
+	OrdersList& operator=(const OrdersList& olist);
 	
 	friend ostream& operator<<(ostream& output, const OrdersList& list); 
 };

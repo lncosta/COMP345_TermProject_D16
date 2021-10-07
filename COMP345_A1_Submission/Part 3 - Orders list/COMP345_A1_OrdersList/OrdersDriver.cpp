@@ -15,16 +15,13 @@ demonstrates that the above features are available.
 	cout << endl;
 	a1.execute(); //invalid because odd
 
-	a1.setId(6);
+	AdvanceOrder a2(6);
+	a1 = a2;
 	cout << a1;
 	cout << endl;
 	a1.execute(); //valid because even
 
-	AdvanceOrder a2(4);
-	a1 = a2;
-	cout << a1;
-	cout << endl;
-
+	
 	OrdersList list;
 
 	list.addOrder(new BlockadeOrder(7));
@@ -71,7 +68,6 @@ demonstrates that the above features are available.
 	list.move(2, 5); //valid
 	list.move(0, 1); //valid
 	list.move(3, 6); //invalid because out of bounds
-	//cout << list;
 
 	cout << endl;
 
@@ -85,7 +81,7 @@ demonstrates that the above features are available.
 	list.remove(5); //invalid because out of bounds
 	cout << endl;
 	cout << list;
-	//cout << list2;
+
 	cout << endl;
 	cout << "Size of list1: " << list.getOrderList().size() << endl;
 
