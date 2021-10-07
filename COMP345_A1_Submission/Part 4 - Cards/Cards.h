@@ -1,17 +1,27 @@
+/*COMP 345 Section D - Assignment #1
+* Fall 2021
+* Due October 8th, 2021
+Written by
+Yupei Hsu 40139071
+Sarah-Noemie Laurin 40150861
+Arie Naccache 40099156
+Luiza Nogueira Costa 40124771
+Tomas Pereira 40128504
+*/
 #pragma once
 #include <vector>
 #include <string>
 using std::string;
 using std::ostream;
 using std::istream;
-using std::vector; 
+using std::vector;
 
 // Global
 enum Type { BOMB, REINFORCEMENT, BLOCKADE, AIRLIFT, DIPLOMACY };
 
 // dummy class 
-class Order { 
-public: 
+class Order {
+public:
 	// Data members
 	string name;
 
@@ -24,6 +34,9 @@ public:
 
 	// Stream Insertion
 	friend ostream& operator << (ostream& out, const Order& o);
+
+	// Destructor
+	~Order();
 };
 
 // dummy class 
@@ -40,6 +53,9 @@ public:
 
 	// Methods
 	void addOrder(Order* other);
+
+	// Destructor
+	~OrdersList();
 };
 
 class Card; // forward declaration
@@ -72,6 +88,7 @@ public:
 	//Methods
 	void addCard(Card* card);
 	Card* eraseCard(Card* card);
+
 	// Destructor
 	~Hand();
 };
@@ -81,7 +98,7 @@ class Player {
 public:
 	// Data Members
 	Hand* playerHand;
-	OrdersList* playerOrders; 
+	OrdersList* playerOrders;
 
 	// Constructors
 	Player();
@@ -93,6 +110,9 @@ public:
 	void addCard(Card* card);
 	void addOrder(Order* order);
 	vector<Card*> getHandOfCards();
+
+	// Destructor
+	~Player();
 };
 
 class Deck {
@@ -103,7 +123,7 @@ private:
 public:
 	// Constructors
 	Deck();
-	
+
 	// Copy constructor
 	Deck(const Deck& copy);
 
@@ -125,7 +145,7 @@ public:
 	void addCard(Card* card);
 
 	// Destructor
-	//~Deck();
+	~Deck();
 };
 
 class Card {

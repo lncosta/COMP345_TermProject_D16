@@ -18,18 +18,11 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\..\Documents\GitHub\COMP345_TermProject_D16\Cards.cpp" />
-    <ClCompile Include="..\..\..\Documents\GitHub\COMP345_TermProject_D16\CardsDriver.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\Documents\GitHub\COMP345_TermProject_D16\Cards.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{5cb16535-9cc1-4c1a-aff9-061a7a054313}</ProjectGuid>
-    <RootNamespace>Tester</RootNamespace>
+    <ProjectGuid>{9fb3cd73-dc27-4daa-943d-90aa0e0fc95a}</ProjectGuid>
+    <RootNamespace>Assignment1Cards</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -145,6 +138,13 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Cards.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Cards.cpp" />
+    <ClCompile Include="CardsDriver.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
