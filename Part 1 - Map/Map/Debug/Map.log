@@ -1,0 +1,7 @@
+﻿  Map.cpp
+C:\Users\luiza\Desktop\Team_D16_A1\Part 1 - Map\Map.cpp(298,25): warning C4018: '<': signed/unsigned mismatch
+C:\Users\luiza\Desktop\Team_D16_A1\Part 1 - Map\Map.cpp(489,20): warning C4018: '<': signed/unsigned mismatch
+  MapDriver.cpp
+C:\Users\luiza\Desktop\Team_D16_A1\Part 1 - Map\MapDriver.cpp(44,34): warning C4101: 'e': unreferenced local variable
+  Generating Code...
+  Map.vcxproj -> C:\Users\luiza\Desktop\Team_D16_A1\Part 1 - Map\Map\Debug\Map.exe
