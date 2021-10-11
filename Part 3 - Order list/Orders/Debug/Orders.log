@@ -1,0 +1,19 @@
+﻿  Orders.cpp
+C:\Users\luiza\Desktop\Team_D16_A1\Part 3 - Order list\Orders.h(240,33): warning C4834: discarding return value of function with 'nodiscard' attribute
+C:\Users\luiza\Desktop\Team_D16_A1\Part 3 - Order list\Orders.cpp(35,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\luiza\Desktop\Team_D16_A1\Part 3 - Order list\Orders.cpp(74,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\luiza\Desktop\Team_D16_A1\Part 3 - Order list\Orders.cpp(120,27): warning C4018: '>': signed/unsigned mismatch
+C:\Users\luiza\Desktop\Team_D16_A1\Part 3 - Order list\Orders.cpp(120,83): warning C4018: '>': signed/unsigned mismatch
+C:\Users\luiza\Desktop\Team_D16_A1\Part 3 - Order list\Orders.cpp(137,31): warning C4018: '>': signed/unsigned mismatch
+C:\Users\luiza\Desktop\Team_D16_A1\Part 3 - Order list\Orders.cpp(559,20): warning C4018: '<': signed/unsigned mismatch
+  OrdersDriver.cpp
+C:\Users\luiza\Desktop\Team_D16_A1\Part 3 - Order list\Orders.h(240,33): warning C4834: discarding return value of function with 'nodiscard' attribute
+C:\Users\luiza\Desktop\Team_D16_A1\Part 3 - Order list\OrdersDriver.cpp(74,20): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+C:\Users\luiza\Desktop\Team_D16_A1\Part 3 - Order list\Orders.cpp(224): warning C4715: 'DeployOrder::validate': not all control paths return a value
+C:\Users\luiza\Desktop\Team_D16_A1\Part 3 - Order list\Orders.cpp(286): warning C4715: 'AdvanceOrder::validate': not all control paths return a value
+C:\Users\luiza\Desktop\Team_D16_A1\Part 3 - Order list\Orders.cpp(348): warning C4715: 'BombOrder::validate': not all control paths return a value
+C:\Users\luiza\Desktop\Team_D16_A1\Part 3 - Order list\Orders.cpp(410): warning C4715: 'BlockadeOrder::validate': not all control paths return a value
+C:\Users\luiza\Desktop\Team_D16_A1\Part 3 - Order list\Orders.cpp(472): warning C4715: 'AirliftOrder::validate': not all control paths return a value
+C:\Users\luiza\Desktop\Team_D16_A1\Part 3 - Order list\Orders.cpp(534): warning C4715: 'NegotiateOrder::validate': not all control paths return a value
+  Orders.vcxproj -> C:\Users\luiza\Desktop\Team_D16_A1\Part 3 - Order list\Orders\Debug\Orders.exe
