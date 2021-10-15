@@ -34,7 +34,7 @@ public:
 	Order(const Order& o);
 
 	virtual bool validate() { return false; }
-	virtual void execute() { return; }
+	virtual void execute() = 0;
 	virtual string getName() const { return nameOfOrder; }
 	virtual string getDesc() const { return description; }
 	virtual OrderType getOrderType() { return type; }
