@@ -29,7 +29,7 @@ public:
 	OrderType type = OrderType::Unspecified;
 
 	Order();
-	~Order();
+	virtual ~Order();
 	Order(int test);
 	Order(const Order& o);
 
@@ -59,7 +59,7 @@ public:
 
 	DeployOrder();
 	DeployOrder(int thisId);
-	~DeployOrder();
+	virtual ~DeployOrder();
 	DeployOrder(const DeployOrder& order);
 	DeployOrder(const Order& order);
 
@@ -89,7 +89,7 @@ public:
 
 	AdvanceOrder();
 	AdvanceOrder(int thisId);
-	~AdvanceOrder();
+	virtual ~AdvanceOrder();
 	AdvanceOrder(const AdvanceOrder& order);
 	AdvanceOrder(const Order& order);
 
@@ -118,7 +118,7 @@ public:
 
 	BombOrder();
 	BombOrder(int thisId);
-	~BombOrder();
+	virtual ~BombOrder();
 	BombOrder(const BombOrder& order);
 	BombOrder(const Order& order);
 
@@ -147,7 +147,7 @@ public:
 
 	BlockadeOrder();
 	BlockadeOrder(int thisId);
-	~BlockadeOrder();
+	virtual ~BlockadeOrder();
 	BlockadeOrder(const BlockadeOrder& order);
 	BlockadeOrder(const Order& order);
 
@@ -176,7 +176,7 @@ public:
 
 	AirliftOrder();
 	AirliftOrder(int thisId);
-	~AirliftOrder();
+	virtual ~AirliftOrder();
 	AirliftOrder(const AirliftOrder& order);
 	AirliftOrder(const Order& order);
 
@@ -205,7 +205,7 @@ public:
 
 	NegotiateOrder();
 	NegotiateOrder(int thisId);
-	~NegotiateOrder();
+	virtual ~NegotiateOrder();
 	NegotiateOrder(const NegotiateOrder& order);
 	NegotiateOrder(const Order& order);
 

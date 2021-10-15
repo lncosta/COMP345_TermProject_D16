@@ -1,6 +1,6 @@
 #include "Orders.h"
 #include <iostream>
-using namespace std; //make sure to add the "only compile this once" keyword
+using namespace std;
 
 /*
 	OrdersList Default Constructor

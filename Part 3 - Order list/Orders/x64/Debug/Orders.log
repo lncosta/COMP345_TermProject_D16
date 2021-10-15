@@ -1,0 +1,10 @@
+﻿  Orders.cpp
+  OrdersDriver.cpp
+  Generating Code...
+D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 3 - Order list\Orders.cpp(224): warning C4715:  'DeployOrder::validate': not all control paths return a value
+D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 3 - Order list\Orders.cpp(286): warning C4715:  'AdvanceOrder::validate': not all control paths return a value
+D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 3 - Order list\Orders.cpp(410): warning C4715:  'BlockadeOrder::validate': not all control paths return a value
+D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 3 - Order list\Orders.cpp(348): warning C4715:  'BombOrder::validate': not all control paths return a value
+D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 3 - Order list\Orders.cpp(472): warning C4715:  'AirliftOrder::validate': not all control paths return a value
+D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 3 - Order list\Orders.cpp(534): warning C4715:  'NegotiateOrder::validate': not all control paths return a value
+  Orders.vcxproj -> D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 3 - Order list\Orders\x64\Debug\Orders.exe

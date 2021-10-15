@@ -1,0 +1,20 @@
+﻿  Map.cpp
+D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 1 - Map\Map.cpp(444,34): warning C4267:  'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 1 - Map\Map.cpp(516,14): error C3861:  'find_if': identifier not found
+D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 1 - Map\Map.cpp(518,28): error C2679:  binary '!=': no operator found which takes a right-hand operand of type 'std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>' (or there is no acceptable conversion)
+D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 1 - Map\Map.cpp(518,28): error C2679:         with
+D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 1 - Map\Map.cpp(518,28): error C2679:         [
+D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 1 - Map\Map.cpp(518,28): error C2679:             _Ty=Territory *
+D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 1 - Map\Map.cpp(518,28): error C2679:         ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\system_error(252,24): message :  could be 'bool std::operator !=(const std::error_condition &,const std::error_condition &) noexcept'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\system_error(247,24): message :  or       'bool std::operator !=(const std::error_condition &,const std::error_code &) noexcept'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\system_error(242,24): message :  or       'bool std::operator !=(const std::error_code &,const std::error_condition &) noexcept'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\system_error(237,24): message :  or       'bool std::operator !=(const std::error_code &,const std::error_code &) noexcept'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\exception(301,24): message :  or       'bool std::operator !=(const std::exception_ptr &,std::nullptr_t) noexcept'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\exception(297,24): message :  or       'bool std::operator !=(std::nullptr_t,const std::exception_ptr &) noexcept'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\exception(293,24): message :  or       'bool std::operator !=(const std::exception_ptr &,const std::exception_ptr &) noexcept'
+D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 1 - Map\Map.cpp(518,28): message :  while trying to match the argument list '(unknown-type, std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>)'
+D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 1 - Map\Map.cpp(518,28): message :         with
+D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 1 - Map\Map.cpp(518,28): message :         [
+D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 1 - Map\Map.cpp(518,28): message :             _Ty=Territory *
+D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 1 - Map\Map.cpp(518,28): message :         ]
