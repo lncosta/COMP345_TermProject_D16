@@ -11,7 +11,6 @@
 #include <iterator>
 using namespace std;
 
-
 /*COMP 345 Section D - Assignment #1
 * Fall 2021
 * Due October 8th, 2021
@@ -23,11 +22,6 @@ Luiza Nogueira Costa 40124771
 Tomas Pereira 40128504
 */
 
-
-// Temporary Classes
-
-
-// Task Specific Classes
 
 // Constructors for the Territory Class
 Territory::Territory(int tID, int cID) {
@@ -66,7 +60,7 @@ Territory::~Territory(void) {
 		if (p != NULL) {
 			delete p;
 		}
-		
+
 	}
 	adjTerritories.clear();
 }
@@ -74,7 +68,7 @@ vector<Territory*> Continent::getSubGraph(void)
 {
 	return subGraph;
 }
-// Desructor for Continent Struct
+// Destructor for Continent Struct
 Continent::~Continent(void) {
 	for (auto p : subGraph) {
 		delete p;
@@ -469,8 +463,6 @@ void Map::DFS1(int s, int bond, vector<Territory*> trr) {
 }
 // Assists the continentSubgraph function
 void Map::DFS_helper1(int s, bool* visitedOrNot, vector<Territory*> trr) {
-
-
 
 	int tID = trr[s]->getTerritoryID();
 	int cID = trr[s]->getContinentID();
