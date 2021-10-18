@@ -5,7 +5,6 @@
 #include <vector>
 #include <string>
 
-
 using namespace std;
 
 /*COMP 345 Section D - Assignment #1
@@ -20,9 +19,7 @@ Tomas Pereira 40128504
 */
 
 class Player;
-
-//Simplified Player Class
-class Territory; // So that player is aware of the Territory Class
+class Territory; // Declaring these 2 classes so that the later classes can access them
 
 struct Continent {
 	int id;
@@ -71,8 +68,6 @@ public:
 	friend ostream& operator << (ostream& out, const Territory& p);
 	friend istream& operator >> (istream& in, Territory& p);
 };
-
-
 
 // Map Class, represents the actual game map being played
 class Map {
