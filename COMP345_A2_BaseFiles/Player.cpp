@@ -172,6 +172,16 @@ OrdersList* Player::getOrders(void) {
 	return orders;
 }
 
+// From Cards: 
+
+vector<Card*> Player::getHandOfCards() {
+	return this->playerHand->getHandOfCards();
+}
+
+Hand Player::getPlayerHand() {
+		return *(this->playerHand);
+	}
+
 void Player::addTerritory(Territory* ter) {
 	ter->setOwner(this); 
 	towned.push_back(ter);

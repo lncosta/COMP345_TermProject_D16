@@ -56,7 +56,7 @@ public:
 
 	//Methods
 	void addCard(Card* card);
-	Card* eraseCard(Card* card);
+	Card* eraseCard(Card*& card);
 
 	// Destructor
 	~Hand();

@@ -130,7 +130,7 @@ Hand& Hand::operator =(const Hand& h) {
 
 // Basic add card/order methods
 void Hand::addCard(Card* card) {
-	cout << *card; 
+	// cout << *card;                  <-- This was added to my code, not sure if it's important or not so I'm leaving it commented out for now 
 	handOfCards.push_back(card); 
 }
 void Deck::addCard(Card* card) {
@@ -157,13 +157,16 @@ Card Deck::draw(Player& p) {
 }
 
 // Method to find and erase a Card* in a hand. It will take a Card*, find it in the hand, erase it and then return it
-Card* Hand::eraseCard(Card* card) {
+Card* Hand::eraseCard(Card*& card) {
+	//(*this).addCard(card);
 	std::vector<Card*>::iterator it = std::find(handOfCards.begin(), handOfCards.end(), card);
 	if (it != handOfCards.end()) {
 		// find the index of the Card*
+		cout << "TESTTTTTTTT";
 		int index = std::distance(handOfCards.begin(), it);
 		Card* cardPlayed = handOfCards[index];
 		handOfCards.erase(it);
+		
 		return cardPlayed;
 	}
 }
@@ -171,16 +174,16 @@ Card* Hand::eraseCard(Card* card) {
 // Method to play a card within a certain hand and return it to a certain deck (passable as parameters)
 // It also creates a new order with the same name as the cardType that was played
 void Card::play(Player& p, Deck& d) {
-	// Create order and add it to the player's orderlist
-	Order* ordPointer = new Order();
-	p.addOrder(ordPointer);
+	//// Create order and add it to the player's orderlist
+	//Order* ordPointer = new Order();
+	//p.addOrder(ordPointer);
 
 	// new pointer that points to the card
 	Card* cardPointer = this;
 	// erase the pointer that was in the player's hand
-	(*(p.playerHand)).eraseCard(cardPointer);
+	p.getPlayerHand().eraseCard(cardPointer);
 	// add the new pointer to the deck (same card, no leak) 
-	d.addCard(cardPointer);
+	/*d.addCard(cardPointer);*/
 	cout << "The card played is of type: " << *cardPointer << endl;
 }
 
@@ -198,21 +201,21 @@ string Card::type() {
 ostream& operator<<(ostream& out, const Card& c)
 {
 	if (c.cardType == 0) {
-		out << "bomb" << endl;
+		out << "bomb and id " << c.cardID << endl;
 	}
 	else if (c.cardType == 1) {
-		out << "reinforcement" << endl;
+		out << "reinforcement and id " << c.cardID << endl;
 	}
 	else if (c.cardType == 2) {
-		out << "blockade" << endl;
+		out << "blockade and id " << c.cardID << endl;
 	}
 	else if (c.cardType == 3) {
-		out << "airlift" << endl;
+		out << "airlift and id " << c.cardID << endl;
 	}
 	else if (c.cardType == 4) {
-		out << "diplomacy" << endl;
+		out << "diplomacy and id " << c.cardID << endl;
 	}
-	else out << "Unknown card type" << endl;
+	else out << "Unknown card type and id " << c.cardID << endl;
 
 	return out;
 }
