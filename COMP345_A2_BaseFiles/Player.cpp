@@ -178,8 +178,8 @@ vector<Card*> Player::getHandOfCards() {
 	return this->playerHand->getHandOfCards();
 }
 
-Hand Player::getPlayerHand() {
-		return *(this->playerHand);
+Hand* Player::getPlayerHand() {
+		return playerHand;
 	}
 
 void Player::addTerritory(Territory* ter) {
@@ -192,7 +192,7 @@ void Player::addCard(Card* card) {
 	playerHand->addCard(card);
 }
 void Player::addOrder(Order* order) {
-	playerOrders->addOrder(order);
+	orders->addOrder(order);
 }
 //Gameplay mechanics:
 vector<Territory*> Player::toDefend()

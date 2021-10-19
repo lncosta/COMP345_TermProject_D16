@@ -79,7 +79,7 @@ public:
 	void addCard(Card* card);
 	void addOrder(Order* order);
 	vector<Card*> getHandOfCards();
-	Hand getPlayerHand();
+	Hand* getPlayerHand();
 
 
 	//Friend classes:
