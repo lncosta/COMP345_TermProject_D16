@@ -56,7 +56,7 @@ public:
 
 	//Methods
 	void addCard(Card* card);
-	Card* eraseCard(Card*& card);
+	Card* eraseCard(Card* card);
 
 	// Destructor
 	~Hand();
@@ -127,7 +127,7 @@ public:
 
 	// Methods
 	void play(Player& p, Deck& d);
-	string type();
+	string orderType();
 
 	// Destructor
 	~Card();

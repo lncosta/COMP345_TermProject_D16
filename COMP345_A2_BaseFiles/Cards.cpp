@@ -10,6 +10,7 @@ Tomas Pereira 40128504
 */
 #include "Cards.h";
 #include <iostream>;
+#include <string>
 using std::cout;
 using std::endl;
 
@@ -20,12 +21,9 @@ int numberOfPlayers = 3;
 
 // Constructors
 Card::Card() {}
-Card::Card(int type) { cardType = Type(type); }
-Card::Card(int type, int id) { cardType = Type(type); cardID = id; }
-Card::Card(const Card& c) {
-	cardType = c.cardType;
-	cardID = c.cardID;
-}
+Card::Card(int type) { cardType = Type(type);}
+Card::Card(int type, int id) { cardType = Type(type); cardID = id;}
+Card::Card(const Card& c) {cardType = c.cardType; cardID = c.cardID;}
 
 Hand::Hand() {}
 Hand::Hand(const Hand& h) {
@@ -157,12 +155,10 @@ Card Deck::draw(Player& p) {
 }
 
 // Method to find and erase a Card* in a hand. It will take a Card*, find it in the hand, erase it and then return it
-Card* Hand::eraseCard(Card*& card) {
-	//(*this).addCard(card);
+Card* Hand::eraseCard(Card* card) {
 	std::vector<Card*>::iterator it = std::find(handOfCards.begin(), handOfCards.end(), card);
 	if (it != handOfCards.end()) {
 		// find the index of the Card*
-		cout << "TESTTTTTTTT";
 		int index = std::distance(handOfCards.begin(), it);
 		Card* cardPlayed = handOfCards[index];
 		handOfCards.erase(it);
@@ -174,48 +170,48 @@ Card* Hand::eraseCard(Card*& card) {
 // Method to play a card within a certain hand and return it to a certain deck (passable as parameters)
 // It also creates a new order with the same name as the cardType that was played
 void Card::play(Player& p, Deck& d) {
-	//// Create order and add it to the player's orderlist
-	//Order* ordPointer = new Order();
-	//p.addOrder(ordPointer);
+	// Create order and add it to the player's orderlist
 
-	// new pointer that points to the card
-	Card* cardPointer = this;
+	if (this->cardType != 1) { // just for now until reinforcement is implemented
+		p.addOrder(p.discoverOrderType(this->orderType()));
+	}
+
 	// erase the pointer that was in the player's hand
-	p.getPlayerHand().eraseCard(cardPointer);
-	// add the new pointer to the deck (same card, no leak) 
-	/*d.addCard(cardPointer);*/
-	cout << "The card played is of type: " << *cardPointer << endl;
+	p.getPlayerHand()->eraseCard(this);
+	// add the pointer to the deck (same card, no leak) 
+	d.addCard(this);
+	cout << "The card played is of type: " << *this << endl;
 }
 
 // Method to return the cardType as a string
-string Card::type() {
-	if (cardType == 0)	return "bomb";
-	else if (cardType == 1)	return "reinforcement";
-	else if (cardType == 2) return "blockade";
-	else if (cardType == 3) return "airlift";
-	else if (cardType == 4) return "diplomacy";
-	else return "Unknown card type";
+string Card::orderType() {
+	if (cardType == 0)	return "BOMB";
+	//else if (cardType == 1)	return "reinforcement";
+	else if (cardType == 2) return "BLOCK";
+	else if (cardType == 3) return "AIRLIFT";
+	else if (cardType == 4) return "NEGOTIATE";
+	else return "UNSPECIFIED";
 }
 
 // Ostreams
 ostream& operator<<(ostream& out, const Card& c)
 {
 	if (c.cardType == 0) {
-		out << "bomb and id " << c.cardID << endl;
+		out << "bomb" << endl;
 	}
 	else if (c.cardType == 1) {
-		out << "reinforcement and id " << c.cardID << endl;
+		out << "reinforcement" << endl;
 	}
 	else if (c.cardType == 2) {
-		out << "blockade and id " << c.cardID << endl;
+		out << "blockade" << endl;
 	}
 	else if (c.cardType == 3) {
-		out << "airlift and id " << c.cardID << endl;
+		out << "airlift" << endl;
 	}
 	else if (c.cardType == 4) {
-		out << "diplomacy and id " << c.cardID << endl;
+		out << "diplomacy" << endl;
 	}
-	else out << "Unknown card type and id " << c.cardID << endl;
+	else out << "Unknown card type" << endl;
 
 	return out;
 }
