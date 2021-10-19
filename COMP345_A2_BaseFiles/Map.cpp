@@ -9,6 +9,7 @@
 #include <sstream>
 #include <vector>
 #include <iterator>
+#include <algorithm>
 using namespace std;
 
 /*COMP 345 Section D - Assignment #1

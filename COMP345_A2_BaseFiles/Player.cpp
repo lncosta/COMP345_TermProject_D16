@@ -76,11 +76,7 @@ Player::Player(const Player& other)
 		playerHand->addCard(temp); 
 		
 	}
-	orders = new OrdersList(); 
-	for (auto p : other.orders->getOrderList()) {
-		Order* temp = new Order(*p);
-		orders->addOrder(temp);
-	}
+	orders = new OrdersList(*other.orders);
 	
 }
 
@@ -121,11 +117,8 @@ Player& Player::operator =(const Player& other) {
 		playerHand->addCard(temp);
 
 	}
-	orders = new OrdersList();
-	for (auto p : other.orders->getOrderList()) {
-		Order* temp = new Order(*p);
-		orders->addOrder(temp);
-	}
+	orders = new OrdersList(*other.orders);
+	
 	return *this;
 }
 
@@ -253,7 +246,7 @@ Order* Player::discoverOrderType(string x) {
 		newOrder = new NegotiateOrder();
 	}
 	else {
-		newOrder = new Order();
+		newOrder = NULL;
 	}
 
 	return newOrder;
@@ -267,12 +260,18 @@ void Player::issueOrder()
 	printOrderList();
 	cout << "Please type out the order you would like to issue: " << endl;
 	cin >> x;
-	issued= discoverOrderType(x);
-	orders->addOrder(issued);
-	cout << "Order was issued: " << issued->getName() << endl;
-	cout << "Current Player orders: " << endl;
-	for (auto p : orders->getOrderList()) {
-		cout << *p; 
+	issued = discoverOrderType(x);
+	
+	if (issued == NULL) {
+		cout << "Invalid Order. Could not add it to the list." << endl;
+	}
+	else {
+		orders->addOrder(issued);
+		cout << "Order was issued: " << issued->getName() << endl;
+		cout << "Current Player orders: " << endl;
+		for (auto p : orders->getOrderList()) {
+			cout << *p;
+		}
 	}
 }
 

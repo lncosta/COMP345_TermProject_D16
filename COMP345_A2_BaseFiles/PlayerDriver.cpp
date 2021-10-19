@@ -152,8 +152,8 @@ void example(void) { //This method demonstrates the basic functionalities of the
 
 }
 
-//int main(void) {
-//	example();
-//
-//	return 0;
-//}
+int main(void) {
+	example();
+
+	return 0;
+}
