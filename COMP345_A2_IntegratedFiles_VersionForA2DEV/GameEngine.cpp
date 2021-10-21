@@ -314,5 +314,18 @@ bool GameEngine::assignTerritories(void) {
 		cout << "Territory " << t->getTerritoryName() << " is now owned by " << t->getOwner()->getName() << endl; 
 		count++; 
 	}
+
+	//Shuffle players:
+	shuffle(begin(players), end(players), rng);
+
+	//Add initial army value:
+	for (auto p : players) {
+		
+		p->setArmiesHeld(50);
+	}
+
+	//Draw cards;
+
+	//Enter play phase.
 	return true; 
 }
