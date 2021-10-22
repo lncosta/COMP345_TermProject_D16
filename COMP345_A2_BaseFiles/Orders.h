@@ -1,4 +1,5 @@
 #pragma once
+#include "LoggingObserver.h"
 #include <string>
 #include <iostream>
 #include <vector>
@@ -23,7 +24,7 @@ enum class OrderType { Deploy, Advance, Bomb, Blockade, Airlift, Negotiate, Unsp
 	Order class.
 	It is the base class for all kinds of Orders.
 */
-class Order {
+class Order : ILoggable {
 
 public:
 	int id;
@@ -40,8 +41,10 @@ public:
 	virtual string getName() const { return nameOfOrder; }
 	virtual string getDesc() const { return description; }
 	virtual OrderType getOrderType() { return type; }
-	Order& operator=(const Order& order);
 
+	virtual void stringToLog();
+
+	Order& operator=(const Order& order);
 	friend ostream& operator<<(ostream& output, const Order& order);
 private:
 	const string nameOfOrder = "Unspecified Order";
@@ -73,8 +76,9 @@ public:
 	void setId(int theId) { this->id = theId; }
 	OrderType getOrderType() { return type; }
 
-	DeployOrder& operator=(const DeployOrder& order);
+	virtual void stringToLog();
 
+	DeployOrder& operator=(const DeployOrder& order);
 	friend ostream& operator<<(ostream& output, const DeployOrder& dorder); 
 };
 
@@ -102,8 +106,9 @@ public:
 	void setId(int theId) { this->id = theId; }
 	OrderType getOrderType() { return type; }
 
-	AdvanceOrder& operator=(const AdvanceOrder& order);
+	virtual void stringToLog();
 
+	AdvanceOrder& operator=(const AdvanceOrder& order);
 	friend ostream& operator<<(ostream& output, const AdvanceOrder& aorder); 
 };
 
@@ -131,8 +136,9 @@ public:
 	void setId(int theId) { this->id = theId; }
 	OrderType getOrderType() { return type; }
 
-	BombOrder& operator=(const BombOrder& order); 
+	virtual void stringToLog();
 
+	BombOrder& operator=(const BombOrder& order); 
 	friend ostream& operator<<(ostream& output, const BombOrder& border);
 };
 
@@ -160,8 +166,9 @@ public:
 	void setId(int theId) { this->id = theId; }
 	OrderType getOrderType() { return type; }
 
-	BlockadeOrder& operator=(const BlockadeOrder& order); 
+	virtual void stringToLog();
 
+	BlockadeOrder& operator=(const BlockadeOrder& order); 
 	friend ostream& operator<<(ostream& output, const BlockadeOrder& border); 
 };
 
@@ -189,8 +196,9 @@ public:
 	void setId(int theId) { this->id = theId; }
 	OrderType getOrderType() { return type; }
 
-	AirliftOrder& operator=(const AirliftOrder& order); 
+	virtual void stringToLog();
 
+	AirliftOrder& operator=(const AirliftOrder& order); 
 	friend ostream& operator<<(ostream& output, const AirliftOrder& aorder);
 };
 
@@ -218,8 +226,9 @@ public:
 	OrderType getOrderType() { return type; }
 	void setId(int theId) { this->id = theId; }
 
-	NegotiateOrder& operator=(const NegotiateOrder& order); 
+	virtual void stringToLog();
 
+	NegotiateOrder& operator=(const NegotiateOrder& order); 
 	friend ostream& operator<<(ostream& output, const NegotiateOrder& norder);
 };
 
@@ -227,7 +236,7 @@ public:
 	OrdersList class.
 	It acts as a list of orders and enables its manipulation.
 */
-class OrdersList {
+class OrdersList : ILoggable {
 private:
 	std::vector<Order*> orderList;
 public:
@@ -240,6 +249,8 @@ public:
 	void move(int toMove, int location);
 	void remove(int toRemove);
 	int getCount() { orderList.size(); }
+
+	virtual void stringToLog();
 
 	OrdersList& operator=(const OrdersList& olist);
 	

@@ -145,6 +145,13 @@ void OrdersList::remove(int toRemove) {
 		cout << "Removed order at " << toRemove << " successfully." << endl;
 	}
 };
+/*
+	OrdersList logging function.
+*/
+void OrdersList::stringToLog() {
+	cout << "OrdersList will write to file gamelog.txt here" << endl;
+}
+
 
 /*
 	Order Default Constructor
@@ -243,6 +250,12 @@ void DeployOrder::execute() {
 		cout << "This execution was successful!" << endl;
 	}
 }
+/*
+	DeployOrder logging function.
+*/
+void DeployOrder::stringToLog() {
+	cout << "DeployOrder will write to file gamelog.txt here" << endl;
+}
 
 /*
 	AdvanceOrder Default Constructor
@@ -305,6 +318,13 @@ void AdvanceOrder::execute() {
 		cout << "This execution was successful!" << endl;
 	}
 }
+/*
+	AdvanceOrder logging function.
+*/
+void AdvanceOrder::stringToLog() {
+	cout << "AdvanceOrder will write to file gamelog.txt here" << endl;
+}
+
 
 /*
 	BombOrder Default Constructor
@@ -367,6 +387,13 @@ void BombOrder::execute() {
 		cout << "This execution was successful!" << endl;
 	}
 }
+/*
+	BombOrder logging function.
+*/
+void BombOrder::stringToLog() {
+	cout << "BombOrder will write to file gamelog.txt here" << endl;
+}
+
 
 /*
 	BlockadeOrder Default Constructor
@@ -429,6 +456,13 @@ void BlockadeOrder::execute() {
 		cout << "This execution was successful!" << endl;
 	}
 }
+/*
+	BlockadeOrder logging function.
+*/
+void BlockadeOrder::stringToLog() {
+	cout << "BlockadeOrder will write to file gamelog.txt here" << endl;
+}
+
 
 /*
 	AirliftOrder Default Constructor
@@ -491,6 +525,13 @@ void AirliftOrder::execute() {
 		cout << "This execution was successful!" << endl;
 	}
 }
+/*
+	AirliftOrder logging function.
+*/
+void AirliftOrder::stringToLog() {
+	cout << "AirliftOrder will write to file gamelog.txt here" << endl;
+}
+
 
 /*
 	NegotiateOrder Default Constructor
@@ -553,6 +594,13 @@ void NegotiateOrder::execute() {
 		cout << "This execution was successful!" << endl;
 	}
 }
+/*
+	NegotiateOrder logging function.
+*/
+void NegotiateOrder::stringToLog() {
+	cout << "NegotiateOrder will write to file gamelog.txt here" << endl;
+}
+
 
 /*
 	Stream insertions
