@@ -31,7 +31,6 @@ bool CommandProcessor::validate(Command* cd, GameEngine* engine) {
 	string currentState = ge->getState();
 
 	bool isThere = false;
-	bool toPrint = false;
 
 	for (string anyCommand : ge->commandArr) {
 		if (input == anyCommand)
@@ -47,59 +46,43 @@ bool CommandProcessor::validate(Command* cd, GameEngine* engine) {
 			if (currentState == ge->stateArr[0] || currentState == ge->stateArr[1]) { // start , maploaded
 				ge->transition(1); // maploaded
 				return true;
-			}
-			else
-				toPrint = true;
-
+			}			
 		}
 		else if (input == ge->commandArr[1]) { // validatemap
 			if (currentState == ge->stateArr[1]) { // maploaded
 				ge->transition(2); // mapvalidated
 				return true;
-			}
-			else
-				toPrint = true;
+			}			
 		}
 		else if (input == ge->commandArr[2]) { // addplayer
 			if (currentState == ge->stateArr[2] || currentState == ge->stateArr[3]) { // mapvalidated, playersadded
 				ge->transition(3); // playersadded
 				
 				return true;
-			}
-			else {
-				toPrint = true;
-			}
-				
+			}			
 		}
 		else if (input == ge->commandArr[3]) { // gamestart
 			if (currentState == ge->stateArr[3]) {  // playersadded
 				ge->transition(4); // assignreinforcement
 				return true;
-			}
-			else
-				toPrint = true;
+			}			
 		}
 		else if (input == ge->commandArr[4]) { // replay
 			if (currentState == ge->stateArr[7]) { //win
 				ge->transition(0); // start
 				return true;
-			}
-			else
-				toPrint = true;
+			}			
 		}
 		else if (input == ge->commandArr[5]) { // quit
 			if (currentState == ge->stateArr[7]) { // win
 				ge->transition(8); // exitprogram
 				return true;
-			}
-			else
-				toPrint = true;
+			}			
 		}
 	}
 
-	if (toPrint) {
 		cout << "It is a game command,but not valid in the current state" << endl;
-	}
+	
 
 	delete ge;
 	ge = NULL;

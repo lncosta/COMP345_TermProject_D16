@@ -1,24 +1,23 @@
 #include "GameEngine.h"
 
-void print(string s) {
-	cout << s << endl;
-}
-
-void print(int s) {
-	cout << s << endl;
-}
+//void print(string s) {
+//	cout << s << endl;
+//}
+//
+//void print(int s) {
+//	cout << s << endl;
+//}
 
 int main() {
 
-	//print("type something");
+	cout << "Type a command "<< endl;
 	GameEngine* ge = new GameEngine;
 	CommandProcessor* processor = new CommandProcessor;
 	Command* c = processor->getCommand();
 	string s = c->returnCommand();
-	print(s);
+	cout << "what you entered is " << s << endl;
 
 	bool value = processor->validate(c, ge);
-	print(value);
 	
 
 
