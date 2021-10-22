@@ -83,10 +83,17 @@ demonstrates that the above features are available.
 	cout << endl;
 	cout << "Size of list1: " << list.getOrderList().size() << endl;
 
+	d9->stringToLog();
+	d8->stringToLog();
+	d7->stringToLog();
+	d6->stringToLog();
+	d5->stringToLog();
+	d4->stringToLog();
+
 }
-/*
+
 int main() {
 	orderdriver();
 
 	return 0;
-}*/
+}

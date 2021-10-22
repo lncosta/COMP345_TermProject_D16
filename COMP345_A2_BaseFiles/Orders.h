@@ -42,7 +42,7 @@ public:
 	virtual string getDesc() const { return description; }
 	virtual OrderType getOrderType() { return type; }
 
-	virtual void stringToLog();
+	virtual void stringToLog() = 0;
 
 	Order& operator=(const Order& order);
 	friend ostream& operator<<(ostream& output, const Order& order);

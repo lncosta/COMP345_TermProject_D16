@@ -7,7 +7,7 @@ using namespace std;
 class Observer {
 public:
 	~Observer();
-	virtual void Update();
+	virtual void Update() = 0;
 protected:
 	Observer();
 };
@@ -37,5 +37,5 @@ class ILoggable : Subject {
 // ----------------------------------- LogObserver class ----------------------------------------
 
 class LogObserver : Observer {
-	virtual void Update(); //Notify will call Update
+	virtual void Update(); //Notify() will call Update()
 };

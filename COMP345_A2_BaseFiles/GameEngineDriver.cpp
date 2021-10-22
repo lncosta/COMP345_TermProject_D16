@@ -7,7 +7,7 @@
 //void print(int s) {
 //	cout << s << endl;
 //}
-
+/*
 int main() {
 
 	cout << "Type a command "<< endl;
@@ -24,11 +24,12 @@ int main() {
 
 	//int currentState = 0;
 	//int newState = 0;
-	/*do {
-		newState = ge.menu(currentState);
-		currentState = newState;
+	
+	//do {
+	//	newState = ge.menu(currentState);
+	//	currentState = newState;
 
-	} while (currentState != -1);*/
+	//} while (currentState != -1);
 
 	
 	
@@ -36,3 +37,4 @@ int main() {
 
 	return 0;
 }
+*/

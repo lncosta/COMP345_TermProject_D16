@@ -257,6 +257,7 @@ void DeployOrder::stringToLog() {
 	cout << "DeployOrder will write to file gamelog.txt here" << endl;
 }
 
+
 /*
 	AdvanceOrder Default Constructor
 */
