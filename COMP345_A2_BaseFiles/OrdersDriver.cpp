@@ -1,5 +1,6 @@
 #include "Orders.h"
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 void orderdriver() {
@@ -82,6 +83,27 @@ demonstrates that the above features are available.
 
 	cout << endl;
 	cout << "Size of list1: " << list.getOrderList().size() << endl;
+	cout << endl;
+	cout << endl;
+
+	ofstream filewriting;
+
+	filewriting.open("gamelog.txt");
+
+	if (filewriting) {
+
+		//emptying file here
+		cout << "Emptying gamelog.txt for this game..." << endl;
+		cout << endl;
+		filewriting.open("gamelog.txt", std::ofstream::out | std::ofstream::trunc);
+		filewriting.close();
+
+	}
+	else {
+		cout << "ERROR - File could not be opened!" << endl;
+		throw invalid_argument("ERROR - File could not be opened!");
+		return;
+	}
 
 	d9->stringToLog();
 	d8->stringToLog();
@@ -89,7 +111,7 @@ demonstrates that the above features are available.
 	d6->stringToLog();
 	d5->stringToLog();
 	d4->stringToLog();
-
+	list2.stringToLog();
 }
 
 int main() {

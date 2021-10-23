@@ -1,5 +1,6 @@
 #include "Orders.h"
 #include <iostream>
+#include <fstream>
 using namespace std; //make sure to add the "only compile this once" keyword
 
 /*
@@ -150,6 +151,24 @@ void OrdersList::remove(int toRemove) {
 */
 void OrdersList::stringToLog() {
 	cout << "OrdersList will write to file gamelog.txt here" << endl;
+
+	ofstream filewriting;
+
+	filewriting.open("gamelog.txt", ios::app);
+	
+	if (filewriting) {
+		//write to file 
+		filewriting << "Orderslist log data" << endl; //call saveEffect here?
+		cout << "Successfully added log to file." << endl;
+		cout << endl;
+		filewriting.close();
+		
+	}
+	else {
+		cout << "ERROR - File could not be opened!" << endl;
+		throw invalid_argument("ERROR - File could not be opened!");
+		return;
+	}
 }
 
 
@@ -255,6 +274,24 @@ void DeployOrder::execute() {
 */
 void DeployOrder::stringToLog() {
 	cout << "DeployOrder will write to file gamelog.txt here" << endl;
+
+	ofstream filewriting;
+
+	filewriting.open("gamelog.txt", ios::app);
+
+	if (filewriting) {
+		//write to file 
+		filewriting << "DeployOrder log data" << endl; //call saveEffect here?
+		cout << "Successfully added log to file." << endl;
+		cout << endl;
+		filewriting.close();
+
+	}
+	else {
+		cout << "ERROR - File could not be opened!" << endl;
+		throw invalid_argument("ERROR - File could not be opened!");
+		return;
+	}
 }
 
 
@@ -324,6 +361,24 @@ void AdvanceOrder::execute() {
 */
 void AdvanceOrder::stringToLog() {
 	cout << "AdvanceOrder will write to file gamelog.txt here" << endl;
+
+	ofstream filewriting;
+
+	filewriting.open("gamelog.txt", ios::app);
+
+	if (filewriting) {
+		//write to file 
+		filewriting << "AdvanceOrder log data" << endl; //call saveEffect here?
+		cout << "Successfully added log to file." << endl;
+		cout << endl;
+		filewriting.close();
+
+	}
+	else {
+		cout << "ERROR - File could not be opened!" << endl;
+		throw invalid_argument("ERROR - File could not be opened!");
+		return;
+	}
 }
 
 
@@ -393,6 +448,24 @@ void BombOrder::execute() {
 */
 void BombOrder::stringToLog() {
 	cout << "BombOrder will write to file gamelog.txt here" << endl;
+
+	ofstream filewriting;
+
+	filewriting.open("gamelog.txt", ios::app);
+
+	if (filewriting) {
+		//write to file 
+		filewriting << "BombOrder log data" << endl; //call saveEffect here?
+		cout << "Successfully added log to file." << endl;
+		cout << endl;
+		filewriting.close();
+
+	}
+	else {
+		cout << "ERROR - File could not be opened!" << endl;
+		throw invalid_argument("ERROR - File could not be opened!");
+		return;
+	}
 }
 
 
@@ -462,6 +535,24 @@ void BlockadeOrder::execute() {
 */
 void BlockadeOrder::stringToLog() {
 	cout << "BlockadeOrder will write to file gamelog.txt here" << endl;
+
+	ofstream filewriting;
+
+	filewriting.open("gamelog.txt", ios::app);
+
+	if (filewriting) {
+		//write to file 
+		filewriting << "BlockadeOrder log data" << endl; //call saveEffect here?
+		cout << "Successfully added log to file." << endl;
+		cout << endl;
+		filewriting.close();
+
+	}
+	else {
+		cout << "ERROR - File could not be opened!" << endl;
+		throw invalid_argument("ERROR - File could not be opened!");
+		return;
+	}
 }
 
 
@@ -531,6 +622,24 @@ void AirliftOrder::execute() {
 */
 void AirliftOrder::stringToLog() {
 	cout << "AirliftOrder will write to file gamelog.txt here" << endl;
+
+	ofstream filewriting;
+
+	filewriting.open("gamelog.txt", ios::app);
+
+	if (filewriting) {
+		//write to file 
+		filewriting << "AirliftOrder log data" << endl; //call saveEffect here?
+		cout << "Successfully added log to file." << endl;
+		cout << endl;
+		filewriting.close();
+
+	}
+	else {
+		cout << "ERROR - File could not be opened!" << endl;
+		throw invalid_argument("ERROR - File could not be opened!");
+		return;
+	}
 }
 
 
@@ -600,6 +709,24 @@ void NegotiateOrder::execute() {
 */
 void NegotiateOrder::stringToLog() {
 	cout << "NegotiateOrder will write to file gamelog.txt here" << endl;
+
+	ofstream filewriting;
+
+	filewriting.open("gamelog.txt", ios::app);
+
+	if (filewriting) {
+		//write to file 
+		filewriting << "NegotiateOrder log data" << endl; //call saveEffect here?
+		cout << "Successfully added log to file." << endl;
+		cout << endl;
+		filewriting.close();
+
+	}
+	else {
+		cout << "ERROR - File could not be opened!" << endl;
+		throw invalid_argument("ERROR - File could not be opened!");
+		return;
+	}
 }
 
 
