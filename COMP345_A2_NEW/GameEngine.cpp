@@ -342,7 +342,49 @@ void GameEngine::reinforcementPhase(void) {
 		cout << "Current army count is: " << p->getArmiesHeld() << endl;
 	}
 }
+void GameEngine::issueOrdersPhase(void) {
+	//Issuing orders in round-robin fashion:
+	bool round = true;
+	string result;
+	for (auto p : players) {
+		cout << "Player - " << p->getName() << endl;
+		round = true;
+		while (round) {
+			p->issueOrder();
+			cout << "Would you like to issue more orders? Y/N" << endl;
+			cin >> result;
+			while (result != "N" && result != "n" && result != "y" && result != "Y") {
+				cin >> result;
+			}
+			if (result == "N" || result == "n") {
+				round = false;
+			}
+		}
+		cout << "The final list of orders is: " << endl; 
+		cout << *( p->getOrders()) << endl;
+	}
 
+}
+void GameEngine::executeOrdersPhase(void) {
+	bool playing = true;
+	int doneCount = 0;
+	while (playing) {
+		for (auto p : players) {
+			vector<Order*> toexc = p->getOrders()->getOrderList();
+			if (toexc.size() > 0) {
+				toexc[0]->execute();
+			}
+			else {
+				doneCount++;
+			}
+		}
+		if (doneCount >= players.size()) {
+			playing = false;
+		}
+	}
+	
+
+}
 void GameEngine::mainGameLoop(void)
 
 {
@@ -358,7 +400,7 @@ void GameEngine::mainGameLoop(void)
 			this->transition(5);
 		}
 		else if (state == this->stateArr[5]) {
-			//issueOrdersPhase();
+			issueOrdersPhase();
 			this->transition(6);
 
 		}
@@ -370,7 +412,7 @@ void GameEngine::mainGameLoop(void)
 
 			}
 			else {
-				//executeOrdersPhase()
+				executeOrdersPhase();
 				this->transition(4);
 			}
 
@@ -408,7 +450,7 @@ bool GameEngine::loadMap(void) {
 	}
 }
 bool GameEngine::assignTerritories(void) {
-	//Should probably shuffle the vector before assigning. Solution from https://stackoverflow.com/questions/6926433/how-to-shuffle-a-stdvector
+	//Shuffle the vector before assigning. Solution from https://stackoverflow.com/questions/6926433/how-to-shuffle-a-stdvector
 	vector<Territory*> copy = map->getTerritoyVector();
 	auto rng = std::default_random_engine{};
 	std::shuffle(begin(copy), end(copy), rng);
@@ -425,16 +467,23 @@ bool GameEngine::assignTerritories(void) {
 		count++;
 	}
 
-	//Shuffle players:
+	//Shuffle players to determine play order:
 	shuffle(begin(players), end(players), rng);
 
-	//Add initial army value:
+	//Create Deck object:
+	
+	 deck = new Deck();
+	//Add initial army value and draw cards:
 	for (auto p : players) {
 
 		p->setArmiesHeld(50);
+		deck->draw(p);
+		deck->draw(p);
+		cout << "Player "<< p->getName() + " has received the following cards: " << endl;
+		for (auto c : p->getHandOfCards()) {
+			cout << *c;
+		}
 	}
-
-	//Draw cards;
 
 	//Enter play phase.
 	return true;

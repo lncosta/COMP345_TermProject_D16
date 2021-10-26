@@ -16,7 +16,7 @@ private:
 	string state;
 	vector<Player*> players;
 	Map* map;
-	Card* deck;
+	Deck* deck;
 
 
 public:
@@ -46,6 +46,8 @@ public:
 	void transition(int index); 
 	void addPlayer(void);
 	void reinforcementPhase(void);
+	void issueOrdersPhase(void);
+	void executeOrdersPhase(void);
 	void mainGameLoop(void);
 	bool loadMap(void);
 

@@ -1,6 +1,7 @@
 #include "Player.h"
 #include <iostream>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 /*COMP 345 Section D - Assignment #1
@@ -231,10 +232,35 @@ void Player::printOrderList(void) {
 	cout << "AIRLIFT: advance some armies from one of the current player’s territories to any another territory." << endl;
 	cout << "NEGOTIATE: prevent attacks between the current playerand another player until the end of the turn." << endl;
 	cout << "----------------------------------" << endl;
+
+	cout << *getPlayerHand();
 }
 
 Order* Player::discoverOrderType(string x) {
-	string options[] = { "DEPLOY", "ADVANCE", "BOMB", "BLOCK", "AIRLIFT", "NEGOTIATE", "UNSPECIFIED"};
+	string options[] = { "deploy", "advance", "bomb", "blockade", "airlift", "diplomacy", "unspecified"};
+	vector<string> options2;
+	for (auto name : getPlayerHand()->getHandOfCards()) {
+		if (name->getType() == 0) {
+			options2.push_back("bomb");
+		}
+		else if (name->getType() == 1) {
+			options2.push_back("reinforcement");
+		}
+		else if (name->getType() == 2) {
+			options2.push_back("blockade");
+		}
+		else if (name->getType() == 3) {
+			options2.push_back("airlift");
+		}
+		else if (name->getType() == 4) {
+			options2.push_back("diplomacy");
+		}
+	
+	}
+	if (!(find(options2.begin(), options2.end(), x) != options2.end())) {
+		cout << "The command you requested is not available at the time. " << endl;
+		return NULL;
+	}
 	Order* newOrder;
 	if (x.compare(options[0]) == 0) {
 		newOrder = new DeployOrder(); 

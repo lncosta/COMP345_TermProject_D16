@@ -153,6 +153,23 @@ Card Deck::draw(Player& p) {
 	// return the card that was just added to the player's hand
 	return *(p.playerHand->getHandOfCards().back());
 }
+// Method to draw a card from the deck and add it to a player's hand
+Card* Deck::draw(Player* p) {
+
+	// Fisher-Yates shuffle algorithm
+	int size = deckOfCards.size();
+	for (int i = 0; i < (size - 1); i++) {
+		int j = i + rand() % (size - i);
+		std::swap(deckOfCards[i], deckOfCards[j]);
+	}
+
+	// add the pointer to the last card in the deck to the player's hand
+	p->addCard(getDeckOfCards().back());
+	// remove that pointer from the deck
+	deckOfCards.pop_back();
+	// return the card that was just added to the player's hand
+	return (p->getHandOfCards().back());
+}
 
 // Method to find and erase a Card* in a hand. It will take a Card*, find it in the hand, erase it and then return it
 Card* Hand::eraseCard(Card* card) {

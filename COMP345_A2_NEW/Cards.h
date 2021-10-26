@@ -89,6 +89,7 @@ public:
 
 	// Methods
 	Card draw(Player& p);
+	Card* draw(Player* p);
 	void addCard(Card* card);
 
 	// Destructor
