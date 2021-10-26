@@ -43,12 +43,12 @@ public:
 
 	//Methods
 	int menu(int i);
-	void transition(int index); 
+	int transition(int index); 
 	void addPlayer(void);
 	void reinforcementPhase(void);
 	void issueOrdersPhase(void);
 	void executeOrdersPhase(void);
-	void mainGameLoop(void);
+	int mainGameLoop(void);
 	bool loadMap(void);
 
 	bool assignTerritories(void);

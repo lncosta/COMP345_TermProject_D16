@@ -101,12 +101,13 @@ string Command::returnCommand(void) {
 
 // -----------------------------------GameEngine class ----------------------------------------
 
-void GameEngine::transition(int index) {
+int GameEngine::transition(int index) {
 
 	string newState = this->stateArr[index];
 	this->setState(newState);
 
 	cout << "You are transited to state: " << this->getState() << endl;
+	return index;
 
 }
 
@@ -165,12 +166,15 @@ int GameEngine::menu(int i)
 	string input; 
 	bool isValid = false;
 	int value = 0;
+	int stateIndex = 0;
 	
 	
 
-	while (i > -1) {
+	while (stateIndex != 8 ) {
+
+		cout << "The current State is [ " << this->getState() << " ]" << endl;
 		
-		switch (i) {
+		switch (stateIndex) {
 		case 0:  // current state: Start 
 			players.clear();
 			delete map;
@@ -186,8 +190,7 @@ int GameEngine::menu(int i)
 				if (!res) {
 					break;
 				}
-				this->transition(1);
-				++i;
+				stateIndex = this->transition(1);
 			}
 			
 			break;
@@ -208,8 +211,7 @@ int GameEngine::menu(int i)
 				}
 				else if (input == "validatemap") {
 					// call validateMap method
-					this->transition(2);
-					++i;
+					stateIndex = this->transition(2);
 				}
 			}
 			break;
@@ -223,8 +225,7 @@ int GameEngine::menu(int i)
 
 			if (isValid) {
 				addPlayer();
-				this->transition(3);
-				++i;
+				stateIndex = this->transition(3);
 			}			
 			break;
 
@@ -241,16 +242,14 @@ int GameEngine::menu(int i)
 				}
 				else if (input == "gamestart") {
 					assignTerritories();
-					this->transition(4);					
-					++i;					
+					stateIndex = this->transition(4);
 				}
 			}			
 			break;			
 
 			
 		case 4: // current state: assignreinforcement (red command: issueorder)	
-			mainGameLoop(); 
-			i = 7;
+			stateIndex = mainGameLoop();
 			break;
 		
 		case 7: // current state: win
@@ -262,20 +261,15 @@ int GameEngine::menu(int i)
 			isValid = processor->validate(c, this);
 			if (isValid) {
 				if (input == "replay") {
-					this->transition(0);					
-					i = 0;
+					stateIndex = this->transition(0);
 				}
 				else if (input == "quit") {
-					this->transition(8);
-					i = -1;
+					stateIndex = this->transition(8);
 					
 				}
 			}			
 			break;
 		}		
-		
-		cout << "The current State is [ " << this->getState() << " ]" << endl;
-		
 	}
 	return -1;
 
@@ -385,15 +379,16 @@ void GameEngine::executeOrdersPhase(void) {
 	
 
 }
-void GameEngine::mainGameLoop(void)
+int GameEngine::mainGameLoop(void)
 
 {
 	bool loopstop = false;
+	// winningCondition needs to be implemented. Set it as false to test executeOrderPhase()
 	bool winningCondition = true;
 
-	// need a while loop to keep running inside the mainGameLoop
+
 	while (!loopstop) {
-		cout << "The current State is [ " << this->getState() << " ]" << endl;
+		
 
 		if (state == this->stateArr[4]) {
 			reinforcementPhase();
@@ -417,8 +412,10 @@ void GameEngine::mainGameLoop(void)
 			}
 
 		}
+		cout << "The current State is [ " << this->getState() << " ]" << endl;
 
-	}	
+	}
+	return this->transition(7);
 	
 }
 
