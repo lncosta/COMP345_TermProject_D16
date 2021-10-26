@@ -402,8 +402,7 @@ int GameEngine::mainGameLoop(void)
 		else if (state == this->stateArr[6]) {
 			
 			if (winningCondition) {
-				this->transition(7);
-				loopstop = true;
+				return (this->transition(7));
 
 			}
 			else {
