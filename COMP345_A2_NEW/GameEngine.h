@@ -20,10 +20,9 @@ private:
 
 
 public:
-
-	const string commandArr[6] = { "loadmap", "validatemap", "addplayer", "gamestart", "replay", "quit" };
-	const string stateArr[9] = { "start", "maploaded", "mapvalidated", "playersadded", "assignreinforcement", "issueorders","executeorders", "win", "exitprogram" };
-
+	
+	//const string stateArr[9] = { "start", "maploaded", "mapvalidated", "playersadded", "assignreinforcement", "issueorders","executeorders", "win", "exitprogram" };
+	
 
 	//Constructors
 	GameEngine(void);
@@ -43,7 +42,7 @@ public:
 
 	//Methods
 	int menu(int i);
-	int transition(int index); 
+	void transition(string newState); 
 	void addPlayer(void);
 	void reinforcementPhase(void);
 	void issueOrdersPhase(void);
@@ -61,14 +60,14 @@ public:
 
 class Command {
 	string command;
-	string effect;
-	void saveEffect(string effect);
+	string effect;	
 public:
 	//Constructors
 	Command(void);
 	Command(string command);
 	string returnCommand(void);
-
+	string returnEffect(void);
+	void saveEffect(string effect);
 
 };
 
@@ -86,7 +85,9 @@ private:
 
 public:
 	// for GameEngine/ Player objects's use 
+
 	Command* getCommand(void);
-	bool validate(Command* cd, GameEngine* ge);
+	bool validate(string input, string currentState);
+	vector<Command*> getCommandVector();
 };
 
