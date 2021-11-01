@@ -26,15 +26,14 @@ Command* CommandProcessor::getCommand(void)
 }
 
 
-bool CommandProcessor::validate(Command* cd, GameEngine* engine) {
+bool CommandProcessor::validate(string input, string currentState) {
 
-	string input = cd->returnCommand();
-	GameEngine* ge = engine;
-	string currentState = ge->getState();
+	const string commandArr[6] = { "loadmap", "validatemap", "addplayer", "gamestart", "replay", "quit" };
 
+	
 	bool isThere = false;
 
-	for (string anyCommand : ge->commandArr) {
+	for (string anyCommand : commandArr) {
 		if (input == anyCommand)
 			isThere = true;
 	}
@@ -44,49 +43,49 @@ bool CommandProcessor::validate(Command* cd, GameEngine* engine) {
 		return false;
 	}
 	else {
-		if (input == ge->commandArr[0]) { // loadmap
-			if (currentState == ge->stateArr[0] || currentState == ge->stateArr[1]) { // start , maploaded
+		if (input == "loadmap") { 
+			if (currentState == "start" || currentState == "maploaded") { 
 				return true;
 			}
 		}
-		else if (input == ge->commandArr[1]) { // validatemap
-			if (currentState == ge->stateArr[1]) { // maploaded
+		else if (input == "validatemap") { 
+			if (currentState == "maploaded") { 
 				return true;
 			}
 		}
-		else if (input == ge->commandArr[2]) { // addplayer
-			if (currentState == ge->stateArr[2] || currentState == ge->stateArr[3]) { // mapvalidated, playersadded
+		else if (input == "addplayer") { 
+			if (currentState == "mapvalidated" || currentState == "playersadded") { 
 				return true;
 			}
 		}
-		else if (input == ge->commandArr[3]) { // gamestart
-			if (currentState == ge->stateArr[3]) {  // playersadded
+		else if (input == "gamestart") { 
+			if (currentState == "playersadded") {  
 				return true;
 			}
 		}
-		else if (input == ge->commandArr[4]) { // replay
-			if (currentState == ge->stateArr[7]) { //win
+		else if (input == "replay") { 
+			if (currentState == "win") { 
 				return true;
 			}
 		}
-		else if (input == ge->commandArr[5]) { // quit
-			if (currentState == ge->stateArr[7]) { // win
+		else if (input == "quit") { 
+			if (currentState == "win") { 
 				return true;
 			}
 		}
 	}
 
-	cout << "It is a game command,but not valid in the current state" << endl;
+	cout << "It is a game command, but not valid in the current state" << endl;
 
 
-	delete ge;
-	ge = NULL;
 
 	return false;
 }
 
 
-
+vector<Command*>CommandProcessor::getCommandVector() {
+	return commandVector;
+};
 
 
 // -----------------------------------Command class ----------------------------------------
@@ -98,26 +97,52 @@ string Command::returnCommand(void) {
 	return command;
 }
 
+string Command::returnEffect(void) {
+	return effect;
+}
+
+void Command::saveEffect(string input) {
+
+	string theEffect;
+	if (input == "loadmap") {
+		theEffect = "Map has been successfully loaded.";
+	}
+	else if (input == "validatemap") {
+		theEffect = "Map has been validated.";
+	}
+	else if (input == "addplayer") {
+		theEffect = "Player(s) has been added.";
+	}
+	else if (input == "gamestart") {
+		theEffect = "Reinforcement has been assigned.";
+	}
+	else if (input == "replay") {
+		theEffect = "The last game settings has been erased. Ready to take new settings.";
+	}
+	else if (input == "quit") {
+		theEffect = "Program exits";
+	}
+
+	this->effect = theEffect;
+}
 
 // -----------------------------------GameEngine class ----------------------------------------
 
-int GameEngine::transition(int index) {
 
-	string newState = this->stateArr[index];
+void GameEngine::transition(string newState) {
+
+	
 	this->setState(newState);
 
 	cout << "You are transited to state: " << this->getState() << endl;
-	return index;
 
 }
 
 
 GameEngine::GameEngine()
 {
-
 	state = "start";
 
-	
 }
 
 GameEngine::GameEngine(const GameEngine& other)
@@ -152,128 +177,141 @@ istream& operator>>(istream& in, GameEngine& g)
 
 ostream& operator<<(ostream& out, const GameEngine& g)
 {
-	out << g.state << endl;
+	out << "The current State is [ " << g.state << " ]" << endl;
 	return out;
 }
 
 
 
-
 int GameEngine::menu(int i)
 {
+
+	string currentState;
 	CommandProcessor* processor = new CommandProcessor();
-	Command* c; 
-	string input; 
-	bool isValid = false;
-	int value = 0;
-	int stateIndex = 0;
-	
-	
 
-	while (stateIndex != 8 ) {
-
-		cout << "The current State is [ " << this->getState() << " ]" << endl;
+	while (state != "exitprogram") {
+		currentState = this->getState();
+		cout << *this << endl;
+		cout << "Enter your command" << endl;
+		Command* c = processor->getCommand(); // will use it for save effect
+		string input = c->returnCommand();
 		
-		switch (stateIndex) {
-		case 0:  // current state: Start 
-			players.clear();
-			delete map;
-			
-			cout << "Enter \"loadmap\" to load your map " << endl;
-		
-			c = processor->getCommand();
-			input = c->returnCommand();
-			isValid = processor->validate(c, this);
+		bool isValid = processor->validate(input, currentState);
 
-			if (isValid) {
+		if (!isValid) {
+			continue;
+		}
+		else 
+		{
+			if (input == "loadmap") {
 				bool res = loadMap();
 				if (!res) {
 					break;
 				}
-				stateIndex = this->transition(1);
+				c->saveEffect(input);
+				transition("maploaded");
 			}
-			
-			break;
+			else if (input == "validatemap") {
+				// call validateMap method which I have to seperate from map generation
+				c->saveEffect(input);
+				transition("mapvalidated");
 
-		case 1: // current state: maploaded
-			cout << "Enter \"loadmap\" or Enter \"validatemap\" " << endl;
-
-			c = processor->getCommand();
-			input = c->returnCommand();
-			isValid = processor->validate(c, this);
-
-			if (isValid) {
-				if (input == "loadmap") {
-					bool res = loadMap();
-					if (!res) {
-						break;
-					}
-				}
-				else if (input == "validatemap") {
-					// call validateMap method
-					stateIndex = this->transition(2);
-				}
 			}
-			break;
-
-		case 2: // current state: mapvalidated
-			cout << "Enter \"addplayer\" to add a player" << endl;
-
-			c = processor->getCommand();
-			input = c->returnCommand();
-			isValid = processor->validate(c, this);
-
-			if (isValid) {
+			else if (input == "addplayer") {
 				addPlayer();
-				stateIndex = this->transition(3);
-			}			
-			break;
+				c->saveEffect(input);
+				transition("playersadded");
+			}
+			else if (input == "gamestart") {
+				assignTerritories();
+				c->saveEffect(input);
+				transition("assignreinforcement");
+				mainGameLoop();
+			}
+			else if (input == "replay") {
+				players.clear();
+				delete map;
+				c->saveEffect(input);
+				transition("start");
+			}
+			else if (input == "quit") {
+				c->saveEffect(input);
+				transition("exitprogram");
+			}
 
-		case 3: // current state: playersadded
-			cout << "Enter \"addplayer\" or \"gamestart\" " << endl;
-			
-			c = processor->getCommand();
-			input = c->returnCommand();
-			isValid = processor->validate(c, this);
-
-			if (isValid) {
-				if (input == "addplayer") {
-					addPlayer();
-				}
-				else if (input == "gamestart") {
-					assignTerritories();
-					stateIndex = this->transition(4);
-				}
-			}			
-			break;			
-
-			
-		case 4: // current state: assignreinforcement (red command: issueorder)	
-			stateIndex = mainGameLoop();
-			break;
-		
-		case 7: // current state: win
-			
-			cout << "Enter \"replay\" or \"quit\" " << endl;
-			
-			c = processor->getCommand();
-			input = c->returnCommand();
-			isValid = processor->validate(c, this);
-			if (isValid) {
-				if (input == "replay") {
-					stateIndex = this->transition(0);
-				}
-				else if (input == "quit") {
-					stateIndex = this->transition(8);
-					
-				}
-			}			
-			break;
-		}		
+		}
 	}
+
+	cout << "-----------------------------"  ;
+	for (Command* c : processor->getCommandVector()) {
+		cout << c->returnCommand();
+		cout << " : " << c->returnEffect() << endl;
+	}
+
 	return -1;
+}
+
+
+int GameEngine::mainGameLoop(void)
+
+{
+	bool loopstop = false;
+	// winningCondition needs to be implemented. Set it as false to test executeOrderPhase()
+	bool winningCondition = true;
+
+
+
+	while (!loopstop) {
+
+		cout << *this << endl;
+
+		if (state == "assignreinforcement") {
+			reinforcementPhase();
+			transition("issueorders");
+		}
+		else if (state == "issueorders") {
+			issueOrdersPhase();
+			transition("executeorders");
+
+		}
+		else if (state == "executeorders") {
+
+			if (winningCondition) {
+				transition("win");
+				loopstop = true;
+
+			}
+			else {
+				executeOrdersPhase();
+				transition("assignreinforcement");
+			}
+
+		}
+
+	}
+	return 0;
 
 }
+
+/*
+void GameEngine::addPlayer(string name) {
+
+    //Creating Player Objects:
+
+Player* temp = new Player();
+(temp).setName(name);
+cout << "Welcome to Warzone, " << name << "!" << endl;
+players.push_back(temp);
+
+
+cout << "All players have been added! Here is who will be playing:" << endl;
+for (Player p : players) {
+	cout << "Player " << (p).getPlayerID() << " - " << (p).getName() << endl;
+}
+}
+
+*/
+
 void GameEngine::addPlayer(void) {
 	int n = 0;
 	//cout << "Welcome to Warzone!" << endl;
@@ -335,6 +373,7 @@ void GameEngine::reinforcementPhase(void) {
 		cout << "Player " << p->getPlayerID() << " - " << p->getName() << " has received " << toAdd << " armies." << endl;
 		cout << "Current army count is: " << p->getArmiesHeld() << endl;
 	}
+
 }
 void GameEngine::issueOrdersPhase(void) {
 	//Issuing orders in round-robin fashion:
@@ -379,45 +418,6 @@ void GameEngine::executeOrdersPhase(void) {
 	
 
 }
-int GameEngine::mainGameLoop(void)
-
-{
-	bool loopstop = false;
-	// winningCondition needs to be implemented. Set it as false to test executeOrderPhase()
-	bool winningCondition = true;
-
-
-	while (!loopstop) {
-		
-
-		if (state == this->stateArr[4]) {
-			reinforcementPhase();
-			this->transition(5);
-		}
-		else if (state == this->stateArr[5]) {
-			issueOrdersPhase();
-			this->transition(6);
-
-		}
-		else if (state == this->stateArr[6]) {
-			
-			if (winningCondition) {
-				return (this->transition(7));
-
-			}
-			else {
-				executeOrdersPhase();
-				this->transition(4);
-			}
-
-		}
-		cout << "The current State is [ " << this->getState() << " ]" << endl;
-
-	}
-	return this->transition(7);
-	
-}
-
 
 bool GameEngine::loadMap(void) {
 	int numberOfMaps = -1;
@@ -484,6 +484,9 @@ bool GameEngine::assignTerritories(void) {
 	//Enter play phase.
 	return true;
 }
+
+
+
 
 
 
