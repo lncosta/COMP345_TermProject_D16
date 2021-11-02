@@ -69,7 +69,7 @@ OrdersList& OrdersList::operator=(const OrdersList& olist) //olist is rhs
 		individualOrder = nullptr;
 	}
 	orderList.clear();
-	
+
 	//fill the vector with the copy
 	std::vector<Order*> vectorlist = olist.getOrderList();
 	for (int i = 0; i < vectorlist.size(); i++) {
@@ -97,7 +97,7 @@ OrdersList& OrdersList::operator=(const OrdersList& olist) //olist is rhs
 
 	}
 	cout << "AO - Copied OrdersList object successfully." << endl;
-	
+
 	return *this;
 };
 /*
@@ -155,14 +155,14 @@ void OrdersList::stringToLog() {
 	ofstream filewriting;
 
 	filewriting.open("gamelog.txt", ios::app);
-	
+
 	if (filewriting) {
 		//write to file 
 		filewriting << "Orderslist log data" << endl; //call saveEffect here?
 		cout << "Successfully added log to file." << endl;
 		cout << endl;
 		filewriting.close();
-		
+
 	}
 	else {
 		cout << "ERROR - File could not be opened!" << endl;
@@ -304,7 +304,19 @@ AdvanceOrder::AdvanceOrder() : Order(count) { /* deliberately empty */ }
 	-Parameters-
 	int theId: the id to give to this order
 */
-AdvanceOrder::AdvanceOrder(int theId) : Order(theId) { /* deliberately empty */ }
+AdvanceOrder::AdvanceOrder(int theId, Player* calledOrder) : Order(theId) { 
+	orderOwner = calledOrder;
+	cout << "Player " << calledOrder->getName() << " has declared an Advance order.\nEnter the source territory: ";
+	cin >> sourceTerritory;
+	cout << "\nEnter the target territory: ";
+	cin >> targetTerritory;
+	cout << "\nHow Many Armies Would You Like to Move: ";
+	cin >> armiesToMove;
+	cout << "\nThe Order has been confirmed." << endl;
+
+	source = nullptr; // Will be assigned later
+	target = nullptr; // Will be assigned later
+}
 /*
 	AdvanceOrder Destructor
 */
@@ -333,26 +345,70 @@ AdvanceOrder::AdvanceOrder(const Order& order) {
 	This is a dummy validation to validate whether the order can be executed or not.
 */
 bool AdvanceOrder::validate() {
-	if (this->id % 2 == 0)
-		return true;
-	if (this->id % 2 == 1)
+	bool sourceBelongsToPlayer = false; 
+	bool targetIsAdjacent = false;
+	bool notEnoughArmies = false;
+	
+	// Checking that the player owns the source territory
+	vector<Territory*> playerOwnedT = orderOwner->getTowned();
+	for (Territory* p : playerOwnedT) {
+		if (p->getTerritoryName() == sourceTerritory) {
+			source = p;
+			sourceBelongsToPlayer = true;
+		}
+	}
+	// Checking that the target is adjacent to the source
+	vector<Territory*> adjT = source->getAdjTerritories();
+	for (Territory* p : adjT) {
+		if (p->getTerritoryName() == targetTerritory) {
+			target = p;
+			targetIsAdjacent = true;
+		}
+	}
+	if (source->getArmiesPlaced() < armiesToMove)
+		notEnoughArmies = true;
+
+	if (sourceBelongsToPlayer == false) {
+		cout << "The Order is Invalid: The Source Territory is Not Owned By You" << endl;
 		return false;
+	}
+	else if (targetIsAdjacent == false) {
+		cout << "The Order is Invalid: The Target Territory is Not Adjacent to the Source" << endl;
+		return false;
+	}
+	else if (notEnoughArmies == true) {		// Maybe Not a Case for Invalidity since not in document
+		cout << "The Order is Invalid: The Source Territory Does Not Have Enough Armies to Move" << endl;
+		return false;
+	}
+	cout << "The Order is Valid: Proceeding with Execution";
+	return true;
+	
 }
 /*
 	AdvanceOrder execute function
 	This method calls the validate function, then executes the order if it is validated or invalid.
 */
 void AdvanceOrder::execute() {
+	cout << "Executing " << this->getName() << "..." << endl;
 	bool canExecute = validate();
 
-	cout << "Executing " << this->getName() << "..." << endl;
 	if (!canExecute) {
 		cout << "This execution is invalid. Skipping this Order." << endl;
 		return;
 	}
 	else {
 		//execution occurs...
+		// If the Player is Moving Armies Between Their Territories
+		if (target->getOwner() == source->getOwner()) {
+			int srcArmiesAfter = source->getArmiesPlaced() - armiesToMove;
+			source->setArmiesPlaced(srcArmiesAfter);
+			int targetArmiesAfter = target->getArmiesPlaced() + armiesToMove;
+			target->setArmiesPlaced(targetArmiesAfter);
+		}
+		// If the Player is Attacking Another
+		if (target->getOwner() != source->getOwner()) {
 
+		}
 		cout << "This execution was successful!" << endl;
 	}
 }
@@ -391,7 +447,13 @@ BombOrder::BombOrder() : Order(count) { /* deliberately empty */ }
 	-Parameters-
 	int theId: the id to give to this order
 */
-BombOrder::BombOrder(int theId) : Order(theId) { /* deliberately empty */ }
+BombOrder::BombOrder(int theId, Player* calledOrder) : Order(theId) { 
+	orderOwner = calledOrder;
+	cout << "Player " << calledOrder->getName() << " has declared a bomb order.\nEnter the target territory: ";
+	cin >> targetTerritory;
+	cout << "\nThe Order has been confirmed." << endl;
+	target = nullptr; // Will be assigned later
+}
 /*
 	BombOrder Destructor
 */
@@ -401,6 +463,8 @@ BombOrder::~BombOrder() {  }
 */
 BombOrder::BombOrder(const BombOrder& order) {
 	this->id = order.id;
+	this->orderOwner = order.orderOwner;
+	this->target = order.target;
 }
 /*
 	BombOrder Assignment Operator
@@ -414,32 +478,61 @@ BombOrder& BombOrder::operator=(const BombOrder& order) {
 */
 BombOrder::BombOrder(const Order& order) {
 	this->id = order.id;
+	this->orderOwner = nullptr;
+	this->target = nullptr;
 }
 /*
 	BombOrder validate function
-	This is a dummy validation to validate whether the order can be executed or not.
 */
 bool BombOrder::validate() {
-	if (this->id % 2 == 0)
-		return true;
-	if (this->id % 2 == 1)
+	bool targetBelongsToPlayer = false;
+	bool targetIsAdjacent = false;
+	// If the target belongs to the player that issued the order, the order is invalid.
+	vector<Territory*> playerOwnedT = orderOwner->getTowned();
+	for (Territory* p : playerOwnedT) {
+		if (p->getTerritoryName() == targetTerritory) {
+			target = p;
+			targetBelongsToPlayer = true;
+		}
+	}
+	// If the target territory is not adjacent to one of the territory owned by the player issuing the order, then the order is invalid.
+	for (Territory* p : playerOwnedT) {
+		vector<Territory*> adjT = p->getAdjTerritories();
+		for (Territory* q : adjT) {
+			if (q->getTerritoryName() == targetTerritory)
+				targetIsAdjacent = true;
+		}
+	}
+
+	if (targetBelongsToPlayer == true) {
+		cout << "The Order is Invalid: The Target Territory is Owned By You" << endl;
 		return false;
+	}
+	else if (targetIsAdjacent == false){
+		cout << "The Order is Invalid: You Do Not Own A Territory Adjacent to the Target" << endl;
+		return false;
+	}
+	cout << "The Order is Valid: Proceeding with Execution";
+	return true;
 }
 /*
 	BombOrder execute function
 	This method calls the validate function, then executes the order if it is validated or invalid.
 */
 void BombOrder::execute() {
+	cout << "Executing " << this->getName() << "..." << endl;
 	bool canExecute = validate();
 
-	cout << "Executing " << this->getName() << "..." << endl;
+	
 	if (!canExecute) {
 		cout << "This execution is invalid. Skipping this Order." << endl;
 		return;
 	}
 	else {
 		//execution occurs...
-
+		int currentArmies = target->getArmiesPlaced();
+		int newNumArmies = currentArmies/2; // PLACEHOLDER
+		target->setArmiesPlaced(newNumArmies);
 		cout << "This execution was successful!" << endl;
 	}
 }
