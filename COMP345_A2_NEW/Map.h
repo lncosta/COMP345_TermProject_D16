@@ -106,11 +106,15 @@ public:
 	void DFS_helper(int s, bool* wasVisited);
 	void DFS1(int s, int bond, vector<Territory*> trr);
 	void DFS_helper1(int s, bool* wasVisited, vector<Territory*> trr);
-	bool validate(bool a, bool b, bool c);// Must check the following 3 functions	
+	bool validate(bool a, bool b, bool c);
+	bool validateWrapper(void);
+	// Must check the following 3 functions	
 	bool validate(void);
 	bool isConnected(void);// Test to the see if the map is a connected graph	
 	bool continentSubgraphs(Map* map); // Test to see that continents are connected subgraphs	
 	bool countryToContinentRelation(void); // Test to see that each country belongs to only one continent
+
+	bool getValidity();
 };
 
 // Map Loader Class, used to create a map object from a given file

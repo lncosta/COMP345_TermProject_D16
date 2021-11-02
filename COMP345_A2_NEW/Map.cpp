@@ -320,23 +320,11 @@ Map* MapLoader::loadMap(string MapFile)
 					cout << *p;
 				}
 
-				// validate() method here
-				cout << "Validating Map " << endl;
-				cout << "\n---------------------------------------------------" << endl;
-				bool a = created->isConnected();
-				bool b = created->continentSubgraphs(created);
-				bool c = created->countryToContinentRelation();
-				bool result = created->validate(a, b, c);
-				if (result) {
-					loadedMap = *created;
-					created->valid = true;
-					return created;
-				}
-				else {
-					loadedMap = *created;
-					created->valid = false;
-					return created;
-				}
+				
+				loadedMap = *created;
+				created->valid = true;
+				return created;
+				
 
 			}
 			else {
@@ -531,6 +519,11 @@ bool Map::countryToContinentRelation() {
 	return true;
 }
 
+bool Map::getValidity()
+{
+	return valid;
+}
+
 // Checks isConnected, continentSubgraphs and countryToContinentRelation. Returns True when all are True.
 // Is called during MapLoader::loadMap()
 bool Map::validate(bool a, bool b, bool c) {
@@ -544,17 +537,24 @@ bool Map::validate(bool a, bool b, bool c) {
 	}
 }
 
-bool Map::validate(void) {
+bool Map::validateWrapper(void) {
+	cout << "Validating Map " << endl;
+	cout << "\n---------------------------------------------------" << endl;
 	bool a = isConnected();
 	bool b = continentSubgraphs(this);
 	bool c = countryToContinentRelation();
-	if (a && b && c) {
-		cout << "MAP VALIDITY: The Map is valid." << endl;
+	bool result = validate(a, b, c);
+	if (result) {
+		
+		valid = true;
 		return true;
 	}
 	else {
-		cout << "MAP VALIDITY: The Map is NOT valid." << endl;
+		
+		valid = false;
 		return false;
 	}
+
 }
+
 

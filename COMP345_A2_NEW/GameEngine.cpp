@@ -212,9 +212,15 @@ int GameEngine::menu(int i)
 				transition("maploaded");
 			}
 			else if (input == "validatemap") {
-				// call validateMap method which I have to seperate from map generation
-				c->saveEffect(input);
-				transition("mapvalidated");
+				map->validateWrapper(); 
+				
+				if (map->getValidity()) {
+					c->saveEffect(input);
+					transition("mapvalidated");
+				}
+				
+				else
+					transition("start");
 
 			}
 			else if (input == "addplayer") {
