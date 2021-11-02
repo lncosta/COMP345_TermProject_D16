@@ -1,5 +1,7 @@
 #pragma once
 #include "LoggingObserver.h"
+#include "Player.h"
+#include "Map.h"
 #include <string>
 #include <iostream>
 #include <vector>
@@ -79,7 +81,7 @@ public:
 	virtual void stringToLog();
 
 	DeployOrder& operator=(const DeployOrder& order);
-	friend ostream& operator<<(ostream& output, const DeployOrder& dorder); 
+	friend ostream& operator<<(ostream& output, const DeployOrder& dorder);
 };
 
 /*
@@ -90,11 +92,17 @@ class AdvanceOrder : public Order {
 private:
 	const string nameOfOrder = "Advance";
 	const string description = "Move some armies from one of the current player's territories (source) to an adjacent territory (target).";
+	Player* orderOwner;
+	string targetTerritory;
+	Territory* target;
+	string sourceTerritory;
+	Territory* source;
+	int armiesToMove;
 public:
 	OrderType type = OrderType::Advance;
 
 	AdvanceOrder();
-	AdvanceOrder(int thisId);
+	AdvanceOrder(int thisId, Player* orderOwner);
 	~AdvanceOrder();
 	AdvanceOrder(const AdvanceOrder& order);
 	AdvanceOrder(const Order& order);
@@ -109,7 +117,7 @@ public:
 	virtual void stringToLog();
 
 	AdvanceOrder& operator=(const AdvanceOrder& order);
-	friend ostream& operator<<(ostream& output, const AdvanceOrder& aorder); 
+	friend ostream& operator<<(ostream& output, const AdvanceOrder& aorder);
 };
 
 /*
@@ -120,11 +128,14 @@ class BombOrder : public Order {
 private:
 	const string nameOfOrder = "Bomb";
 	const string description = "Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.";
+	Player* orderOwner;
+	string targetTerritory;
+	Territory* target;
 public:
 	OrderType type = OrderType::Bomb;
 
 	BombOrder();
-	BombOrder(int thisId);
+	BombOrder(int thisId, Player* calledOrder);
 	~BombOrder();
 	BombOrder(const BombOrder& order);
 	BombOrder(const Order& order);
@@ -138,7 +149,7 @@ public:
 
 	virtual void stringToLog();
 
-	BombOrder& operator=(const BombOrder& order); 
+	BombOrder& operator=(const BombOrder& order);
 	friend ostream& operator<<(ostream& output, const BombOrder& border);
 };
 
@@ -168,8 +179,8 @@ public:
 
 	virtual void stringToLog();
 
-	BlockadeOrder& operator=(const BlockadeOrder& order); 
-	friend ostream& operator<<(ostream& output, const BlockadeOrder& border); 
+	BlockadeOrder& operator=(const BlockadeOrder& order);
+	friend ostream& operator<<(ostream& output, const BlockadeOrder& border);
 };
 
 /*
@@ -198,7 +209,7 @@ public:
 
 	virtual void stringToLog();
 
-	AirliftOrder& operator=(const AirliftOrder& order); 
+	AirliftOrder& operator=(const AirliftOrder& order);
 	friend ostream& operator<<(ostream& output, const AirliftOrder& aorder);
 };
 
@@ -228,7 +239,7 @@ public:
 
 	virtual void stringToLog();
 
-	NegotiateOrder& operator=(const NegotiateOrder& order); 
+	NegotiateOrder& operator=(const NegotiateOrder& order);
 	friend ostream& operator<<(ostream& output, const NegotiateOrder& norder);
 };
 
@@ -253,6 +264,6 @@ public:
 	virtual void stringToLog();
 
 	OrdersList& operator=(const OrdersList& olist);
-	
-	friend ostream& operator<<(ostream& output, const OrdersList& list); 
+
+	friend ostream& operator<<(ostream& output, const OrdersList& list);
 };
