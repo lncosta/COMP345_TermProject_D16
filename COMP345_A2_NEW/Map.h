@@ -60,6 +60,8 @@ public:
 	string getTerritoryName(void);
 	int getContinentID(void);
 	int getTerritoryID(void);
+	int getArmiesPlaced(void);
+	void setArmiesPlaced(int newNum);
 	vector<Territory*> getAdjTerritories(void);
 	void addAdj(Territory* o);
 	void setOwner(Player* o);
