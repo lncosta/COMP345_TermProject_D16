@@ -189,6 +189,16 @@ Order::Order(int setId) {
 	count++;
 	this->id = setId;
 }
+Order::Order(int setId, Player* owner) {
+	count++;
+	this->id = setId;
+	this->orderOwner = owner;
+}
+Order::Order(Player* owner) {
+	count++;
+	this->id = count;
+	this->orderOwner = owner;
+}
 /*
 	Order Destructor
 */
@@ -206,6 +216,25 @@ Order& Order::operator=(const Order& order) {
 	this->id = order.id;
 	return *this;
 };
+
+//**************** METHOD ************************
+bool Order::isTerritoryMine(string territoryToFind) const {
+
+	for (Territory* t : this->getOwner()->getTowned()) {
+		if (t->getTerritoryName() == territoryToFind) return true;
+	}
+}
+Territory* Order::findTerritory(string territoryToFind) const {
+
+	for (Territory* t : this->getOwner()->getTowned()) {
+		if (t->getTerritoryName() == territoryToFind) return t;
+	}
+}
+//**************** Getter ************************
+Player* Order::getOwner() const {
+	return orderOwner;
+}
+
 
 
 /*
@@ -478,7 +507,7 @@ BombOrder& BombOrder::operator=(const BombOrder& order) {
 */
 BombOrder::BombOrder(const Order& order) {
 	this->id = order.id;
-	this->orderOwner = nullptr;
+	orderOwner = nullptr;
 	this->target = nullptr;
 }
 /*
@@ -488,7 +517,7 @@ bool BombOrder::validate() {
 	bool targetBelongsToPlayer = false;
 	bool targetIsAdjacent = false;
 	// If the target belongs to the player that issued the order, the order is invalid.
-	vector<Territory*> playerOwnedT = orderOwner->getTowned();
+	vector<Territory*> playerOwnedT = this->getOwner()->getTowned();
 	for (Territory* p : playerOwnedT) {
 		if (p->getTerritoryName() == targetTerritory) {
 			target = p;
@@ -662,6 +691,15 @@ AirliftOrder::AirliftOrder(int theId) : Order(theId) { /* deliberately empty */ 
 /*
 	AirliftOrder Destructor
 */
+AirliftOrder::AirliftOrder(Player* owner) : Order(owner) {
+	cout << "Player " << owner->getName() << " has declared an airlift order.\nEnter the source territory: ";
+	cin >> sourceTerritory;
+	cout << "What is the number of armies to be airlifted: ";
+	cin >> numberOfArmies;
+	cout << "Now enter the target territory: ";
+	cin >> targetTerritory;
+	cout << "\nThe Order has been confirmed." << endl;
+}
 AirliftOrder::~AirliftOrder() {  }
 /*
 	AirliftOrder Copy Constructor
@@ -684,13 +722,26 @@ AirliftOrder::AirliftOrder(const Order& order) {
 }
 /*
 	AirliftOrder validate function
-	This is a dummy validation to validate whether the order can be executed or not.
 */
 bool AirliftOrder::validate() {
-	if (this->id % 2 == 0)
-		return true;
-	if (this->id % 2 == 1)
-		return false;
+	bool hasCard = false;
+	bool armiesOK = false;
+	bool sourceOK = this->isTerritoryMine(sourceTerritory); // checking if the player owns the source territory
+	bool targetOK = this->isTerritoryMine(targetTerritory); // checking if the player owns the target territory
+	if (sourceOK) armiesOK = (numberOfArmies >= this->findTerritory(sourceTerritory)->getArmiesPlaced()); // checking if the source has enough armies
+
+		// checks whether the player has the correct card and erase it
+		for (Card* c : this->getOwner()->getHandOfCards()) {
+			if (c->getType() == 3){
+				this->getOwner()->getPlayerHand()->eraseCard(c); 
+				hasCard = true;
+				return (hasCard && sourceOK && targetOK && armiesOK);
+			}
+			else {
+				cout << "Invalid Order. \nPlayer " << this->getOwner()->getName() << " does not own an airlift card.\n" << endl;
+				return false; 
+			}
+		}
 }
 /*
 	AirliftOrder execute function
@@ -705,7 +756,11 @@ void AirliftOrder::execute() {
 		return;
 	}
 	else {
-		//execution occurs...
+		int sourceArmies = this->findTerritory(sourceTerritory)->getArmiesPlaced();
+		int targetArmies = this->findTerritory(targetTerritory)->getArmiesPlaced();
+
+		this->findTerritory(sourceTerritory)->setArmiesPlaced(sourceArmies - numberOfArmies);
+		this->findTerritory(targetTerritory)->setArmiesPlaced(targetArmies + numberOfArmies);
 
 		cout << "This execution was successful!" << endl;
 	}

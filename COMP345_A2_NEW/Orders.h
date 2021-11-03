@@ -36,6 +36,8 @@ public:
 	Order();
 	~Order();
 	Order(int test);
+	Order(Player* owner);
+	Order(int theID, Player* owner);
 	Order(const Order& o);
 
 	virtual bool validate() { return false; }
@@ -43,14 +45,26 @@ public:
 	virtual string getName() const { return nameOfOrder; }
 	virtual string getDesc() const { return description; }
 	virtual OrderType getOrderType() { return type; }
+	virtual Player* getOwner() const;
+	virtual bool isTerritoryMine(string territoryToFind) const;
+	virtual Territory* findTerritory(string territoryToFind) const;
 
 	virtual void stringToLog() = 0;
 
 	Order& operator=(const Order& order);
 	friend ostream& operator<<(ostream& output, const Order& order);
+	friend class DeployOrder;
+	friend class BombOrder;
+	friend class AirliftOrder;
+	friend class AdvanceOrder;
+	friend class BlockadeOrder;
+	friend class NegotiateOrder;
+
+
 private:
 	const string nameOfOrder = "Unspecified Order";
 	const string description = "Unspecified order description";
+	Player* orderOwner;
 };
 
 /*
@@ -92,7 +106,6 @@ class AdvanceOrder : public Order {
 private:
 	const string nameOfOrder = "Advance";
 	const string description = "Move some armies from one of the current player's territories (source) to an adjacent territory (target).";
-	Player* orderOwner;
 	string targetTerritory;
 	Territory* target;
 	string sourceTerritory;
@@ -128,7 +141,6 @@ class BombOrder : public Order {
 private:
 	const string nameOfOrder = "Bomb";
 	const string description = "Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.";
-	Player* orderOwner;
 	string targetTerritory;
 	Territory* target;
 public:
@@ -191,11 +203,16 @@ class AirliftOrder : public Order {
 private:
 	const string nameOfOrder = "Airlift";
 	const string description = "Advance some armies from one of the current player's territories to any another territory.";
+	string targetTerritory;
+	string sourceTerritory;
+	int numberOfArmies; 
 public:
 	OrderType type = OrderType::Airlift;
 
 	AirliftOrder();
 	AirliftOrder(int thisId);
+	AirliftOrder(int thisId, Player* calledOrder);
+	AirliftOrder(Player* calledOrder);
 	~AirliftOrder();
 	AirliftOrder(const AirliftOrder& order);
 	AirliftOrder(const Order& order);
