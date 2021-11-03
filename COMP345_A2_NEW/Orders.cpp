@@ -247,6 +247,14 @@ DeployOrder::DeployOrder() : Order(count) { /* deliberately empty */ }
 	int theId: the id to give to this order
 */
 DeployOrder::DeployOrder(int theId) : Order(theId) { /* deliberately empty */ }
+
+DeployOrder::DeployOrder(Player* owner) : Order(owner) {
+	cout << "Player " << owner->getName() << " has declared a deploy order.\nEnter the source territory: ";
+	cin >> sourceTerritory;
+	cout << "What is the number of armies to be deployed: ";
+	cin >> numberOfArmies;
+	cout << "\nThe Order has been confirmed." << endl;
+}
 /*
 	DeployOrder Destructor
 */
@@ -275,10 +283,10 @@ DeployOrder::DeployOrder(const Order& order) {
 	This is a dummy validation to validate whether the order can be executed or not.
 */
 bool DeployOrder::validate() {
-	if (this->id % 2 == 0)
-		return true;
-	if (this->id % 2 == 1)
-		return false;
+	int reinforcementPool = 100;
+	bool armiesOK = (numberOfArmies <= reinforcementPool); // checking if the player's reinforcement pool has enough armies****************************************;
+	bool sourceOK = this->isTerritoryMine(sourceTerritory); // checking if the player owns the source territory
+		return (sourceOK && armiesOK);
 }
 /*
 	DeployOrder execute function
@@ -293,7 +301,9 @@ void DeployOrder::execute() {
 		return;
 	}
 	else {
-		//execution occurs...
+		int sourceArmies = this->findTerritory(sourceTerritory)->getArmiesPlaced();
+
+		this->findTerritory(sourceTerritory)->setArmiesPlaced(sourceArmies + numberOfArmies);
 
 		cout << "This execution was successful!" << endl;
 	}
@@ -673,8 +683,8 @@ void BlockadeOrder::execute() {
 			Territory* territoryBlockaded = this->getOwner()->getTowned()[index];
 			this->getOwner()->getTowned().erase(it);
 		}
-
-		// create a neutral player, give him the target territory and then double the armies on it
+		
+		// create a neutral player, give him the target territory and double the armies on it
 		Player neutralPlayer;
 		neutralPlayer.addTerritory(temp);
 		temp->setArmiesPlaced(targetArmies *2);

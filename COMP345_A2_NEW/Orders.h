@@ -75,11 +75,14 @@ class DeployOrder : public Order {
 private:
 	const string nameOfOrder = "Deploy";
 	const string description = "Place some armies on one of the current player's territories.";
+	string sourceTerritory;
+	int numberOfArmies; 
 public:
 	OrderType type = OrderType::Deploy;
 
 	DeployOrder();
 	DeployOrder(int thisId);
+	DeployOrder(Player* owner);
 	~DeployOrder();
 	DeployOrder(const DeployOrder& order);
 	DeployOrder(const Order& order);
@@ -173,11 +176,13 @@ class BlockadeOrder : public Order {
 private:
 	const string nameOfOrder = "Blockade";
 	const string description = "Triple the number of armies on one of the current player's territories and make it a neutral territory.";
+	string targetTerritory;
 public:
 	OrderType type = OrderType::Blockade;
 
 	BlockadeOrder();
 	BlockadeOrder(int thisId);
+	BlockadeOrder(Player* owner);
 	~BlockadeOrder();
 	BlockadeOrder(const BlockadeOrder& order);
 	BlockadeOrder(const Order& order);
