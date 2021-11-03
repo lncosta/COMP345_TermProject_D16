@@ -604,6 +604,11 @@ BlockadeOrder::BlockadeOrder(int theId) : Order(theId) { /* deliberately empty *
 /*
 	BlockadeOrder Destructor
 */
+BlockadeOrder::BlockadeOrder(Player* owner) : Order(owner) {
+	cout << "Player " << owner->getName() << " has declared a blockade order.\nEnter the target territory: ";
+	cin >> targetTerritory;
+	cout << "\nThe Order has been confirmed." << endl;
+}
 BlockadeOrder::~BlockadeOrder() {  }
 /*
 	BlockadeOrder Copy Constructor
@@ -629,10 +634,21 @@ BlockadeOrder::BlockadeOrder(const Order& order) {
 	This is a dummy validation to validate whether the order can be executed or not.
 */
 bool BlockadeOrder::validate() {
-	if (this->id % 2 == 0)
-		return true;
-	if (this->id % 2 == 1)
-		return false;
+	bool hasCard = false;
+	bool targetOK = this->isTerritoryMine(targetTerritory); // checking if the player owns the target territory
+
+		// checks whether the player has the correct card and erase it
+	for (Card* c : this->getOwner()->getHandOfCards()) {
+		if (c->getType() == 2) {
+			this->getOwner()->getPlayerHand()->eraseCard(c);
+			hasCard = true;
+			return (hasCard && targetOK);
+		}
+		else {
+			cout << "Invalid Order. \nPlayer " << this->getOwner()->getName() << " does not own a blockade card.\n" << endl;
+			return false;
+		}
+	}
 }
 /*
 	BlockadeOrder execute function
@@ -647,8 +663,23 @@ void BlockadeOrder::execute() {
 		return;
 	}
 	else {
-		//execution occurs...
+		Territory* temp = this->findTerritory(targetTerritory);
+		int targetArmies = temp->getArmiesPlaced();
 
+		std::vector<Territory*>::iterator it = std::find(this->getOwner()->getTowned().begin(), this->getOwner()->getTowned().end(), this->findTerritory(targetTerritory));
+		if (it != this->getOwner()->getTowned().end()) {
+			// find the index of the Territory*
+			int index = std::distance(this->getOwner()->getTowned().begin(), it);
+			Territory* territoryBlockaded = this->getOwner()->getTowned()[index];
+			this->getOwner()->getTowned().erase(it);
+		}
+
+		// create a neutral player, give him the target territory and then double the armies on it
+		Player neutralPlayer;
+		neutralPlayer.addTerritory(temp);
+		temp->setArmiesPlaced(targetArmies *2);
+
+		cout << "The neutral player now owns this territory" << endl;
 		cout << "This execution was successful!" << endl;
 	}
 }
