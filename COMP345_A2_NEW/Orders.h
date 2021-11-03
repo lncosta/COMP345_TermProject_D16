@@ -46,6 +46,11 @@ public:
 	virtual string getDesc() const { return description; }
 	virtual OrderType getOrderType() { return type; }
 	virtual Player* getOwner() const;
+	virtual Territory* getTarget() const;
+	virtual int getModifier() const;
+	virtual void setOwner(Player* owner);
+	virtual void setTarget(Territory* target);
+	virtual void setModifier(int modifier);
 	virtual bool isTerritoryMine(string territoryToFind) const;
 	virtual Territory* findTerritory(string territoryToFind) const;
 
@@ -65,6 +70,8 @@ private:
 	const string nameOfOrder = "Unspecified Order";
 	const string description = "Unspecified order description";
 	Player* orderOwner;
+	Territory* target;
+	int modifier; 
 };
 
 /*
@@ -76,7 +83,7 @@ private:
 	const string nameOfOrder = "Deploy";
 	const string description = "Place some armies on one of the current player's territories.";
 	string sourceTerritory;
-	int numberOfArmies; 
+	int numberOfArmies;
 public:
 	OrderType type = OrderType::Deploy;
 
@@ -210,7 +217,7 @@ private:
 	const string description = "Advance some armies from one of the current player's territories to any another territory.";
 	string targetTerritory;
 	string sourceTerritory;
-	int numberOfArmies; 
+	int numberOfArmies;
 public:
 	OrderType type = OrderType::Airlift;
 

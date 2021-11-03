@@ -101,17 +101,18 @@ Player* Territory::getOwner(void)
 	return owner;
 }
 
+int Territory::getArmiesPlaced(void)
+{
+	return armiesPlaced;
+}
+void Territory::setArmiesPlaced(int newNum) {
+	armiesPlaced = newNum;
+}
+
 string Territory::getTerritoryName() {
 	return name;
 }
 
-int Territory::getArmiesPlaced(void) {
-	return armiesPlaced;
-}
-
-void Territory::setArmiesPlaced(int newNum) {
-	armiesPlaced = newNum;
-}
 
 // Constructor for the Map Class.
 // Implements a directed graph structure

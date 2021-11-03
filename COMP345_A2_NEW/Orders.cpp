@@ -235,6 +235,31 @@ Player* Order::getOwner() const {
 	return orderOwner;
 }
 
+Territory* Order::getTarget() const
+{
+	return target;
+}
+
+int Order::getModifier() const
+{
+	return modifier;
+}
+
+void Order::setOwner(Player* owner)
+{
+	orderOwner = owner;
+}
+
+void Order::setTarget(Territory* target)
+{
+	this->target = target;
+}
+
+void Order::setModifier(int modifier)
+{
+	this->modifier = modifier; 
+}
+
 
 
 /*
@@ -286,7 +311,7 @@ bool DeployOrder::validate() {
 	int reinforcementPool = 100;
 	bool armiesOK = (numberOfArmies <= reinforcementPool); // checking if the player's reinforcement pool has enough armies****************************************;
 	bool sourceOK = this->isTerritoryMine(sourceTerritory); // checking if the player owns the source territory
-		return (sourceOK && armiesOK);
+	return (sourceOK && armiesOK);
 }
 /*
 	DeployOrder execute function
@@ -343,7 +368,7 @@ AdvanceOrder::AdvanceOrder() : Order(count) { /* deliberately empty */ }
 	-Parameters-
 	int theId: the id to give to this order
 */
-AdvanceOrder::AdvanceOrder(int theId, Player* calledOrder) : Order(theId) { 
+AdvanceOrder::AdvanceOrder(int theId, Player* calledOrder) : Order(theId) {
 	orderOwner = calledOrder;
 	cout << "Player " << calledOrder->getName() << " has declared an Advance order.\nEnter the source territory: ";
 	cin >> sourceTerritory;
@@ -384,10 +409,10 @@ AdvanceOrder::AdvanceOrder(const Order& order) {
 	This is a dummy validation to validate whether the order can be executed or not.
 */
 bool AdvanceOrder::validate() {
-	bool sourceBelongsToPlayer = false; 
+	bool sourceBelongsToPlayer = false;
 	bool targetIsAdjacent = false;
 	bool notEnoughArmies = false;
-	
+
 	// Checking that the player owns the source territory
 	vector<Territory*> playerOwnedT = orderOwner->getTowned();
 	for (Territory* p : playerOwnedT) {
@@ -421,7 +446,7 @@ bool AdvanceOrder::validate() {
 	}
 	cout << "The Order is Valid: Proceeding with Execution";
 	return true;
-	
+
 }
 /*
 	AdvanceOrder execute function
@@ -486,7 +511,7 @@ BombOrder::BombOrder() : Order(count) { /* deliberately empty */ }
 	-Parameters-
 	int theId: the id to give to this order
 */
-BombOrder::BombOrder(int theId, Player* calledOrder) : Order(theId) { 
+BombOrder::BombOrder(int theId, Player* calledOrder) : Order(theId) {
 	orderOwner = calledOrder;
 	cout << "Player " << calledOrder->getName() << " has declared a bomb order.\nEnter the target territory: ";
 	cin >> targetTerritory;
@@ -547,7 +572,7 @@ bool BombOrder::validate() {
 		cout << "The Order is Invalid: The Target Territory is Owned By You" << endl;
 		return false;
 	}
-	else if (targetIsAdjacent == false){
+	else if (targetIsAdjacent == false) {
 		cout << "The Order is Invalid: You Do Not Own A Territory Adjacent to the Target" << endl;
 		return false;
 	}
@@ -562,7 +587,7 @@ void BombOrder::execute() {
 	cout << "Executing " << this->getName() << "..." << endl;
 	bool canExecute = validate();
 
-	
+
 	if (!canExecute) {
 		cout << "This execution is invalid. Skipping this Order." << endl;
 		return;
@@ -570,7 +595,7 @@ void BombOrder::execute() {
 	else {
 		//execution occurs...
 		int currentArmies = target->getArmiesPlaced();
-		int newNumArmies = currentArmies/2; // PLACEHOLDER
+		int newNumArmies = currentArmies / 2; // PLACEHOLDER
 		target->setArmiesPlaced(newNumArmies);
 		cout << "This execution was successful!" << endl;
 	}
@@ -683,11 +708,11 @@ void BlockadeOrder::execute() {
 			Territory* territoryBlockaded = this->getOwner()->getTowned()[index];
 			this->getOwner()->getTowned().erase(it);
 		}
-		
+
 		// create a neutral player, give him the target territory and double the armies on it
 		Player neutralPlayer;
 		neutralPlayer.addTerritory(temp);
-		temp->setArmiesPlaced(targetArmies *2);
+		temp->setArmiesPlaced(targetArmies * 2);
 
 		cout << "The neutral player now owns this territory" << endl;
 		cout << "This execution was successful!" << endl;
@@ -772,17 +797,17 @@ bool AirliftOrder::validate() {
 	if (sourceOK) armiesOK = (numberOfArmies >= this->findTerritory(sourceTerritory)->getArmiesPlaced()); // checking if the source has enough armies
 
 		// checks whether the player has the correct card and erase it
-		for (Card* c : this->getOwner()->getHandOfCards()) {
-			if (c->getType() == 3){
-				this->getOwner()->getPlayerHand()->eraseCard(c); 
-				hasCard = true;
-				return (hasCard && sourceOK && targetOK && armiesOK);
-			}
-			else {
-				cout << "Invalid Order. \nPlayer " << this->getOwner()->getName() << " does not own an airlift card.\n" << endl;
-				return false; 
-			}
+	for (Card* c : this->getOwner()->getHandOfCards()) {
+		if (c->getType() == 3) {
+			this->getOwner()->getPlayerHand()->eraseCard(c);
+			hasCard = true;
+			return (hasCard && sourceOK && targetOK && armiesOK);
 		}
+		else {
+			cout << "Invalid Order. \nPlayer " << this->getOwner()->getName() << " does not own an airlift card.\n" << endl;
+			return false;
+		}
+	}
 }
 /*
 	AirliftOrder execute function

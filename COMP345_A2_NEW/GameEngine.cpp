@@ -263,13 +263,43 @@ int GameEngine::mainGameLoop(void)
 {
 	bool loopstop = false;
 	// winningCondition needs to be implemented. Set it as false to test executeOrderPhase()
-	bool winningCondition = true;
+	bool winningCondition = false;
 
 
 
 	while (!loopstop) {
 
 		cout << *this << endl;
+
+		//Check for winning condition:
+		vector<Player*> winningPlayers;
+		for (auto t : map->getTerritoyVector()) {
+			if (find(winningPlayers.begin(), winningPlayers.end(), t->getOwner()) == winningPlayers.end()) {
+				winningPlayers.push_back(t->getOwner());
+			}
+		}
+		if (winningPlayers.size() <= 1) {
+			winningCondition = true;
+		}
+		else {
+			winningCondition = false; 
+			cout << "No player has yet won. The game continues." << endl; 
+			int i = 0;
+			for (auto p : players) {
+				if (find(winningPlayers.begin(), winningPlayers.end(), p) == winningPlayers.end()) {
+					//One of the players does not own any territories.
+					cout << "Player " << p->getName() << " does not own any territories and thus must be removed from the game." << endl;
+					players.erase(players.begin() + i); 
+				}
+				i++;
+			}
+		}
+
+		if (winningCondition) {
+			transition("win");
+			loopstop = true;
+
+		}
 
 		if (state == "assignreinforcement") {
 			reinforcementPhase();
@@ -408,10 +438,28 @@ void GameEngine::executeOrdersPhase(void) {
 	bool playing = true;
 	int doneCount = 0;
 	while (playing) {
+		//First execute deploy orders:
+		for (auto p : players) {
+			OrdersList* toDeleteFrom = p->getOrders();
+			vector<Order*> toexc = toDeleteFrom->getOrderList();
+			int i = 0;
+			for (auto o : toexc) {
+				if (o->getOrderType() == OrderType::Deploy) { //Execute all deploy orders first.
+					o->execute(); 
+					toDeleteFrom->remove(i); 
+				}
+				i++;
+			}
+			
+		}
+		//Then, execute regular orders:
 		for (auto p : players) {
 			vector<Order*> toexc = p->getOrders()->getOrderList();
 			if (toexc.size() > 0) {
 				toexc[0]->execute();
+				//Remove executed order:
+				OrdersList* toDeleteFrom = p->getOrders(); 
+				toDeleteFrom->remove(0); 
 			}
 			else {
 				doneCount++;

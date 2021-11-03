@@ -1,6 +1,6 @@
-/*COMP 345 Section D - Assignment #1
+/*COMP 345 Section D - Assignment #2
 * Fall 2021
-* Due October 8th, 2021
+* Due November 12th, 2021
 Written by
 Yupei Hsu 40139071
 Sarah-Noemie Laurin 40150861

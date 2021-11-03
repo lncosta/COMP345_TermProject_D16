@@ -7,9 +7,9 @@
 
 using namespace std;
 
-/*COMP 345 Section D - Assignment #1
+/*COMP 345 Section D - Assignment #2
 * Fall 2021
-* Due October 8th, 2021
+* Due November 12th, 2021
 Written by
 Yupei Hsu 40139071
 Sarah-Noemie Laurin 40150861
@@ -60,16 +60,22 @@ public:
 	string getTerritoryName(void);
 	int getContinentID(void);
 	int getTerritoryID(void);
-	int getArmiesPlaced(void);
-	void setArmiesPlaced(int newNum);
 	vector<Territory*> getAdjTerritories(void);
 	void addAdj(Territory* o);
 	void setOwner(Player* o);
 	Player* getOwner(void); 
+	int getArmiesPlaced(void);
+	void setArmiesPlaced(int newNum);
 
 	//Stream Insertions:
 	friend ostream& operator << (ostream& out, const Territory& p);
 	friend istream& operator >> (istream& in, Territory& p);
+
+	//Operator:
+	bool operator < (const Territory& str) const
+	{
+		return (armiesPlaced < str.armiesPlaced);
+	}
 };
 
 // Map Class, represents the actual game map being played

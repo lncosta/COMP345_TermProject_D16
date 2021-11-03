@@ -4,9 +4,9 @@
 #include <algorithm>
 using namespace std;
 
-/*COMP 345 Section D - Assignment #1
+/*COMP 345 Section D - Assignment #2
 * Fall 2021
-* Due October 8th, 2021
+* Due November 12th, 2021
 Written by
 Yupei Hsu 40139071
 Sarah-Noemie Laurin 40150861
@@ -90,8 +90,7 @@ Player::~Player() {
 	if (orders != NULL) {
 		delete orders;
 	}
-	//Currently Territory and Card objects are allocated on the stack, so they are freed automatically at the end of main() and manually deleting the pointers generates an error.
-	//Once code is integrated and objects are created using "new", the following must be commented out:
+	
 	cout << "Player " << this->getName() << "'s Territories will now be destroyed." << endl;
 	for (auto p: towned){
 			delete p;
@@ -199,27 +198,34 @@ void Player::addOrder(Order* order) {
 	orders->addOrder(order);
 }
 //Gameplay mechanics:
+
 vector<Territory*> Player::toDefend()
 {
-	Territory* a = new Territory(1, 2, "Canada");
-	Territory* b = new Territory(2, 2, "Japan");
-	Territory* c = new Territory(1, 2, "France");
+	
 	vector<Territory*> defense;
-	defense.push_back(a);
-	defense.push_back(b);
-	defense.push_back(c);
+	for (auto t : towned) {
+		defense.push_back(t);
+	}
+	sort(defense.begin(), defense.end());
+	
 	return defense;
 }
 
 vector<Territory*> Player::toAttack()
 {
-	Territory* a = new Territory(1, 2, "Canada");
-	Territory* b = new Territory(2, 2, "Japan");
-	Territory* c = new Territory(1, 2, "France");
 	vector<Territory*> attack;
-	attack.push_back(a);
-	attack.push_back(b);
-	attack.push_back(c);
+	for (auto t : towned) {
+		for (auto d : t->getAdjTerritories()) {
+			if (!(find(attack.begin(), attack.end(),d) != attack.end())) {
+				if (d->getOwner() != this) {
+					attack.push_back(d);
+				}
+				
+			}
+			
+		}
+	}
+	sort(attack.begin(), attack.end());
 	return attack;
 }
 void Player::printOrderList(void) {
@@ -237,49 +243,211 @@ void Player::printOrderList(void) {
 }
 
 Order* Player::discoverOrderType(string x) {
-	string options[] = { "deploy", "advance", "bomb", "blockade", "airlift", "diplomacy", "unspecified"};
-	vector<string> options2;
-	for (auto name : getPlayerHand()->getHandOfCards()) {
-		if (name->getType() == 0) {
-			options2.push_back("bomb");
+	vector<Territory*> defend = toDefend();
+	vector<Territory*> attack = toAttack();
+	
+	string options[] = { "reinforcement", "advance", "bomb", "blockade", "airlift", "diplomacy", "unspecified"};
+	Order* newOrder;
+	//Create the correct order based on command:
+	if (x.compare(options[0]) == 0) { //Deployment orders and reinforcement.
+		cout << "You have issued a deploy order. Please indicate which of the territories you would like to defend:" << endl;
+		cout << "Territories available to defend:" << endl;
+		for (auto t : defend) {
+			cout << *t << "Army count: " << t->getArmiesPlaced() << endl;
 		}
-		else if (name->getType() == 1) {
-			options2.push_back("reinforcement");
+		cout << "Please indicate the target territory: " << endl;
+		string defendTerritory;
+		bool searching = true;
+		while (true) {
+			cin >> defendTerritory;
+			auto it = find_if(defend.begin(), defend.end(), [&defendTerritory](Territory* obj) {
+				return obj->getTerritoryName() == defendTerritory; });
+			if (it != defend.end()) {
+				cout << "Valid territory." << endl;
+				cout << "How many armies would you like to deploy there?" << endl;
+				int armiesToPlace;
+				cin >> armiesToPlace;
+				if (armiesToPlace <= armiesHeld) {
+					newOrder = new DeployOrder();
+					newOrder->setOwner(this);
+					newOrder->setTarget(*it);
+					newOrder->setModifier(armiesToPlace);
+					armiesHeld -= armiesToPlace; 
+					break;
+				}
+				else {
+					cout << "Only the remaining armies will be deployed." << endl;
+					newOrder = new DeployOrder();
+					newOrder->setOwner(this);
+					newOrder->setTarget(*it);
+					newOrder->setModifier(armiesHeld);
+					armiesHeld = 0;
+					break;
+				}
+				
+			}
+			else {
+				cout << "The territory requested cannot be defended." << endl;
+			}
 		}
-		else if (name->getType() == 2) {
-			options2.push_back("blockade");
+
+	
+
+	}
+	else if (x.compare(options[1]) == 0) { //Still requires the moving from current to target mechanism
+		cout << "You have issued an advance order. Please indicate which of the territories you would like to attack:" << endl;
+		cout << "Territories available to attack: " << endl;
+		for (auto t : attack) {
+			cout << *t << "Owner: " << (t->getOwner())->getName() << endl;
 		}
-		else if (name->getType() == 3) {
-			options2.push_back("airlift");
+		cout << "Please indicate the target territory: " << endl;
+		string target;
+		bool searching = true;
+		while (true) {
+			cin >> target;
+			auto it = find_if(attack.begin(), attack.end(), [&target](Territory* obj) {
+				return obj->getTerritoryName() == target; });
+			if (it != attack.end()) {
+				cout << "Valid territory." << endl;
+				cout << "How many armies would you like to deploy there?" << endl;
+				int armiesToPlace;
+				cin >> armiesToPlace;
+				newOrder = new AdvanceOrder();
+				newOrder->setOwner(this);
+				newOrder->setTarget(*it);
+				newOrder->setModifier(armiesToPlace);
+				break;
+			}
+			else {
+				cout << "The territory requested cannot be attacked." << endl;
+			}
 		}
-		else if (name->getType() == 4) {
-			options2.push_back("diplomacy");
+
+	}
+	else if (x.compare(options[2]) == 0) {
+		cout << "You have issued a bomb order. Please indicate which of the territories you would like to attack:" << endl;
+		cout << "Territories available to attack: " << endl;
+		for (auto t : attack) {
+			cout << *t << "Owner: " << (t->getOwner())->getName() << endl;
+		}
+		cout << "Please indicate the target territory: " << endl;
+		string target;
+		bool searching = true;
+		while (true) {
+			cin >> target;
+			auto it = find_if(attack.begin(), attack.end(), [&target](Territory* obj) {
+				return obj->getTerritoryName() == target; });
+			if (it != attack.end()) {
+				cout << "Valid territory." << endl;
+				cout << "How many armies would you like to deploy there?" << endl;
+				int armiesToPlace;
+				cin >> armiesToPlace;
+
+				newOrder = new BombOrder();
+				newOrder->setOwner(this);
+				newOrder->setTarget(*it);
+				newOrder->setModifier(armiesToPlace);
+				break;
+			}
+			else {
+				cout << "The territory requested cannot be attacked." << endl;
+			}
 		}
 	
 	}
-	if (!(find(options2.begin(), options2.end(), x) != options2.end())) {
-		cout << "The command you requested is not available at the time. " << endl;
-		return NULL;
-	}
-	Order* newOrder;
-	if (x.compare(options[0]) == 0) {
-		newOrder = new DeployOrder(); 
-	}
-	else if (x.compare(options[1]) == 0) {
-		newOrder = new AdvanceOrder();
-	}
-	else if (x.compare(options[2]) == 0) {
-		newOrder = new BombOrder();
-	}
 	else if (x.compare(options[3]) == 0) {
-		newOrder = new BlockadeOrder(); 
+		cout << "You have issued a blockade order. Please indicate which of the territories you would like to attack:" << endl;
+		cout << "Territories available to attack: " << endl;
+		for (auto t : attack) {
+			cout << *t << "Owner: " << (t->getOwner())->getName() << endl;
+		}
+		cout << "Please indicate the target territory: " << endl;
+		string target;
+		bool searching = true;
+		while (true) {
+			cin >> target;
+			auto it = find_if(attack.begin(), attack.end(), [&target](Territory* obj) {
+				return obj->getTerritoryName() == target; });
+			if (it != attack.end()) {
+				cout << "Valid territory." << endl;
+				cout << "How many armies would you like to deploy there?" << endl;
+				int armiesToPlace;
+				cin >> armiesToPlace;
+
+				newOrder = new BlockadeOrder();
+				newOrder->setOwner(this);
+				newOrder->setTarget(*it);
+				newOrder->setModifier(armiesToPlace);
+				break;
+			}
+			else {
+				cout << "The territory requested cannot be attacked." << endl;
+			}
+		}
+		
 
 	}
 	else if (x.compare(options[4]) == 0) {
-		newOrder = new AirliftOrder();
+		cout << "You have issued an airlift order. Please indicate which of the territories you would like to attack:" << endl;
+		cout << "Territories available to attack: " << endl;
+		for (auto t : attack) {
+			cout << *t << "Owner: " << (t->getOwner())->getName() << endl;
+		}
+		cout << "Please indicate the target territory: " << endl;
+		string target;
+		bool searching = true;
+		while (true) {
+			cin >> target;
+			auto it = find_if(attack.begin(), attack.end(), [&target](Territory* obj) {
+				return obj->getTerritoryName() == target; });
+			if (it != attack.end()) {
+				cout << "Valid territory." << endl;
+				cout << "How many armies would you like to deploy there?" << endl;
+				int armiesToPlace;
+				cin >> armiesToPlace;
+
+				newOrder = new AirliftOrder();
+				newOrder->setOwner(this);
+				newOrder->setTarget(*it);
+				newOrder->setModifier(armiesToPlace); 
+				break;
+			}
+			else {
+				cout << "The territory requested cannot be attacked." << endl;
+			}
+		}
+		
 	}
 	else if (x.compare(options[5]) == 0) {
-		newOrder = new NegotiateOrder();
+		cout << "You have issued a negotiate order. Please indicate which of the territories you would like to attempt diplomacy with:" << endl;
+		cout << "Territories available to negotiate with: " << endl;
+		for (auto t : attack) {
+			cout << *t << "Owner: " << (t->getOwner())->getName() << endl;
+		}
+		cout << "Please indicate the target territory: " << endl;
+		string target;
+		bool searching = true;
+		while (true) {
+			cin >> target;
+			auto it = find_if(attack.begin(), attack.end(), [&target](Territory* obj) {
+				return obj->getTerritoryName() == target; });
+			if (it != attack.end()) {
+				cout << "Valid territory." << endl;
+				cout << "How many armies would you like to deploy there?" << endl;
+				int armiesToPlace;
+				cin >> armiesToPlace;
+
+				newOrder = new NegotiateOrder();
+				newOrder->setOwner(this);
+				newOrder->setTarget(*it);
+				newOrder->setModifier(armiesToPlace);
+				break;
+			}
+			else {
+				cout << "The territory requested cannot be negotiated with." << endl;
+			}
+		}
+		
 	}
 	else {
 		newOrder = NULL;
@@ -293,10 +461,60 @@ void Player::issueOrder()
 	Order* issued;
 	string x;
 
-	printOrderList();
-	cout << "Please type out the order you would like to issue: " << endl;
-	cin >> x;
-	issued = discoverOrderType(x);
+	vector<Territory*> defend = toDefend();
+	vector<Territory*> attack = toAttack();
+	cout << "Territories available to defend:" << endl;
+	for (auto t : defend) {
+		cout << *t << "Army count: " << t->getArmiesPlaced() << endl;
+	}
+
+	//Playing the cards:
+	cout << "Territories available to attack: " << endl;
+	for (auto t : attack) {
+		cout << *t << "Owner: " << (t->getOwner())->getName() << endl;
+	}
+
+	if (armiesHeld > 0) { //Deployment phase.
+		cout << "Player must deploy armies." << endl; 
+		cout << "Armies held: " << armiesHeld << endl; 
+		issued = discoverOrderType("reinforcement");
+	}
+	else { //Attack and Card phase.
+		printOrderList();
+		cout << "Please select a card to play." << endl;
+		cin >> x;
+		vector<string> options2;
+		for (auto name : getPlayerHand()->getHandOfCards()) {	//Check which commands are available based on player's hand of cards
+			if (name->getType() == 0) {
+				options2.push_back("bomb");
+			}
+			else if (name->getType() == 1) {
+				options2.push_back("reinforcement");
+			}
+			else if (name->getType() == 2) {
+				options2.push_back("blockade");
+			}
+			else if (name->getType() == 3) {
+				options2.push_back("airlift");
+			}
+			else if (name->getType() == 4) {
+				options2.push_back("diplomacy");
+			}
+
+		}
+		if (!(find(options2.begin(), options2.end(), x) != options2.end())) {	//If the player does not have the necessary card to issue to requested order, return null
+			cout << "The command you requested is not available at the time. " << endl;
+			issued = NULL;
+		}
+		else {
+			//Play the card and issue the order:
+			issued = discoverOrderType(x);
+
+			//Remove correspondent card.
+		}
+	}
+	
+	
 	
 	if (issued == NULL) {
 		cout << "Invalid Order. Could not add it to the list." << endl;
@@ -304,6 +522,7 @@ void Player::issueOrder()
 	else {
 		orders->addOrder(issued);
 		cout << "Order was issued: " << issued->getName() << endl;
+	
 		cout << "Current Player orders: " << endl;
 		for (auto p : orders->getOrderList()) {
 			cout << *p;
