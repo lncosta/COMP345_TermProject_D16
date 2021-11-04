@@ -408,6 +408,7 @@ void GameEngine::reinforcementPhase(void) {
 		p->setArmiesHeld(toAdd);
 		cout << "Player " << p->getPlayerID() << " - " << p->getName() << " has received " << toAdd << " armies." << endl;
 		cout << "Current army count is: " << p->getArmiesHeld() << endl;
+
 	}
 
 }
@@ -461,6 +462,7 @@ void GameEngine::executeOrdersPhase(void) {
 		//Then, execute regular orders:
 		for (auto p : players) {
 			vector<Order*> toexc = p->getOrders()->getOrderList();
+			int terrOwned = p->getTowned().size(); 
 			if (toexc.size() > 0) {
 				toexc[0]->execute();
 				//Remove executed order:
@@ -468,6 +470,10 @@ void GameEngine::executeOrdersPhase(void) {
 				toDeleteFrom->remove(0); 
 			}
 			else {
+				int newTerritorySize = p->getTowned().size();
+				if (newTerritorySize > terrOwned) {
+					deck->draw(p); 
+				}
 				doneCount++;
 			}
 		}
