@@ -419,7 +419,13 @@ void GameEngine::issueOrdersPhase(void) {
 		cout << "Player - " << p->getName() << endl;
 		round = true;
 		while (round) {
+			if (p->getPlayerHand()->getHandOfCards().size() < 1 && p->getArmiesHeld() < 1) {
+				cout << "The player does not own any armies and has an empty hand of cards. Player may not issue any orders." << endl;
+				round = false; 
+				break; 
+			}
 			p->issueOrder();
+			string orderIssued = (p->getOrders())->getOrderList().back()->getName(); 
 			cout << "Would you like to issue more orders? Y/N" << endl;
 			cin >> result;
 			while (result != "N" && result != "n" && result != "y" && result != "Y") {
@@ -525,7 +531,7 @@ bool GameEngine::assignTerritories(void) {
 	 deck = new Deck();
 	//Add initial army value and draw cards:
 	for (auto p : players) {
-
+		p->getPlayerHand()->setDeck(deck); 
 		p->setArmiesHeld(50);
 		deck->draw(p);
 		deck->draw(p);

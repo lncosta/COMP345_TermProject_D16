@@ -370,16 +370,13 @@ AdvanceOrder::AdvanceOrder() : Order(count) { /* deliberately empty */ }
 */
 AdvanceOrder::AdvanceOrder(int theId, Player* calledOrder) : Order(theId) {
 	orderOwner = calledOrder;
-	cout << "Player " << calledOrder->getName() << " has declared an Advance order.\nEnter the source territory: ";
-	cin >> sourceTerritory;
-	cout << "\nEnter the target territory: ";
-	cin >> targetTerritory;
+	cout << "Player " << calledOrder->getName() << " has declared an Advance order.";
 	cout << "\nHow Many Armies Would You Like to Move: ";
 	cin >> armiesToMove;
 	cout << "\nThe Order has been confirmed." << endl;
 
-	source = nullptr; // Will be assigned later
-	target = nullptr; // Will be assigned later
+	source = calledOrder->toDefend()[0]; // Will be assigned later
+	target = calledOrder->toAttack()[0]; // Will be assigned later
 }
 /*
 	AdvanceOrder Destructor
@@ -416,7 +413,7 @@ bool AdvanceOrder::validate() {
 	// Checking that the player owns the source territory
 	vector<Territory*> playerOwnedT = orderOwner->getTowned();
 	for (Territory* p : playerOwnedT) {
-		if (p->getTerritoryName() == sourceTerritory) {
+		if (p->getTerritoryName() == source->getTerritoryName()) {
 			source = p;
 			sourceBelongsToPlayer = true;
 		}
@@ -424,7 +421,7 @@ bool AdvanceOrder::validate() {
 	// Checking that the target is adjacent to the source
 	vector<Territory*> adjT = source->getAdjTerritories();
 	for (Territory* p : adjT) {
-		if (p->getTerritoryName() == targetTerritory) {
+		if (p->getTerritoryName() == target->getTerritoryName()) {
 			target = p;
 			targetIsAdjacent = true;
 		}
@@ -479,6 +476,14 @@ void AdvanceOrder::execute() {
 /*
 	AdvanceOrder logging function.
 */
+Territory* AdvanceOrder::getSource()
+{
+	return sourceTerritory;
+}
+void AdvanceOrder::setSource(Territory* source)
+{
+	sourceTerritory = source;
+}
 void AdvanceOrder::stringToLog() {
 	cout << "AdvanceOrder will write to file gamelog.txt here" << endl;
 

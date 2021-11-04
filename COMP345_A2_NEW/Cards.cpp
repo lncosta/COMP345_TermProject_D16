@@ -63,6 +63,10 @@ int Card::getCardID() {
 vector<Card*> Hand::getHandOfCards() {
 	return handOfCards;
 }
+Deck* Hand::getDeck()
+{
+	return deck;
+}
 vector<Card*> Deck::getDeckOfCards() {
 	return deckOfCards;
 }
@@ -76,6 +80,10 @@ void Card::setCardType(Type cardType) {
 }
 void Hand::setHandOfCards(vector<Card*>& cards) {
 	this->handOfCards = cards;
+}
+void Hand::setDeck(Deck* d)
+{
+	deck = d; 
 }
 void Deck::setDeckOfCards(vector<Card*>& cards) {
 	this->deckOfCards = cards;
@@ -200,13 +208,23 @@ void Card::play(Player& p, Deck& d) {
 	cout << "The card played is of type: " << *this << endl;
 }
 
+void Card::play(Player* p)
+{
+	// erase the pointer that was in the player's hand
+	p->getPlayerHand()->eraseCard(this);
+	// add the pointer to the deck (same card, no leak) 
+	Deck* deck = p->getPlayerHand()->getDeck();
+	deck->addCard(this);
+	cout << "The card played is of type: " << *this << endl;
+}
+
 // Method to return the cardType as a string
 string Card::orderType() {
-	if (cardType == 0)	return "BOMB";
-	//else if (cardType == 1)	return "reinforcement";
-	else if (cardType == 2) return "BLOCK";
-	else if (cardType == 3) return "AIRLIFT";
-	else if (cardType == 4) return "NEGOTIATE";
+	if (cardType == 0)	return "bomb";
+	else if (cardType == 1)	return "reinforcement";
+	else if (cardType == 2) return "blockade";
+	else if (cardType == 3) return "airlift";
+	else if (cardType == 4) return "diplomacy";
 	else return "UNSPECIFIED";
 }
 
@@ -253,8 +271,10 @@ ostream& operator << (ostream& out, const Hand& h) {
 	}
 	else {
 		out << "The player currently has these cards: " << endl;
+		int i = 1; 
 		for (Card* c : h.handOfCards) {
-			out << *c;
+			out << i << " - " << * c;
+			i++; 
 		}
 	}
 	return out;

@@ -116,9 +116,7 @@ class AdvanceOrder : public Order {
 private:
 	const string nameOfOrder = "Advance";
 	const string description = "Move some armies from one of the current player's territories (source) to an adjacent territory (target).";
-	string targetTerritory;
-	Territory* target;
-	string sourceTerritory;
+	Territory* sourceTerritory;
 	Territory* source;
 	int armiesToMove;
 public:
@@ -136,6 +134,8 @@ public:
 	string getDesc() const { return AdvanceOrder::description; }
 	void setId(int theId) { this->id = theId; }
 	OrderType getOrderType() { return type; }
+	Territory* getSource();
+	void setSource(Territory* source); 
 
 	virtual void stringToLog();
 
