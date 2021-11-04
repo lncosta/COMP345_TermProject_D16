@@ -449,7 +449,7 @@ bool AdvanceOrder::validate() {
 	AdvanceOrder execute function
 	This method calls the validate function, then executes the order if it is validated or invalid.
 */
-void AdvanceOrder::execute() {
+void AdvanceOrder::execute() {											// Last Step is to Give the Player a card if they have conquered this turn
 	cout << "Executing " << this->getName() << "..." << endl;
 	bool canExecute = validate();
 
@@ -468,9 +468,30 @@ void AdvanceOrder::execute() {
 		}
 		// If the Player is Attacking Another
 		if (target->getOwner() != source->getOwner()) {
+			// Loop continues as long as there are attackers left
+			while (armiesToMove != 0) {
+				// At the beginnings check if defenders are still standing, covers the case where there are no defenders
+				if (target->getArmiesPlaced() == 0) {
+					cout << "The Territory Has Been Conquered. The Remaining Attackers will be moved to it." << endl;
+					target->setOwner(getOwner());
+					target->setArmiesPlaced(armiesToMove);
+					break;
+				}
 
+				int attackerRoll = (rand() % 10) + 1;
+				int defenderRoll = (rand() % 10) + 1;
+				// Checking if a defender gets killed
+				if (attackerRoll <= 6) {
+					target->setArmiesPlaced(target->getArmiesPlaced() - 1);
+				}
+				// Checking if an attacker gets killed
+				if (defenderRoll <= 7) {
+					armiesToMove = armiesToMove - 1;
+				}
+			}
 		}
 		cout << "This execution was successful!" << endl;
+		return;
 	}
 }
 /*
