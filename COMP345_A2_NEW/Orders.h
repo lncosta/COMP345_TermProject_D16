@@ -71,7 +71,7 @@ private:
 	const string description = "Unspecified order description";
 	Player* orderOwner;
 	Territory* target;
-	int modifier; 
+	int modifier;
 };
 
 /*
@@ -135,7 +135,7 @@ public:
 	void setId(int theId) { this->id = theId; }
 	OrderType getOrderType() { return type; }
 	Territory* getSource();
-	void setSource(Territory* source); 
+	void setSource(Territory* source);
 
 	virtual void stringToLog();
 
@@ -250,6 +250,7 @@ class NegotiateOrder : public Order {
 private:
 	const string nameOfOrder = "Negotiate";
 	const string description = "Prevent attacks between the current player and another player until the end of the turn.";
+	Player* targetPlayer;
 public:
 	OrderType type = OrderType::Negotiate;
 
