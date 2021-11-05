@@ -3,9 +3,66 @@
 #include <random>
 #include "GameEngine.h"
 
-using namespace std;
-// -----------------------------------CommandProcessor class ----------------------------------------
 
+using namespace std;
+
+// -----------------------------------FileCommandProcessor class ----------------------------------------
+FileCommandProcessor::FileCommandProcessor() {
+		fileName = "not defined";
+}
+FileCommandProcessor::FileCommandProcessor(string fileName) {
+		this->fileName = fileName;
+}
+
+string FileCommandProcessor::readCommandFromFile(void) {
+	input.open("copy.txt");
+	string current;	
+
+	// get the first line of the file
+	getline(input, current);
+	input.close();
+
+	// remove the first line from the file
+	int count = 0;
+	string line;
+	ifstream inFile("copy.txt");
+	ofstream outFile("removefirstline.txt");
+	while (getline(inFile, line)) {
+		count++;
+		if (count != 1) {
+			outFile << line << "\n";
+		}
+	}
+	inFile.close();
+	outFile.close();
+
+	// delete the original file
+	remove("copy.txt");	
+	// change the file name of removeline.txt to copy.txt
+	rename("removefirstline.txt", "copy.txt");
+	
+	return(current);
+}
+
+// -----------------------------------FileCommandProcessorAdapter class ----------------------------------------
+
+FileCommandProcessorAdapter::FileCommandProcessorAdapter() {
+		*fprocessor = FileCommandProcessor(); // stack object
+}
+
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileCommandProcessor* processor) {
+		fprocessor = processor;
+}
+
+Command* FileCommandProcessorAdapter::getCommand() {
+	// use adaptee object to read commands from a file
+	string input = fprocessor->readCommandFromFile();	
+	Command* temp = CommandProcessor::saveCommand(input);
+	return temp;
+
+}
+
+// -----------------------------------CommandProcessor class ----------------------------------------
 string CommandProcessor::readCommand(void) {
 	string input;
 	cin >> input;
@@ -73,10 +130,11 @@ bool CommandProcessor::validate(string input, string currentState) {
 				return true;
 			}
 		}
+
+		
 	}
 
 	cout << "It is a game command, but not valid in the current state" << endl;
-
 
 
 	return false;
@@ -89,6 +147,10 @@ vector<Command*>CommandProcessor::getCommandVector() {
 
 
 // -----------------------------------Command class ----------------------------------------
+
+Command::Command() {
+	
+}
 Command::Command(string input) {
 	this->command = input;
 }
@@ -132,7 +194,7 @@ void Command::saveEffect(string input) {
 void GameEngine::transition(string newState) {
 
 	
-	this->setState(newState);
+	setState(newState);
 
 	cout << "You are transited to state: " << this->getState() << endl;
 
@@ -181,21 +243,95 @@ ostream& operator<<(ostream& out, const GameEngine& g)
 	return out;
 }
 
-
-
-int GameEngine::menu(int i)
+// solution found on https://www.techiedelight.com/split-string-cpp-using-delimiter/
+void split(std::string const& str, const char delim,
+	std::vector<std::string>& out)
 {
+	size_t start;
+	size_t end = 0;
 
+	while ((start = str.find_first_not_of(delim, end)) != std::string::npos)
+	{
+		end = str.find(delim, start);
+		out.push_back(str.substr(start, end - start));
+	}
+}
+
+
+int GameEngine::menu(int i)  // client
+{
+	string source;
 	string currentState;
-	CommandProcessor* processor = new CommandProcessor();
+	Command* c = new Command();
+
+	// create pointers of target, adaptee and adapter
+	CommandProcessor* processor {};
+	FileCommandProcessor* fprocessor {}; 
+	FileCommandProcessorAdapter* adapter {};
+
+
+	// Process user's input to extract the source (console or file wtih fileName) 
+	do {
+		string s;		
+		char delim = '-';
+		vector<string> contents;
+
+		cout << "Please enter -console or -file <filename> to choose the input source." << endl;
+		cin >> s;
+
+		split(s, delim, contents);
+
+		for (auto& i : contents) {
+			source.append(i);
+		}
+
+		// create objects based on user's choice
+		if (source == "console") {
+			processor = new CommandProcessor(); // target 
+		}
+						
+		else if (source == "file") {  
+			string fileName;
+			cout << "Enter a file name for loading the commands" << endl;
+			cin >> fileName;			
+			// copy the source file so that we can delete the top line after reading it
+			ifstream inFile(fileName);
+			ofstream outFile("copy.txt");
+			outFile << inFile.rdbuf();
+			inFile.close();
+			outFile.close();
+			fprocessor = new FileCommandProcessor("copy.txt"); // adaptee
+			adapter = new FileCommandProcessorAdapter(fprocessor);// adapter (inherited from target)
+		}		
+		
+	} while (source != "console" && source != "file");
+	
+	
 
 	while (state != "exitprogram") {
 		currentState = this->getState();
 		cout << *this << endl;
-		cout << "Enter your command" << endl;
-		Command* c = processor->getCommand(); // will use it for save effect
-		string input = c->returnCommand();
 		
+		string input;
+		// depends on user's choice, command is read from commandProcessor object or Adapter object
+		if (source == "console") {
+			cout << "Enter your command" << endl;
+			c = processor->getCommand();
+			input = c->returnCommand();
+
+		}
+		else if (source == "file") {
+			c = adapter->getCommand(); // call readLineFromfile()
+			input = c->returnCommand();
+			cout << "-----------------The input from the file is------------------ " << input << endl;
+			
+		}
+		
+		// validate command string
+		
+
+		
+	
 		bool isValid = processor->validate(input, currentState);
 
 		if (!isValid) {
@@ -206,7 +342,7 @@ int GameEngine::menu(int i)
 			if (input == "loadmap") {
 				bool res = loadMap();
 				if (!res) {
-					break;
+					continue;
 				}
 				c->saveEffect(input);
 				transition("maploaded");
@@ -248,12 +384,22 @@ int GameEngine::menu(int i)
 		}
 	}
 
-	cout << "-----------------------------"  ;
-	for (Command* c : processor->getCommandVector()) {
-		cout << c->returnCommand();
-		cout << " : " << c->returnEffect() << endl;
-	}
+	if (source == "console") {
+		cout << "-----------for command array testing------------------" << endl;
+		for (Command* c : processor->getCommandVector()) {
+			cout << c->returnCommand();
+			cout << " : " << c->returnEffect() << endl;
+		}
 
+	}
+	else if (source == "file") {
+		cout << "-----------for command array testing------------------" << endl;
+		for (Command* c : adapter->getCommandVector()) {
+			cout << c->returnCommand();
+			cout << " : " << c->returnEffect() << endl;
+		}
+
+	}
 	return -1;
 }
 
