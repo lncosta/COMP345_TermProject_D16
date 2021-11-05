@@ -227,23 +227,23 @@ Order* Player::discoverOrderType(string x) {
 	string options[] = { "DEPLOY", "ADVANCE", "BOMB", "BLOCK", "AIRLIFT", "NEGOTIATE", "UNSPECIFIED"};
 	Order* newOrder;
 	if (x.compare(options[0]) == 0) {
-		newOrder = new DeployOrder(); 
+		newOrder = new DeployOrder(2); 
 	}
 	else if (x.compare(options[1]) == 0) {
-		newOrder = new AdvanceOrder();
+		newOrder = new AdvanceOrder(3);
 	}
 	else if (x.compare(options[2]) == 0) {
-		newOrder = new BombOrder();
+		newOrder = new BombOrder(5);
 	}
 	else if (x.compare(options[3]) == 0) {
-		newOrder = new BlockadeOrder(); 
+		newOrder = new BlockadeOrder(4); 
 
 	}
 	else if (x.compare(options[4]) == 0) {
-		newOrder = new AirliftOrder();
+		newOrder = new AirliftOrder(5);
 	}
 	else if (x.compare(options[5]) == 0) {
-		newOrder = new NegotiateOrder();
+		newOrder = new NegotiateOrder(6);
 	}
 	else {
 		newOrder = NULL;

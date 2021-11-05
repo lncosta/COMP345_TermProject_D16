@@ -87,6 +87,10 @@ vector<Command*>CommandProcessor::getCommandVector() {
 	return commandVector;
 };
 
+string CommandProcessor::stringToLog() {
+	cout << "CommandProcessor will write to file gamelog.txt here" << endl;
+	return "-CommandProcessor-\nInputted command: ";
+}
 
 // -----------------------------------Command class ----------------------------------------
 Command::Command(string input) {
@@ -124,6 +128,11 @@ void Command::saveEffect(string input) {
 	}
 
 	this->effect = theEffect;
+}
+
+string Command::stringToLog() {
+	cout << "Command will write to file gamelog.txt here" << endl;
+	return "-Command-\nInputted command: ";
 }
 
 // -----------------------------------GameEngine class ----------------------------------------
@@ -181,7 +190,10 @@ ostream& operator<<(ostream& out, const GameEngine& g)
 	return out;
 }
 
-
+string GameEngine::stringToLog() {
+	cout << "GameEngine will write to file gamelog.txt here" << endl;
+	return "-GameEngine-\nTransitioned to state: " + state;
+}
 
 int GameEngine::menu(int i)
 {
