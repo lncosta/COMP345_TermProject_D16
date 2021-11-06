@@ -23,18 +23,18 @@ enum Type { BOMB, REINFORCEMENT, BLOCKADE, AIRLIFT, DIPLOMACY };
 
 class Player;
 class Order;
-class OrdersList; 
+class OrdersList;
 class Order;
 
 
 class Card; // forward declaration
-class Deck; 
+class Deck;
 
 class Hand {
 private:
 	// Data members
 	vector<Card*> handOfCards;
-	Deck* deck; 
+	Deck* deck;
 
 public:
 	// Constructors
@@ -49,7 +49,7 @@ public:
 
 	// Mutator methods
 	void setHandOfCards(vector<Card*>& cards);
-	void setDeck(Deck* d); 
+	void setDeck(Deck* d);
 
 	// Assignment Operators
 	Hand& operator =(const Hand& h);

@@ -245,7 +245,7 @@ void Order::setTarget(Territory* target)
 
 void Order::setModifier(int modifier)
 {
-	this->modifier = modifier; 
+	this->modifier = modifier;
 }
 
 
@@ -440,6 +440,13 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 		}
 		// If the Player is Attacking Another
 		if (target->getOwner() != source->getOwner()) {
+			// Checking that a Negotiate order is not active
+			for (Player* p : this->getOwner()->getCantAttack()) {
+				if (getTarget()->getOwner() == p) {
+					cout << "There is a Negotiate Order Active Between the Two Players. The Attack has been Canceled." << endl;
+					return;
+				}
+			}
 			// Loop continues as long as there are attackers left
 			while (armiesToMove != 0) {
 				// At the beginnings check if defenders are still standing, covers the case where there are no defenders
@@ -467,6 +474,7 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 		return;
 	}
 }
+
 /*
 	AdvanceOrder logging function.
 */
@@ -533,6 +541,15 @@ BombOrder::BombOrder(const Order& order) {
 bool BombOrder::validate() {
 	bool targetBelongsToPlayer = false;
 	bool targetIsAdjacent = false;
+	bool hasCard = false;
+
+	// Check that the player owns the given card
+	for (Card* c : this->getOwner()->getHandOfCards()) {
+		if (c->getType() == 0) {
+			this->getOwner()->getPlayerHand()->eraseCard(c);
+			hasCard = true;
+		}
+	}
 	// If the target belongs to the player that issued the order, the order is invalid.
 	vector<Territory*> playerOwnedT = this->getOwner()->getTowned();
 	for (Territory* p : playerOwnedT) {
@@ -556,6 +573,10 @@ bool BombOrder::validate() {
 	}
 	else if (targetIsAdjacent == false) {
 		cout << "The Order is Invalid: You Do Not Own A Territory Adjacent to the Target" << endl;
+		return false;
+	}
+	else if (hasCard == false) {
+		cout << "The Order is Invalid: You Do Not Have a Bomb Card" << endl;
 		return false;
 	}
 	cout << "The Order is Valid: Proceeding with Execution";
@@ -638,7 +659,7 @@ bool BlockadeOrder::validate() {
 	bool hasCard = false;
 	bool targetOK = this->isTerritoryMine(targetTerritory); // checking if the player owns the target territory
 
-		// checks whether the player has the correct card and erase it
+	// checks whether the player has the correct card and erase it
 	for (Card* c : this->getOwner()->getHandOfCards()) {
 		if (c->getType() == 2) {
 			this->getOwner()->getPlayerHand()->eraseCard(c);
@@ -794,7 +815,9 @@ string AirliftOrder::stringToLog() {
 /*
 	NegotiateOrder Default Constructor
 */
-NegotiateOrder::NegotiateOrder() : Order(count) { /* deliberately empty */ }
+NegotiateOrder::NegotiateOrder() : Order(count) { 
+	targetPlayer = getTarget()->getOwner();
+}
 /*
 	NegotiateOrder Constructor overloading with id.
 	-Parameters-
@@ -810,6 +833,7 @@ NegotiateOrder::~NegotiateOrder() {  }
 */
 NegotiateOrder::NegotiateOrder(const NegotiateOrder& order) {
 	this->id = order.id;
+	this->targetPlayer = order.targetPlayer;
 }
 /*
 	NegotiateOrder Assignment Operator
@@ -829,28 +853,47 @@ NegotiateOrder::NegotiateOrder(const Order& order) {
 	This is a dummy validation to validate whether the order can be executed or not.
 */
 bool NegotiateOrder::validate() {
-	if (this->id % 2 == 0)
-		return true;
-	if (this->id % 2 == 1)
+	bool hasCard = false;
+	// Check that the player owns the given card
+	for (Card* c : this->getOwner()->getHandOfCards()) {
+		if (c->getType() == 4) {
+			this->getOwner()->getPlayerHand()->eraseCard(c);
+			hasCard = true;
+		}
+	}
+	// Checking that the Player who called the order isnt the target
+	if (getOwner() == targetPlayer) {
+		cout << "The Order is Invalid: You Cannot Negotiate with Yourself" << endl;
 		return false;
+	}
+	else if (hasCard == false) {
+		cout << "The Order is Invalid: You Do Not Have a Diplomacy Card" << endl;
+		return false;
+	}
+	cout << "The Order is Valid: Proceeding with Execution";
+	return true;
 }
 /*
 	NegotiateOrder execute function
 	This method calls the validate function, then executes the order if it is validated or invalid.
 */
 void NegotiateOrder::execute() {
+	cout << "Executing " << this->getName() << "..." << endl;
 	bool canExecute = validate();
 
-	cout << "Executing " << this->getName() << "..." << endl;
 	if (!canExecute) {
 		cout << "This execution is invalid. Skipping this Order." << endl;
 		return;
 	}
 	else {
 		//execution occurs...
-
+		getOwner()->getCantAttack().push_back(targetPlayer);
+		targetPlayer->getCantAttack().push_back(this->getOwner());
 		cout << "This execution was successful!" << endl;
+
 		//Notify();
+		return;
+
 	}
 }
 /*

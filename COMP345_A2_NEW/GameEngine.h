@@ -21,9 +21,9 @@ private:
 
 
 public:
-	
+
 	//const string stateArr[9] = { "start", "maploaded", "mapvalidated", "playersadded", "assignreinforcement", "issueorders","executeorders", "win", "exitprogram" };
-	
+
 
 	//Constructors
 	GameEngine(void);
@@ -43,7 +43,7 @@ public:
 
 	//Methods
 	int menu(int i);
-	void transition(string newState); 
+	void transition(string newState);
 	void addPlayer(void);
 	void reinforcementPhase(void);
 	void issueOrdersPhase(void);
@@ -61,7 +61,7 @@ public:
 
 class Command : public Subject {
 	string command;
-	string effect;	
+	string effect;
 public:
 	//Constructors
 	Command(void);
@@ -94,4 +94,3 @@ public:
 
 	virtual string stringToLog();
 };
-

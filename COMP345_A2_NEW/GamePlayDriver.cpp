@@ -18,15 +18,13 @@ int main(void) {
 		cout << "ERROR - File could not be opened!" << endl;
 		throw invalid_argument("ERROR - File could not be opened!");
 	}
-
+  
+  
 	cout << "Welcome to Warzone! " << endl;
 	GameEngine* currentGame = new GameEngine(); 
 	LogObserver* obs = new LogObserver(currentGame);
 	
 	currentGame->menu(0);
-
-	//is it better to get the player to initialize a log observer so that they can attach and detach the orderlist and everything inside
-	
 
 	delete obs;
 	obs = nullptr;

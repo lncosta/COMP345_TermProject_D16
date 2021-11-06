@@ -31,7 +31,7 @@ bool CommandProcessor::validate(string input, string currentState) {
 
 	const string commandArr[6] = { "loadmap", "validatemap", "addplayer", "gamestart", "replay", "quit" };
 
-	
+
 	bool isThere = false;
 
 	for (string anyCommand : commandArr) {
@@ -44,33 +44,33 @@ bool CommandProcessor::validate(string input, string currentState) {
 		return false;
 	}
 	else {
-		if (input == "loadmap") { 
-			if (currentState == "start" || currentState == "maploaded") { 
+		if (input == "loadmap") {
+			if (currentState == "start" || currentState == "maploaded") {
 				return true;
 			}
 		}
-		else if (input == "validatemap") { 
-			if (currentState == "maploaded") { 
+		else if (input == "validatemap") {
+			if (currentState == "maploaded") {
 				return true;
 			}
 		}
-		else if (input == "addplayer") { 
-			if (currentState == "mapvalidated" || currentState == "playersadded") { 
+		else if (input == "addplayer") {
+			if (currentState == "mapvalidated" || currentState == "playersadded") {
 				return true;
 			}
 		}
-		else if (input == "gamestart") { 
-			if (currentState == "playersadded") {  
+		else if (input == "gamestart") {
+			if (currentState == "playersadded") {
 				return true;
 			}
 		}
-		else if (input == "replay") { 
-			if (currentState == "win") { 
+		else if (input == "replay") {
+			if (currentState == "win") {
 				return true;
 			}
 		}
-		else if (input == "quit") { 
-			if (currentState == "win") { 
+		else if (input == "quit") {
+			if (currentState == "win") {
 				return true;
 			}
 		}
@@ -142,7 +142,7 @@ string Command::stringToLog() {
 
 void GameEngine::transition(string newState) {
 
-	
+
 	this->setState(newState);
 
 	cout << "You are transited to state: " << this->getState() << endl;
@@ -212,14 +212,15 @@ int GameEngine::menu(int i)
 		Command* c = processor->getCommand(); // will use it for save effect
 		string input = c->returnCommand();
 
+
 		commandObserver = new LogObserver(c);
-		
+
 		bool isValid = processor->validate(input, currentState);
 
 		if (!isValid) {
 			continue;
 		}
-		else 
+		else
 		{
 			if (input == "loadmap") {
 				bool res = loadMap();
@@ -230,13 +231,13 @@ int GameEngine::menu(int i)
 				transition("maploaded");
 			}
 			else if (input == "validatemap") {
-				map->validateWrapper(); 
-				
+				map->validateWrapper();
+
 				if (map->getValidity()) {
 					c->saveEffect(input);
 					transition("mapvalidated");
 				}
-				
+
 				else
 					transition("start");
 
@@ -268,7 +269,7 @@ int GameEngine::menu(int i)
 		commandObserver = nullptr;
 	}
 
-	cout << "-----------------------------"  ;
+	cout << "-----------------------------";
 	for (Command* c : processor->getCommandVector()) {
 		cout << c->returnCommand();
 		cout << " : " << c->returnEffect() << endl;
@@ -305,14 +306,14 @@ int GameEngine::mainGameLoop(void)
 			winningCondition = true;
 		}
 		else {
-			winningCondition = false; 
-			cout << "No player has yet won. The game continues." << endl; 
+			winningCondition = false;
+			cout << "No player has yet won. The game continues." << endl;
 			int i = 0;
 			for (auto p : players) {
 				if (find(winningPlayers.begin(), winningPlayers.end(), p) == winningPlayers.end()) {
 					//One of the players does not own any territories.
 					cout << "Player " << p->getName() << " does not own any territories and thus must be removed from the game." << endl;
-					players.erase(players.begin() + i); 
+					players.erase(players.begin() + i);
 				}
 				i++;
 			}
@@ -355,7 +356,7 @@ int GameEngine::mainGameLoop(void)
 /*
 void GameEngine::addPlayer(string name) {
 
-    //Creating Player Objects:
+	//Creating Player Objects:
 
 Player* temp = new Player();
 (temp).setName(name);
@@ -445,11 +446,11 @@ void GameEngine::issueOrdersPhase(void) {
 		while (round) {
 			if (p->getPlayerHand()->getHandOfCards().size() < 1 && p->getArmiesHeld() < 1) {
 				cout << "The player does not own any armies and has an empty hand of cards. Player may not issue any orders." << endl;
-				round = false; 
-				break; 
+				round = false;
+				break;
 			}
 			p->issueOrder();
-			string orderIssued = (p->getOrders())->getOrderList().back()->getName(); 
+			string orderIssued = (p->getOrders())->getOrderList().back()->getName();
 			cout << "Would you like to issue more orders? Y/N" << endl;
 			cin >> result;
 			while (result != "N" && result != "n" && result != "y" && result != "Y") {
@@ -459,8 +460,8 @@ void GameEngine::issueOrdersPhase(void) {
 				round = false;
 			}
 		}
-		cout << "The final list of orders is: " << endl; 
-		cout << *( p->getOrders()) << endl;
+		cout << "The final list of orders is: " << endl;
+		cout << *(p->getOrders()) << endl;
 	}
 
 }
@@ -485,12 +486,12 @@ void GameEngine::executeOrdersPhase(void) {
 					toDeleteFrom->remove(0); 
 				}
 			}
-			
+
 		}
 		//Then, execute regular orders:
 		for (auto p : players) {
 			vector<Order*> toexc = p->getOrders()->getOrderList();
-			int terrOwned = p->getTowned().size(); 
+			int terrOwned = p->getTowned().size();
 			if (toexc.size() > 0) {
 				orderObserver = new LogObserver(toexc[0]);
 
@@ -499,13 +500,13 @@ void GameEngine::executeOrdersPhase(void) {
 				delete orderObserver; //delete the observer before deleting the order
 				orderObserver = nullptr; //if we used smart pointers we wouldn't have to do this deletion here
 				//Remove executed order:
-				OrdersList* toDeleteFrom = p->getOrders(); 
-				toDeleteFrom->remove(0); 
+				OrdersList* toDeleteFrom = p->getOrders();
+				toDeleteFrom->remove(0);
 			}
 			else {
 				int newTerritorySize = p->getTowned().size();
 				if (newTerritorySize > terrOwned) {
-					deck->draw(p); 
+					deck->draw(p);
 				}
 				doneCount++;
 			}
@@ -514,7 +515,7 @@ void GameEngine::executeOrdersPhase(void) {
 			playing = false;
 		}
 	}
-	
+
 
 }
 
@@ -566,15 +567,15 @@ bool GameEngine::assignTerritories(void) {
 	shuffle(begin(players), end(players), rng);
 
 	//Create Deck object:
-	
-	 deck = new Deck();
+
+	deck = new Deck();
 	//Add initial army value and draw cards:
 	for (auto p : players) {
-		p->getPlayerHand()->setDeck(deck); 
+		p->getPlayerHand()->setDeck(deck);
 		p->setArmiesHeld(50);
 		deck->draw(p);
 		deck->draw(p);
-		cout << "Player "<< p->getName() + " has received the following cards: " << endl;
+		cout << "Player " << p->getName() + " has received the following cards: " << endl;
 		for (auto c : p->getHandOfCards()) {
 			cout << *c;
 		}
@@ -583,7 +584,6 @@ bool GameEngine::assignTerritories(void) {
 	//Enter play phase.
 	return true;
 }
-
 
 
 

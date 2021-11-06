@@ -328,11 +328,11 @@ Map* MapLoader::loadMap(string MapFile)
 					cout << *p;
 				}
 
-				
+
 				loadedMap = *created;
 				created->valid = true;
 				return created;
-				
+
 
 			}
 			else {
@@ -553,16 +553,15 @@ bool Map::validateWrapper(void) {
 	bool c = countryToContinentRelation();
 	bool result = validate(a, b, c);
 	if (result) {
-		
+
 		valid = true;
 		return true;
 	}
 	else {
-		
+
 		valid = false;
 		return false;
 	}
 
 }
-
 

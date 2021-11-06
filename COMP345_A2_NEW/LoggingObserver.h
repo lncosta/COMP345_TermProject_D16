@@ -40,6 +40,7 @@ protected:
 
 // ----------------------------------- LogObserver class ----------------------------------------
 
+
 class LogObserver : public Observer {
 protected:
 	Subject* _subject;
@@ -51,3 +52,4 @@ public:
 	//Notify() will call Update()
 	virtual void Update(string log); //takes illogable as parameter?
 };
+

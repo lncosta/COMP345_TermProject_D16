@@ -91,4 +91,3 @@ void LogObserver::Update(string nextLog) {
 		return;
 	}
 }
-

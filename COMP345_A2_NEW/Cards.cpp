@@ -21,9 +21,9 @@ int numberOfPlayers = 3;
 
 // Constructors
 Card::Card() {}
-Card::Card(int type) { cardType = Type(type);}
-Card::Card(int type, int id) { cardType = Type(type); cardID = id;}
-Card::Card(const Card& c) {cardType = c.cardType; cardID = c.cardID;}
+Card::Card(int type) { cardType = Type(type); }
+Card::Card(int type, int id) { cardType = Type(type); cardID = id; }
+Card::Card(const Card& c) { cardType = c.cardType; cardID = c.cardID; }
 
 Hand::Hand() {}
 Hand::Hand(const Hand& h) {
@@ -83,7 +83,7 @@ void Hand::setHandOfCards(vector<Card*>& cards) {
 }
 void Hand::setDeck(Deck* d)
 {
-	deck = d; 
+	deck = d;
 }
 void Deck::setDeckOfCards(vector<Card*>& cards) {
 	this->deckOfCards = cards;
@@ -137,7 +137,7 @@ Hand& Hand::operator =(const Hand& h) {
 // Basic add card/order methods
 void Hand::addCard(Card* card) {
 	// cout << *card;                  <-- This was added to my code, not sure if it's important or not so I'm leaving it commented out for now 
-	handOfCards.push_back(card); 
+	handOfCards.push_back(card);
 }
 void Deck::addCard(Card* card) {
 	deckOfCards.push_back(card);
@@ -187,7 +187,7 @@ Card* Hand::eraseCard(Card* card) {
 		int index = std::distance(handOfCards.begin(), it);
 		Card* cardPlayed = handOfCards[index];
 		handOfCards.erase(it);
-		
+
 		return cardPlayed;
 	}
 }
@@ -271,10 +271,10 @@ ostream& operator << (ostream& out, const Hand& h) {
 	}
 	else {
 		out << "The player currently has these cards: " << endl;
-		int i = 1; 
+		int i = 1;
 		for (Card* c : h.handOfCards) {
-			out << i << " - " << * c;
-			i++; 
+			out << i << " - " << *c;
+			i++;
 		}
 	}
 	return out;
@@ -327,4 +327,3 @@ Deck::~Deck() {
 	}
 	deckOfCards.clear();
 };
-
