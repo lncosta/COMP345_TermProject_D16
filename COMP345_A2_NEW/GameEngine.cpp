@@ -268,7 +268,7 @@ int GameEngine::mainGameLoop(void)
 
 
 	while (!loopstop) {
-
+		
 		cout << *this << endl;
 
 		//Check for winning condition:
@@ -302,16 +302,20 @@ int GameEngine::mainGameLoop(void)
 		}
 
 		if (state == "assignreinforcement") {
+			cout << "//////////////////////////////////////" << endl;
+			cout << "Starting game round." << endl;
 			reinforcementPhase();
 			transition("issueorders");
 		}
 		else if (state == "issueorders") {
+			cout << "//////////////////////////////////////" << endl;
+			
 			issueOrdersPhase();
 			transition("executeorders");
 
 		}
 		else if (state == "executeorders") {
-
+			cout << "//////////////////////////////////////" << endl;
 			if (winningCondition) {
 				transition("win");
 				loopstop = true;
@@ -352,9 +356,9 @@ void GameEngine::addPlayer(void) {
 	int n = 0;
 	//cout << "Welcome to Warzone!" << endl;
 	cout << "This is the Player creation menu." << endl;
-	while (n < 1) {
+	while (n < 2 || n > 6) {
 		cout << "Please enter the number of desired players. " << endl;
-		cout << "The number should be greater than or equal to one." << endl;
+		cout << "The number should be between 2 to 6." << endl;
 		cin >> n;
 	}
 
@@ -377,6 +381,9 @@ void GameEngine::addPlayer(void) {
 }
 void GameEngine::reinforcementPhase(void) {
 	for (auto p : players) {
+		//Reset Diplomacy modifier:
+		p->getCantAttack().empty(); 
+		//Count territories owned:
 		int count = 0;
 		for (auto o : p->getTowned()) {
 			count++;

@@ -23,6 +23,7 @@ OrdersList::~OrdersList() {
 /*
 	OrdersList Copy Constructor
 */
+
 OrdersList::OrdersList(const OrdersList& olist) {
 	//empty current list to start the copy
 	for (Order* individualOrder : orderList) {
@@ -32,7 +33,7 @@ OrdersList::OrdersList(const OrdersList& olist) {
 	orderList.clear();
 
 	//fill the vector with the copy
-	std::vector<Order*> vectorlist = olist.getOrderList();
+	vector<Order*> vectorlist = olist.getOrderList();
 	for (int i = 0; i < vectorlist.size(); i++) {
 
 		switch ((*vectorlist.at(i)).getOrderType()) {
@@ -416,6 +417,7 @@ bool AdvanceOrder::validate() {
 		if (p->getTerritoryName() == source->getTerritoryName()) {
 			source = p;
 			sourceBelongsToPlayer = true;
+			break;
 		}
 	}
 	// Checking that the target is adjacent to the source
@@ -424,9 +426,10 @@ bool AdvanceOrder::validate() {
 		if (p->getTerritoryName() == target->getTerritoryName()) {
 			target = p;
 			targetIsAdjacent = true;
+			break; 
 		}
 	}
-	if (source->getArmiesPlaced() < armiesToMove)
+	if (source != NULL && source->getArmiesPlaced() < armiesToMove)
 		notEnoughArmies = true;
 
 	if (sourceBelongsToPlayer == false) {
@@ -451,6 +454,12 @@ bool AdvanceOrder::validate() {
 */
 void AdvanceOrder::execute() {											// Last Step is to Give the Player a card if they have conquered this turn
 	cout << "Executing " << this->getName() << "..." << endl;
+	if (modifier == 0) { //Advance is in attack mode
+		setSource(orderOwner->toDefend()[0]); 
+	}
+	else {
+		setSource(orderOwner->toDefend()[0]);
+	}
 	bool canExecute = validate();
 
 	if (!canExecute) {
@@ -459,6 +468,8 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 	}
 	else {
 		//execution occurs...
+		
+		armiesToMove = modifier; 
 		// If the Player is Moving Armies Between Their Territories
 		if (target->getOwner() == source->getOwner()) {
 			int srcArmiesAfter = source->getArmiesPlaced() - armiesToMove;
@@ -507,11 +518,11 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 */
 Territory* AdvanceOrder::getSource()
 {
-	return sourceTerritory;
+	return source;
 }
 void AdvanceOrder::setSource(Territory* source)
 {
-	sourceTerritory = source;
+	this->source = source;
 }
 void AdvanceOrder::stringToLog() {
 	cout << "AdvanceOrder will write to file gamelog.txt here" << endl;
@@ -748,10 +759,10 @@ void BlockadeOrder::execute() {
 		Territory* temp = this->findTerritory(targetTerritory);
 		int targetArmies = temp->getArmiesPlaced();
 
-		std::vector<Territory*>::iterator it = std::find(this->getOwner()->getTowned().begin(), this->getOwner()->getTowned().end(), this->findTerritory(targetTerritory));
+		vector<Territory*>::iterator it = find(this->getOwner()->getTowned().begin(), this->getOwner()->getTowned().end(), this->findTerritory(targetTerritory));
 		if (it != this->getOwner()->getTowned().end()) {
 			// find the index of the Territory*
-			int index = std::distance(this->getOwner()->getTowned().begin(), it);
+			int index = distance(this->getOwner()->getTowned().begin(), it);
 			Territory* territoryBlockaded = this->getOwner()->getTowned()[index];
 			this->getOwner()->getTowned().erase(it);
 		}
@@ -908,7 +919,7 @@ void AirliftOrder::stringToLog() {
 	NegotiateOrder Default Constructor
 */
 NegotiateOrder::NegotiateOrder() : Order(count) { 
-	targetPlayer = getTarget()->getOwner();
+	
 }
 /*
 	NegotiateOrder Constructor overloading with id.
@@ -1015,7 +1026,7 @@ void NegotiateOrder::stringToLog() {
 	Stream insertions
 */
 ostream& operator<<(ostream& output, const OrdersList& olist) {
-	std::vector<Order*> vectorlist = olist.getOrderList();
+	vector<Order*> vectorlist = olist.getOrderList();
 	for (int i = 0; i < vectorlist.size(); i++) {
 		output << vectorlist.at(i)->id << " - ";
 		output << vectorlist.at(i)->getName() << endl;

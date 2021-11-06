@@ -7,9 +7,9 @@
 #include <vector>
 using namespace std;
 
-/*COMP 345 Section D - Assignment #1
+/*COMP 345 Section D - Assignment #2
 * Fall 2021
-* Due October 8th, 2021
+* Due November 12th, 2021
 Written by
 Yupei Hsu 40139071
 Sarah-Noemie Laurin 40150861
@@ -66,7 +66,7 @@ public:
 	friend class NegotiateOrder;
 
 
-private:
+//private:
 	const string nameOfOrder = "Unspecified Order";
 	const string description = "Unspecified order description";
 	Player* orderOwner;
@@ -116,7 +116,6 @@ class AdvanceOrder : public Order {
 private:
 	const string nameOfOrder = "Advance";
 	const string description = "Move some armies from one of the current player's territories (source) to an adjacent territory (target).";
-	Territory* sourceTerritory;
 	Territory* source;
 	int armiesToMove;
 public:

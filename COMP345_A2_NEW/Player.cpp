@@ -397,7 +397,6 @@ void Player::issueOrder()
 		cout << *t << "Army count: " << t->getArmiesPlaced() << endl;
 	}
 
-	//Playing the cards:
 	cout << "Territories available to attack: " << endl;
 	for (auto t : attack) {
 		cout << *t << "Owner: " << (t->getOwner())->getName() << endl;
@@ -410,11 +409,20 @@ void Player::issueOrder()
 	}
 	else { //Attack and Card phase.
 		printOrderList();
+		cout << "*0* - ATTACK" << endl; 
 		cout << "Please select a card to play (type the correct integer)." << endl;
 		int index;
 		cin >> index;
-		played = getPlayerHand()->getHandOfCards()[index - 1];
-		x = played->orderType();
+		if (index == 0) {
+			x = "advance"; 
+			played = new Card(); 
+		}
+		else {
+			played = getPlayerHand()->getHandOfCards()[index - 1];
+			x = played->orderType();
+		}
+		
+	
 		vector<string> options2;
 		for (auto name : getPlayerHand()->getHandOfCards()) {	//Check which commands are available based on player's hand of cards
 			if (name->getType() == 0) {
@@ -434,16 +442,21 @@ void Player::issueOrder()
 			}
 
 		}
+		options2.push_back("advance");
 		if (!(find(options2.begin(), options2.end(), x) != options2.end())) {	//If the player does not have the necessary card to issue to requested order, return null
 			cout << "The command you requested is not available at the time. " << endl;
 			issued = NULL;
 		}
 		else {
-			//Play the card and issue the order:
+			// Issue the order:
 
 			issued = discoverOrderType(x);
-			played->play(this);
-			//Remove correspondent card.
+			if (index != 0) {
+				//Remove correspondent card if order was issued through a card.
+				played->play(this);
+				
+			}
+			
 		}
 	}
 
