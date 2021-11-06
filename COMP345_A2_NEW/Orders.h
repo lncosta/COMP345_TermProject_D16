@@ -53,6 +53,8 @@ public:
 	virtual void setModifier(int modifier);
 	virtual bool isTerritoryMine(string territoryToFind) const;
 	virtual Territory* findTerritory(string territoryToFind) const;
+	Territory* getSource() const;
+	void setSource(Territory* theSource);
 
 	virtual void stringToLog() = 0;
 
@@ -71,6 +73,7 @@ public:
 	const string description = "Unspecified order description";
 	Player* orderOwner;
 	Territory* target;
+	Territory* source;
 	int modifier;
 };
 
@@ -232,6 +235,7 @@ public:
 	bool validate();
 	string getName() const { return AirliftOrder::nameOfOrder; }
 	string getDesc() const { return AirliftOrder::description; }
+
 	void setId(int theId) { this->id = theId; }
 	OrderType getOrderType() { return type; }
 

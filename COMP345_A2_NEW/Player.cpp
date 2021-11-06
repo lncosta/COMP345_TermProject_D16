@@ -355,14 +355,31 @@ Order* Player::discoverOrderType(string x) {
 	}
 	else if (x.compare(options[4]) == 0) {
 		cout << "You have issued an airlift order. Please indicate which of the territories you would like to attack:" << endl;
+		cout << "Territories available to airlift from:" << endl;
+		for (auto t : defend) {
+			cout << *t << "Army count: " << t->getArmiesPlaced() << endl;
+		}
+		cout << "Territory to airlift from:" << defend[1]->getTerritoryName() << endl;
+
 		cout << "Territories available to airlift to:" << endl;
 		for (auto t : defend) {
 			cout << *t << "Army count: " << t->getArmiesPlaced() << endl;
 		}
 		cout << "Territory to airlift to:" << defend[0]->getTerritoryName() << endl;
-		newOrder = new AirliftOrder();
-		newOrder->setOwner(this);
-		newOrder->setTarget(defend[0]);
+		cout << "How many armies would you like to airlift there?" << endl;
+		int armiesToPlace;
+		cin >> armiesToPlace;
+		if (armiesToPlace > 0 && armiesToPlace <= defend[0]->getArmiesPlaced()) {
+			newOrder = new AirliftOrder();
+			newOrder->setOwner(this);
+			newOrder->setTarget(defend[0]);
+			newOrder->setSource(defend[1]);
+			newOrder->setModifier(armiesToPlace);
+		}
+		else {
+			newOrder = NULL;
+		}
+
 	}
 	else if (x.compare(options[5]) == 0) {
 		cout << "You have issued a negotiate order. Please indicate which of the territories you would like to attempt diplomacy with:" << endl;
