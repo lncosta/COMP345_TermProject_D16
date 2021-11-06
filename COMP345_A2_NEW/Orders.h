@@ -279,6 +279,7 @@ public:
 class OrdersList : public Subject {
 private:
 	std::vector<Order*> orderList;
+	string stringToBeLogged;
 public:
 	OrdersList();
 	virtual ~OrdersList();

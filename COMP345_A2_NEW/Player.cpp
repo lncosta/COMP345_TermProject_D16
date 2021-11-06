@@ -385,6 +385,7 @@ void Player::issueOrder()
 	Order* issued;
 	string x;
 	Card* played;
+	LogObserver* orderObserver = new LogObserver(orders);
 
 	vector<Territory*> defend = toDefend();
 	vector<Territory*> attack = toAttack();
@@ -443,7 +444,6 @@ void Player::issueOrder()
 		}
 	}
 	
-	
 	if (issued == NULL) {
 		cout << "Invalid Order. Could not add it to the list." << endl;
 	}
@@ -456,6 +456,8 @@ void Player::issueOrder()
 			cout << *p;
 		}
 	}
+	delete orderObserver;
+	orderObserver = nullptr;
 }
 
 

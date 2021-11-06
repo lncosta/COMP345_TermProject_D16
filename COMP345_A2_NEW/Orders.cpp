@@ -108,6 +108,7 @@ OrdersList& OrdersList::operator=(const OrdersList& olist) //olist is rhs
 void OrdersList::addOrder(Order* order) {
 	this->orderList.push_back(order);
 	cout << "Added order successfully." << endl;
+	stringToBeLogged = "Order Added: " + order->getName();
 	Notify();
 };
 /*
@@ -151,8 +152,8 @@ void OrdersList::remove(int toRemove) {
 */
 string OrdersList::stringToLog() {
 	cout << "OrdersList will write to file gamelog.txt" << endl;
-	string latestOrderName = this->getOrderList().back()->getName();
-	return "Order Added: " + latestOrderName;
+	//string latestOrderName = this->getOrderList().back()->getName();
+	return stringToBeLogged; //"Order Added: " + latestOrderName;
 }
 
 

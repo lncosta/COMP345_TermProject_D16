@@ -43,23 +43,12 @@ void Subject::Detach(Observer* obsView) {
 }
 
 void Subject::Notify() {
-	cout << "called notify?" << endl;
 	list<Observer*>::iterator i = _observers->begin();
 	for (; i != _observers->end(); ++i) {
-		string log = this->stringToLog();
+		string log = stringToLog();
+		cout << log << endl; //if it doesnt go here, it's because it's not attached
 		(*i)->Update(log);
 	}
-	/*
-	//attach orders inside a list if we have orderlist
-	OrdersList* tempList = dynamic_cast<OrdersList*>(this);
-	if (tempList != NULL) {
-		i = _observers->begin();
-		for (; i != _observers->end(); ++i) {
-			(*tempList->getOrderList().back()).Attach(*i);
-		}
-	}
-	tempList = nullptr;
-	*/
 }
 
 string Subject::stringToLog() {
@@ -75,11 +64,9 @@ LogObserver::LogObserver() {
 LogObserver::LogObserver(Subject* s) {
 	_subject = s;
 	_subject->Attach(this);
-	cout << "!!!attaching!!!" << endl;
 }
 LogObserver::~LogObserver() {
 	_subject->Detach(this);
-	cout << "!!!detaching!!!" << endl;
 }
 
 //**was having issues trying to pass a Subject pointer as a parameter so I decided to call stringToLog inside Notify
@@ -87,13 +74,12 @@ void LogObserver::Update(string nextLog) {
 	//get the string to log from the subject from "nextLog"
 
 	//then add the string to the log
-
 	ofstream filewriting;
 	filewriting.open("gamelog.txt", ios::app);
 
 	if (filewriting) {
 		//write to file 
-		filewriting << nextLog << endl; //call saveEffect here?
+		filewriting << nextLog << endl; 
 
 		cout << "Successfully added log to file." << endl;
 		cout << endl;

@@ -13,7 +13,6 @@ int main(void) {
 		cout << endl;
 		filewriting.open("gamelog.txt", std::ofstream::out | std::ofstream::trunc);
 		filewriting.close();
-	
 	}
 	else {
 		cout << "ERROR - File could not be opened!" << endl;
@@ -22,6 +21,14 @@ int main(void) {
 
 	cout << "Welcome to Warzone! " << endl;
 	GameEngine* currentGame = new GameEngine(); 
+	LogObserver* obs = new LogObserver(currentGame);
+	
 	currentGame->menu(0);
+
+	//is it better to get the player to initialize a log observer so that they can attach and detach the orderlist and everything inside
+	
+
+	delete obs;
+	obs = nullptr;
 	return 0;
 }
