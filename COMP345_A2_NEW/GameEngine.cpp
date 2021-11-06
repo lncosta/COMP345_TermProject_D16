@@ -15,6 +15,7 @@ string CommandProcessor::readCommand(void) {
 Command* CommandProcessor::saveCommand(string command) {
 	Command* temp = new Command(command);
 	commandVector.push_back(temp);
+	Notify();
 	return temp;
 }
 
@@ -87,6 +88,10 @@ vector<Command*>CommandProcessor::getCommandVector() {
 	return commandVector;
 };
 
+string CommandProcessor::stringToLog() {
+	cout << "CommandProcessor will write to file gamelog.txt here" << endl;
+	return "Inputted command: " + commandVector.back()->returnCommand();
+}
 
 // -----------------------------------Command class ----------------------------------------
 Command::Command(string input) {
@@ -124,6 +129,12 @@ void Command::saveEffect(string input) {
 	}
 
 	this->effect = theEffect;
+	Notify();
+}
+
+string Command::stringToLog() {
+	cout << "Command will write to file gamelog.txt here" << endl;
+	return "Current effect: " + effect;
 }
 
 // -----------------------------------GameEngine class ----------------------------------------
@@ -135,7 +146,7 @@ void GameEngine::transition(string newState) {
 	this->setState(newState);
 
 	cout << "You are transited to state: " << this->getState() << endl;
-
+	Notify();
 }
 
 
@@ -181,13 +192,18 @@ ostream& operator<<(ostream& out, const GameEngine& g)
 	return out;
 }
 
-
+string GameEngine::stringToLog() {
+	//cout << "GameEngine will write to file gamelog.txt here" << endl;
+	return "Transitioned to state: " + state;
+}
 
 int GameEngine::menu(int i)
 {
 
 	string currentState;
 	CommandProcessor* processor = new CommandProcessor();
+	LogObserver* processorObserver = new LogObserver(processor);
+	LogObserver* commandObserver;
 
 	while (state != "exitprogram") {
 		currentState = this->getState();
@@ -195,6 +211,9 @@ int GameEngine::menu(int i)
 		cout << "Enter your command" << endl;
 		Command* c = processor->getCommand(); // will use it for save effect
 		string input = c->returnCommand();
+
+
+		commandObserver = new LogObserver(c);
 
 		bool isValid = processor->validate(input, currentState);
 
@@ -246,6 +265,8 @@ int GameEngine::menu(int i)
 			}
 
 		}
+		delete commandObserver;
+		commandObserver = nullptr;
 	}
 
 	cout << "-----------------------------";
@@ -253,6 +274,9 @@ int GameEngine::menu(int i)
 		cout << c->returnCommand();
 		cout << " : " << c->returnEffect() << endl;
 	}
+
+	delete processorObserver;
+	processorObserver = nullptr;
 
 	return -1;
 }
@@ -445,17 +469,22 @@ void GameEngine::executeOrdersPhase(void) {
 	bool playing = true;
 	int doneCount = 0;
 	while (playing) {
+		LogObserver* orderObserver;
 		//First execute deploy orders:
 		for (auto p : players) {
 			OrdersList* toDeleteFrom = p->getOrders();
 			vector<Order*> toexc = toDeleteFrom->getOrderList();
-			int i = 0;
 			for (auto o : toexc) {
 				if (o->getOrderType() == OrderType::Deploy) { //Execute all deploy orders first.
-					o->execute();
-					toDeleteFrom->remove(i);
+					orderObserver = new LogObserver(o);
+					
+					o->execute(); 
+					
+					delete orderObserver; //delete the observer before deleting the order
+					orderObserver = nullptr; //if we used smart pointers we wouldn't have to do this deletion here
+					
+					toDeleteFrom->remove(0); 
 				}
-				i++;
 			}
 
 		}
@@ -464,7 +493,12 @@ void GameEngine::executeOrdersPhase(void) {
 			vector<Order*> toexc = p->getOrders()->getOrderList();
 			int terrOwned = p->getTowned().size();
 			if (toexc.size() > 0) {
+				orderObserver = new LogObserver(toexc[0]);
+
 				toexc[0]->execute();
+
+				delete orderObserver; //delete the observer before deleting the order
+				orderObserver = nullptr; //if we used smart pointers we wouldn't have to do this deletion here
 				//Remove executed order:
 				OrdersList* toDeleteFrom = p->getOrders();
 				toDeleteFrom->remove(0);

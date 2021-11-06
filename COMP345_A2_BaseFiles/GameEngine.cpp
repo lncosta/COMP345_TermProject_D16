@@ -1,4 +1,5 @@
 #include "GameEngine.h"
+#include <fstream>
 
 using namespace std;
 
@@ -90,7 +91,11 @@ bool CommandProcessor::validate(Command* cd, GameEngine* engine) {
 	return false;
 }
 
+string CommandProcessor::stringToLog() {
+	cout << "CommandProcessor will write to file gamelog.txt here" << endl;
 
+	return "-CommandProcessor-\nInputted command: ";
+}
 
 
 
@@ -101,6 +106,12 @@ Command::Command(string input) {
 
 string Command::returnCommand(void) {
 	return command;
+}
+
+string Command::stringToLog() {
+	cout << "Command will write to file gamelog.txt here" << endl;
+
+	return "-Command-\nInputted command: ";
 }
 
 
@@ -123,7 +134,7 @@ GameEngine::GameEngine()
 	//cp = new CommandProcessor;
 }
 
-GameEngine:: GameEngine(const GameEngine& other) 
+GameEngine::GameEngine(const GameEngine& other) 
 {
 	state = other.state;
 }
@@ -157,6 +168,12 @@ ostream& operator<<(ostream& out, const GameEngine& g)
 {
 	out << g.state << endl;
 	return out;
+}
+
+string GameEngine::stringToLog() {
+	cout << "GameEngine will write to file gamelog.txt here" << endl;
+
+	return "-GameEngine-\nTransitioned to state: "+state; 
 }
 
 //

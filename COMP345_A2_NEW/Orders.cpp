@@ -1,7 +1,6 @@
 #include "Orders.h"
 #include <iostream>
-#include <fstream>
-using namespace std; //make sure to add the "only compile this once" keyword
+using namespace std; 
 
 /*
 	OrdersList Default Constructor
@@ -109,6 +108,8 @@ OrdersList& OrdersList::operator=(const OrdersList& olist) //olist is rhs
 void OrdersList::addOrder(Order* order) {
 	this->orderList.push_back(order);
 	cout << "Added order successfully." << endl;
+	stringToBeLogged = "Order Added: " + order->getName();
+	Notify();
 };
 /*
 	OrdersList move function
@@ -149,26 +150,10 @@ void OrdersList::remove(int toRemove) {
 /*
 	OrdersList logging function.
 */
-void OrdersList::stringToLog() {
-	cout << "OrdersList will write to file gamelog.txt here" << endl;
-
-	ofstream filewriting;
-
-	filewriting.open("gamelog.txt", ios::app);
-
-	if (filewriting) {
-		//write to file 
-		filewriting << "Orderslist log data" << endl; //call saveEffect here?
-		cout << "Successfully added log to file." << endl;
-		cout << endl;
-		filewriting.close();
-
-	}
-	else {
-		cout << "ERROR - File could not be opened!" << endl;
-		throw invalid_argument("ERROR - File could not be opened!");
-		return;
-	}
+string OrdersList::stringToLog() {
+	cout << "OrdersList will write to file gamelog.txt" << endl;
+	//string latestOrderName = this->getOrderList().back()->getName();
+	return stringToBeLogged; //"Order Added: " + latestOrderName;
 }
 
 
@@ -216,6 +201,9 @@ Order& Order::operator=(const Order& order) {
 	this->id = order.id;
 	return *this;
 };
+string Order::stringToLog() {
+	return "unspecified order";
+}
 
 //**************** METHOD ************************
 bool Order::isTerritoryMine(string territoryToFind) const {
@@ -331,31 +319,15 @@ void DeployOrder::execute() {
 		this->findTerritory(sourceTerritory)->setArmiesPlaced(sourceArmies + numberOfArmies);
 
 		cout << "This execution was successful!" << endl;
+		//Notify();
 	}
 }
 /*
 	DeployOrder logging function.
 */
-void DeployOrder::stringToLog() {
-	cout << "DeployOrder will write to file gamelog.txt here" << endl;
-
-	ofstream filewriting;
-
-	filewriting.open("gamelog.txt", ios::app);
-
-	if (filewriting) {
-		//write to file 
-		filewriting << "DeployOrder log data" << endl; //call saveEffect here?
-		cout << "Successfully added log to file." << endl;
-		cout << endl;
-		filewriting.close();
-
-	}
-	else {
-		cout << "ERROR - File could not be opened!" << endl;
-		throw invalid_argument("ERROR - File could not be opened!");
-		return;
-	}
+string DeployOrder::stringToLog() {
+	cout << "DeployOrder will write to file gamelog.txt" << endl;
+	return "Order Executed: Deploy";
 }
 
 
@@ -498,6 +470,7 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 			}
 		}
 		cout << "This execution was successful!" << endl;
+		//Notify();
 		return;
 	}
 }
@@ -513,26 +486,9 @@ void AdvanceOrder::setSource(Territory* source)
 {
 	sourceTerritory = source;
 }
-void AdvanceOrder::stringToLog() {
+string AdvanceOrder::stringToLog() {
 	cout << "AdvanceOrder will write to file gamelog.txt here" << endl;
-
-	ofstream filewriting;
-
-	filewriting.open("gamelog.txt", ios::app);
-
-	if (filewriting) {
-		//write to file 
-		filewriting << "AdvanceOrder log data" << endl; //call saveEffect here?
-		cout << "Successfully added log to file." << endl;
-		cout << endl;
-		filewriting.close();
-
-	}
-	else {
-		cout << "ERROR - File could not be opened!" << endl;
-		throw invalid_argument("ERROR - File could not be opened!");
-		return;
-	}
+	return "Order Executed: Advance";
 }
 
 
@@ -645,31 +601,15 @@ void BombOrder::execute() {
 		int newNumArmies = currentArmies / 2; // PLACEHOLDER
 		target->setArmiesPlaced(newNumArmies);
 		cout << "This execution was successful!" << endl;
+		//Notify();
 	}
 }
 /*
 	BombOrder logging function.
 */
-void BombOrder::stringToLog() {
+string BombOrder::stringToLog() {
 	cout << "BombOrder will write to file gamelog.txt here" << endl;
-
-	ofstream filewriting;
-
-	filewriting.open("gamelog.txt", ios::app);
-
-	if (filewriting) {
-		//write to file 
-		filewriting << "BombOrder log data" << endl; //call saveEffect here?
-		cout << "Successfully added log to file." << endl;
-		cout << endl;
-		filewriting.close();
-
-	}
-	else {
-		cout << "ERROR - File could not be opened!" << endl;
-		throw invalid_argument("ERROR - File could not be opened!");
-		return;
-	}
+	return "Order Executed: Bomb";
 }
 
 
@@ -763,31 +703,15 @@ void BlockadeOrder::execute() {
 
 		cout << "The neutral player now owns this territory" << endl;
 		cout << "This execution was successful!" << endl;
+		//Notify();
 	}
 }
 /*
 	BlockadeOrder logging function.
 */
-void BlockadeOrder::stringToLog() {
+string BlockadeOrder::stringToLog() {
 	cout << "BlockadeOrder will write to file gamelog.txt here" << endl;
-
-	ofstream filewriting;
-
-	filewriting.open("gamelog.txt", ios::app);
-
-	if (filewriting) {
-		//write to file 
-		filewriting << "BlockadeOrder log data" << endl; //call saveEffect here?
-		cout << "Successfully added log to file." << endl;
-		cout << endl;
-		filewriting.close();
-
-	}
-	else {
-		cout << "ERROR - File could not be opened!" << endl;
-		throw invalid_argument("ERROR - File could not be opened!");
-		return;
-	}
+	return "Order Executed: Blockade";
 }
 
 
@@ -876,31 +800,15 @@ void AirliftOrder::execute() {
 		this->findTerritory(targetTerritory)->setArmiesPlaced(targetArmies + numberOfArmies);
 
 		cout << "This execution was successful!" << endl;
+		//Notify();
 	}
 }
 /*
 	AirliftOrder logging function.
 */
-void AirliftOrder::stringToLog() {
+string AirliftOrder::stringToLog() {
 	cout << "AirliftOrder will write to file gamelog.txt here" << endl;
-
-	ofstream filewriting;
-
-	filewriting.open("gamelog.txt", ios::app);
-
-	if (filewriting) {
-		//write to file 
-		filewriting << "AirliftOrder log data" << endl; //call saveEffect here?
-		cout << "Successfully added log to file." << endl;
-		cout << endl;
-		filewriting.close();
-
-	}
-	else {
-		cout << "ERROR - File could not be opened!" << endl;
-		throw invalid_argument("ERROR - File could not be opened!");
-		return;
-	}
+	return "Order Executed: Airlift";
 }
 
 
@@ -982,32 +890,18 @@ void NegotiateOrder::execute() {
 		getOwner()->getCantAttack().push_back(targetPlayer);
 		targetPlayer->getCantAttack().push_back(this->getOwner());
 		cout << "This execution was successful!" << endl;
+
+		//Notify();
 		return;
+
 	}
 }
 /*
 	NegotiateOrder logging function.
 */
-void NegotiateOrder::stringToLog() {
+string NegotiateOrder::stringToLog() {
 	cout << "NegotiateOrder will write to file gamelog.txt here" << endl;
-
-	ofstream filewriting;
-
-	filewriting.open("gamelog.txt", ios::app);
-
-	if (filewriting) {
-		//write to file 
-		filewriting << "NegotiateOrder log data" << endl; //call saveEffect here?
-		cout << "Successfully added log to file." << endl;
-		cout << endl;
-		filewriting.close();
-
-	}
-	else {
-		cout << "ERROR - File could not be opened!" << endl;
-		throw invalid_argument("ERROR - File could not be opened!");
-		return;
-	}
+	return "Order Executed: Negotiate";
 }
 
 
