@@ -268,7 +268,7 @@ int GameEngine::mainGameLoop(void)
 
 
 	while (!loopstop) {
-		
+
 		cout << *this << endl;
 
 		//Check for winning condition:
@@ -309,7 +309,7 @@ int GameEngine::mainGameLoop(void)
 		}
 		else if (state == "issueorders") {
 			cout << "//////////////////////////////////////" << endl;
-			
+
 			issueOrdersPhase();
 			transition("executeorders");
 
@@ -382,7 +382,7 @@ void GameEngine::addPlayer(void) {
 void GameEngine::reinforcementPhase(void) {
 	for (auto p : players) {
 		//Reset Diplomacy modifier:
-		p->getCantAttack().empty(); 
+		p->getCantAttack().empty();
 		//Count territories owned:
 		int count = 0;
 		for (auto o : p->getTowned()) {
@@ -557,7 +557,6 @@ bool GameEngine::assignTerritories(void) {
 	//Enter play phase.
 	return true;
 }
-
 
 
 

@@ -275,11 +275,11 @@ DeployOrder::DeployOrder() : Order(count) { /* deliberately empty */ }
 DeployOrder::DeployOrder(int theId) : Order(theId) { /* deliberately empty */ }
 
 DeployOrder::DeployOrder(Player* owner) : Order(owner) {
-	cout << "Player " << owner->getName() << " has declared a deploy order.\nEnter the source territory: ";
+	/*cout << "Player " << owner->getName() << " has declared a deploy order.\nEnter the source territory: ";
 	cin >> sourceTerritory;
 	cout << "What is the number of armies to be deployed: ";
 	cin >> numberOfArmies;
-	cout << "\nThe Order has been confirmed." << endl;
+	cout << "\nThe Order has been confirmed." << endl;*/
 }
 /*
 	DeployOrder Destructor
@@ -310,8 +310,14 @@ DeployOrder::DeployOrder(const Order& order) {
 */
 bool DeployOrder::validate() {
 	int reinforcementPool = 100;
-	bool armiesOK = (numberOfArmies <= reinforcementPool); // checking if the player's reinforcement pool has enough armies****************************************;
-	bool sourceOK = this->isTerritoryMine(sourceTerritory); // checking if the player owns the source territory
+	bool armiesOK = (modifier <= reinforcementPool); // checking if the player's reinforcement pool has enough armies****************************************;
+	bool sourceOK = false;
+//	sourceOK = this->isTerritoryMine(sourceTerritory); // checking if the player owns the source territory
+	vector<Territory*> tOwned = orderOwner->getTowned();
+	for (Territory* p : tOwned) {
+		if (target == p)
+			sourceOK = true;
+	}
 	return (sourceOK && armiesOK);
 }
 /*
@@ -327,9 +333,12 @@ void DeployOrder::execute() {
 		return;
 	}
 	else {
-		int sourceArmies = this->findTerritory(sourceTerritory)->getArmiesPlaced();
+		cout << "DEBUG: DEPLOY ORDER IN EXECUTION" << endl;
+		cout << "DEBUG: TARGET TERRITORY IS " << target->getTerritoryName() << endl;
+		int sourceArmies = target->getArmiesPlaced();
 
-		this->findTerritory(sourceTerritory)->setArmiesPlaced(sourceArmies + numberOfArmies);
+		target->setArmiesPlaced(sourceArmies + modifier);
+		cout << "DEBUG: THE TERRITORY NOW HAS " << target->getArmiesPlaced() << " ARMIES ON IT" << endl;
 
 		cout << "This execution was successful!" << endl;
 	}
@@ -363,7 +372,9 @@ void DeployOrder::stringToLog() {
 /*
 	AdvanceOrder Default Constructor
 */
-AdvanceOrder::AdvanceOrder() : Order(count) { /* deliberately empty */ }
+AdvanceOrder::AdvanceOrder() : Order(count) {
+	/* deliberately empty */ 
+}
 /*
 	AdvanceOrder Constructor overloading with id.
 	-Parameters-
@@ -403,6 +414,15 @@ AdvanceOrder::AdvanceOrder(const Order& order) {
 	this->id = order.id;
 }
 /*
+	Getter for the attribute armiesToMove, which represent the number of armies being advanced
+*/
+int AdvanceOrder::getArmiesToMove(void) {
+	return armiesToMove;
+}
+void AdvanceOrder::setArmiesToMove(int num) {
+	armiesToMove = num;
+}
+/*
 	AdvanceOrder validate function
 	This is a dummy validation to validate whether the order can be executed or not.
 */
@@ -426,7 +446,7 @@ bool AdvanceOrder::validate() {
 		if (p->getTerritoryName() == target->getTerritoryName()) {
 			target = p;
 			targetIsAdjacent = true;
-			break; 
+			break;
 		}
 	}
 	if (source != NULL && source->getArmiesPlaced() < armiesToMove)
@@ -455,7 +475,7 @@ bool AdvanceOrder::validate() {
 void AdvanceOrder::execute() {											// Last Step is to Give the Player a card if they have conquered this turn
 	cout << "Executing " << this->getName() << "..." << endl;
 	if (modifier == 0) { //Advance is in attack mode
-		setSource(orderOwner->toDefend()[0]); 
+		setSource(orderOwner->toDefend()[0]);
 	}
 	else {
 		setSource(orderOwner->toDefend()[0]);
@@ -468,8 +488,8 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 	}
 	else {
 		//execution occurs...
-		
-		armiesToMove = modifier; 
+
+		armiesToMove = modifier;
 		// If the Player is Moving Armies Between Their Territories
 		if (target->getOwner() == source->getOwner()) {
 			int srcArmiesAfter = source->getArmiesPlaced() - armiesToMove;
@@ -918,8 +938,8 @@ void AirliftOrder::stringToLog() {
 /*
 	NegotiateOrder Default Constructor
 */
-NegotiateOrder::NegotiateOrder() : Order(count) { 
-	
+NegotiateOrder::NegotiateOrder() : Order(count) {
+
 }
 /*
 	NegotiateOrder Constructor overloading with id.

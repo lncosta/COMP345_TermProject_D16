@@ -66,7 +66,7 @@ public:
 	friend class NegotiateOrder;
 
 
-//private:
+	//private:
 	const string nameOfOrder = "Unspecified Order";
 	const string description = "Unspecified order description";
 	Player* orderOwner;
@@ -82,8 +82,6 @@ class DeployOrder : public Order {
 private:
 	const string nameOfOrder = "Deploy";
 	const string description = "Place some armies on one of the current player's territories.";
-	string sourceTerritory;
-	int numberOfArmies;
 public:
 	OrderType type = OrderType::Deploy;
 
@@ -135,6 +133,8 @@ public:
 	OrderType getOrderType() { return type; }
 	Territory* getSource();
 	void setSource(Territory* source);
+	int getArmiesToMove(void);
+	void setArmiesToMove(int num);
 
 	virtual void stringToLog();
 

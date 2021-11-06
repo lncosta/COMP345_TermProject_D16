@@ -307,10 +307,11 @@ Order* Player::discoverOrderType(string x) {
 			cout << "How many armies would you like to deploy there?" << endl;
 			int armiesToPlace;
 			cin >> armiesToPlace;
+			static_cast<AdvanceOrder*>(newOrder);
 			newOrder = new AdvanceOrder();
 			newOrder->setOwner(this);
 			newOrder->setTarget(attack[0]);
-			newOrder->setModifier(0);	//Advance set to attack mode
+			newOrder->setModifier(armiesToPlace);	//Advance set to attack mode
 		}
 		else {
 			cout << "Territory to defend:" << defend[0]->getTerritoryName() << endl;
@@ -318,7 +319,6 @@ Order* Player::discoverOrderType(string x) {
 			newOrder->setOwner(this);
 			newOrder->setTarget(defend[0]);
 			newOrder->setModifier(1); //Advance set to defend mode
-
 		}
 
 
@@ -409,20 +409,20 @@ void Player::issueOrder()
 	}
 	else { //Attack and Card phase.
 		printOrderList();
-		cout << "*0* - ATTACK" << endl; 
+		cout << "*0* - ATTACK" << endl;
 		cout << "Please select a card to play (type the correct integer)." << endl;
 		int index;
 		cin >> index;
 		if (index == 0) {
-			x = "advance"; 
-			played = new Card(); 
+			x = "advance";
+			played = new Card();
 		}
 		else {
 			played = getPlayerHand()->getHandOfCards()[index - 1];
 			x = played->orderType();
 		}
-		
-	
+
+
 		vector<string> options2;
 		for (auto name : getPlayerHand()->getHandOfCards()) {	//Check which commands are available based on player's hand of cards
 			if (name->getType() == 0) {
@@ -454,9 +454,9 @@ void Player::issueOrder()
 			if (index != 0) {
 				//Remove correspondent card if order was issued through a card.
 				played->play(this);
-				
+
 			}
-			
+
 		}
 	}
 
