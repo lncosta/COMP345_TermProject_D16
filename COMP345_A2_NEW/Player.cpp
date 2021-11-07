@@ -2,6 +2,9 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <random>
+#include <chrono>
+#include <array>
 using namespace std;
 
 /*COMP 345 Section D - Assignment #2
@@ -210,8 +213,11 @@ vector<Territory*> Player::toDefend()
 	for (auto t : towned) {
 		defense.push_back(t);
 	}
-	sort(defense.begin(), defense.end());
+	//At a later development stage, priority will be determined using sorting and the player profile:
+	//sort(defense.begin(), defense.end());
 
+	//For testing purposes while priority definition is still not implemented, priority is set to random:
+	random_shuffle(defense.begin(), defense.end());
 	return defense;
 }
 
@@ -230,7 +236,11 @@ vector<Territory*> Player::toAttack()
 
 		}
 	}
-	sort(attack.begin(), attack.end());
+	//At a later development stage, priority will be determined using sorting and the player profile:
+	//sort(attack.begin(), attack.end());
+	
+	//For testing purposes while priority definition is still not implemented, priority is set to random:
+	random_shuffle(attack.begin(), attack.end());
 	return attack;
 }
 void Player::printOrderList(void) {

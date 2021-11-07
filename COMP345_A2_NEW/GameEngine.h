@@ -49,6 +49,7 @@ public:
 	void issueOrdersPhase(void);
 	void executeOrdersPhase(void);
 	int mainGameLoop(void);
+	void addPlayer(string name);
 	bool loadMap(void);
 
 	bool assignTerritories(void);
