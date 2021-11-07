@@ -57,6 +57,7 @@ public:
 
 	//Destructors:
 	~Territory(void);
+
 	string getTerritoryName(void);
 	int getContinentID(void);
 	int getTerritoryID(void);
@@ -142,4 +143,3 @@ public:
 
 };
 #endif // !_MAP_H_
-

@@ -5,12 +5,13 @@
 #include "Cards.h"
 #include "Map.h"
 #include "Orders.h"
+#include "LoggingObserver.h"
 
 
 using namespace std;
 
 
-class GameEngine {
+class GameEngine : public Subject {
 
 private:
 	string state;
@@ -52,13 +53,13 @@ public:
 
 	bool assignTerritories(void);
 
-
+	virtual string stringToLog();
 
 
 };
 
 
-class Command {
+class Command : public Subject {
 	string command;
 	string effect;
 public:
@@ -69,10 +70,11 @@ public:
 	string returnEffect(void);
 	void saveEffect(string effect);
 
+	virtual string stringToLog();
 };
 
 
-class CommandProcessor {
+class CommandProcessor : public Subject {
 private:
 	// Data members	
 	vector<Command*> commandVector;
@@ -89,4 +91,6 @@ public:
 	Command* getCommand(void);
 	bool validate(string input, string currentState);
 	vector<Command*> getCommandVector();
+
+	virtual string stringToLog();
 };
