@@ -94,6 +94,4 @@ public:
 	vector<Command*> getCommandVector();
 
 	virtual string stringToLog();
-
 };
-

@@ -1,8 +1,10 @@
-
 ﻿#include "Player.h"
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <random>
+#include <chrono>
+#include <array>
 using namespace std;
 
 /*COMP 345 Section D - Assignment #2
@@ -211,8 +213,11 @@ vector<Territory*> Player::toDefend()
 	for (auto t : towned) {
 		defense.push_back(t);
 	}
-	sort(defense.begin(), defense.end());
+	//At a later development stage, priority will be determined using sorting and the player profile:
+	//sort(defense.begin(), defense.end());
 
+	//For testing purposes while priority definition is still not implemented, priority is set to random:
+	random_shuffle(defense.begin(), defense.end());
 	return defense;
 }
 
@@ -231,17 +236,21 @@ vector<Territory*> Player::toAttack()
 
 		}
 	}
-	sort(attack.begin(), attack.end());
+	//At a later development stage, priority will be determined using sorting and the player profile:
+	//sort(attack.begin(), attack.end());
+	
+	//For testing purposes while priority definition is still not implemented, priority is set to random:
+	random_shuffle(attack.begin(), attack.end());
 	return attack;
 }
 void Player::printOrderList(void) {
 	cout << "----------------------------------" << endl;
 	cout << "The following commands are available: " << endl;
-	cout << "DEPLOY: place some armies on one of the current player�s territories." << endl;
-	cout << "ADVANCE: move some armies from one of the current player�s territories(source) to an adjacent territory." << endl;
+	cout << "DEPLOY: place some armies on one of the current player's territories." << endl;
+	cout << "ADVANCE: move some armies from one of the current player's territories(source) to an adjacent territory." << endl;
 	cout << "TARGET: If the target territory belongs to the current player, the armies are moved to the target.\nIf the target territory belongs to another player, an attack happens between the two territories." << endl;
-	cout << "BOMB: destroy half of the armies located on an opponent�s territory that is adjacent to one of the current player�s territories." << endl;
-	cout << "AIRLIFT: advance some armies from one of the current player�s territories to any another territory." << endl;
+	cout << "BOMB: destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories." << endl;
+	cout << "AIRLIFT: advance some armies from one of the current player's territories to any another territory." << endl;
 	cout << "NEGOTIATE: prevent attacks between the current playerand another player until the end of the turn." << endl;
 	cout << "----------------------------------" << endl;
 
@@ -302,16 +311,39 @@ Order* Player::discoverOrderType(string x) {
 		if (cmd == "attack") {
 			cout << "Territories available to attack: " << endl;
 			for (auto t : attack) {
-				cout << *t << "Owner: " << (t->getOwner())->getName() << endl;
+				cout << *t << "\tOwner: " << (t->getOwner())->getName() << endl;
+				cout << "\tArmies: " << t->getArmiesPlaced() << endl;
 			}
-			cout << "Territory to advance upon:" << attack[0]->getTerritoryName() << endl;
-			cout << "How many armies would you like to deploy there?" << endl;
-			int armiesToPlace;
-			cin >> armiesToPlace;
+			// Setting the target and source
+			string targetTString;
+			cout << "Choose The Territory to advance upon: ";
+			cin >> targetTString;
+			Territory* theTarget = nullptr;
+			cout << "DEBUG: TRYING TO SET TARGET" << endl;
+			for (Territory* p : attack) {
+				if (p->getTerritoryName() == targetTString) {
+					theTarget = p;
+					cout << "DEBUG: TARGET WAS CORRECTLY SET" << endl;
+				}
+			}
+			string sourceTString;
+			cout << "Choose The Territory to advance from: ";
+			cin >> sourceTString;
+			Territory* theSource = nullptr;
+			cout << "DEBUG: TRYING TO SET TARGET" << endl;
+			for (Territory* p : defend) {
+				if (p->getTerritoryName() == sourceTString) {
+					theSource = p;
+					cout << "DEBUG: SOURCE WAS CORRECTLY SET" << endl;
+				}
+			}
+
 			newOrder = new AdvanceOrder();
 			newOrder->setOwner(this);
-			newOrder->setTarget(attack[0]);
+			newOrder->setTarget(theTarget);
+			newOrder->setSource(theSource);
 			newOrder->setModifier(0);	//Advance set to attack mode
+			
 		}
 		else {
 			cout << "Territory to defend:" << defend[0]->getTerritoryName() << endl;
@@ -319,7 +351,6 @@ Order* Player::discoverOrderType(string x) {
 			newOrder->setOwner(this);
 			newOrder->setTarget(defend[0]);
 			newOrder->setModifier(1); //Advance set to defend mode
-
 		}
 
 
@@ -399,7 +430,6 @@ void Player::issueOrder()
 		cout << *t << "Army count: " << t->getArmiesPlaced() << endl;
 	}
 
-	//Playing the cards:
 	cout << "Territories available to attack: " << endl;
 	for (auto t : attack) {
 		cout << *t << "Owner: " << (t->getOwner())->getName() << endl;
@@ -412,11 +442,20 @@ void Player::issueOrder()
 	}
 	else { //Attack and Card phase.
 		printOrderList();
+		cout << "*0* - ATTACK" << endl;
 		cout << "Please select a card to play (type the correct integer)." << endl;
 		int index;
 		cin >> index;
-		played = getPlayerHand()->getHandOfCards()[index - 1];
-		x = played->orderType();
+		if (index == 0) {
+			x = "advance";
+			played = new Card();
+		}
+		else {
+			played = getPlayerHand()->getHandOfCards()[index - 1];
+			x = played->orderType();
+		}
+
+
 		vector<string> options2;
 		for (auto name : getPlayerHand()->getHandOfCards()) {	//Check which commands are available based on player's hand of cards
 			if (name->getType() == 0) {
@@ -436,18 +475,24 @@ void Player::issueOrder()
 			}
 
 		}
+		options2.push_back("advance");
 		if (!(find(options2.begin(), options2.end(), x) != options2.end())) {	//If the player does not have the necessary card to issue to requested order, return null
 			cout << "The command you requested is not available at the time. " << endl;
 			issued = NULL;
 		}
 		else {
-			//Play the card and issue the order:
+			// Issue the order:
 
 			issued = discoverOrderType(x);
-			played->play(this);
-			//Remove correspondent card.
+			if (index != 0) {
+				//Remove correspondent card if order was issued through a card.
+				played->play(this);
+
+			}
+
 		}
 	}
+
 
 	if (issued == NULL) {
 		cout << "Invalid Order. Could not add it to the list." << endl;
@@ -471,5 +516,4 @@ void printVector(vector<T> vec) {
 	for (T i : vec) {
 		cout << i << endl;
 	}
-
 }
