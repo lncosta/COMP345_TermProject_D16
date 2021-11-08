@@ -12,17 +12,6 @@
 #include <algorithm>
 using namespace std;
 
-/*COMP 345 Section D - Assignment #1
-* Fall 2021
-* Due October 8th, 2021
-Written by
-Yupei Hsu 40139071
-Sarah-Noemie Laurin 40150861
-Arie Naccache 40099156
-Luiza Nogueira Costa 40124771
-Tomas Pereira 40128504
-*/
-
 
 // Constructors for the Territory Class
 Territory::Territory(int tID, int cID) {
@@ -328,11 +317,11 @@ Map* MapLoader::loadMap(string MapFile)
 					cout << *p;
 				}
 
-				
+
 				loadedMap = *created;
 				created->valid = true;
 				return created;
-				
+
 
 			}
 			else {
@@ -553,16 +542,14 @@ bool Map::validateWrapper(void) {
 	bool c = countryToContinentRelation();
 	bool result = validate(a, b, c);
 	if (result) {
-		
+
 		valid = true;
 		return true;
 	}
 	else {
-		
+
 		valid = false;
 		return false;
 	}
 
 }
-
-

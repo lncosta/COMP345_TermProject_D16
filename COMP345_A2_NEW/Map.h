@@ -57,13 +57,14 @@ public:
 
 	//Destructors:
 	~Territory(void);
+
 	string getTerritoryName(void);
 	int getContinentID(void);
 	int getTerritoryID(void);
 	vector<Territory*> getAdjTerritories(void);
 	void addAdj(Territory* o);
 	void setOwner(Player* o);
-	Player* getOwner(void); 
+	Player* getOwner(void);
 	int getArmiesPlaced(void);
 	void setArmiesPlaced(int newNum);
 
@@ -142,5 +143,3 @@ public:
 
 };
 #endif // !_MAP_H_
-
-

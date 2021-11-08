@@ -7,10 +7,9 @@
 #include <iterator>
 #include <string>
 
-
-/*COMP 345 Section D - Assignment #1
+/*COMP 345 Section D - Assignment #2
 * Fall 2021
-* Due October 8th, 2021
+* Due November 12th, 2021
 Written by
 Yupei Hsu 40139071
 Sarah-Noemie Laurin 40150861
@@ -31,11 +30,12 @@ class Player {
 private:
 	//Data members:
 	int playerID;
-	int armiesHeld; 
+	int armiesHeld;
 	string name;
 	vector<Territory*> towned;
 	vector<Card*> cards; //Will become a Hand* pointer once code is integrated with Part 5 of assignment. For now, a hand is simply considered a collection of cards held by the Player itself. 
 	OrdersList* orders;
+	vector<Player*> cannotAttack; // Used with the negotiate to store the players that can't be attacked
 
 	//From Cards
 	Hand* playerHand;
@@ -63,6 +63,7 @@ public:
 	vector<Territory*> getTowned(void);
 	vector<Card*> getCards(void);
 	OrdersList* getOrders(void);
+	vector<Player*> getCantAttack(void);
 
 	//Stream Insertions:
 	friend ostream& operator << (ostream& out, const Player& p);
@@ -88,9 +89,8 @@ public:
 	//Friend classes:
 	friend class Card;
 	friend class Hand;
-	friend class OrdersList; 
-	friend class Deck; 
+	friend class OrdersList;
+	friend class Deck;
 
 };
 #endif // !_PLAYER_H_
-

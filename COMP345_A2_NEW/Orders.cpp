@@ -1,7 +1,6 @@
 #include "Orders.h"
 #include <iostream>
-#include <fstream>
-using namespace std; //make sure to add the "only compile this once" keyword
+using namespace std;
 
 /*
 	OrdersList Default Constructor
@@ -109,6 +108,8 @@ OrdersList& OrdersList::operator=(const OrdersList& olist) //olist is rhs
 void OrdersList::addOrder(Order* order) {
 	this->orderList.push_back(order);
 	cout << "Added order successfully." << endl;
+	stringToBeLogged = "Order Added: " + order->getName();
+	Notify();
 };
 /*
 	OrdersList move function
@@ -149,26 +150,10 @@ void OrdersList::remove(int toRemove) {
 /*
 	OrdersList logging function.
 */
-void OrdersList::stringToLog() {
-	cout << "OrdersList will write to file gamelog.txt here" << endl;
-
-	ofstream filewriting;
-
-	filewriting.open("gamelog.txt", ios::app);
-
-	if (filewriting) {
-		//write to file 
-		filewriting << "Orderslist log data" << endl; //call saveEffect here?
-		cout << "Successfully added log to file." << endl;
-		cout << endl;
-		filewriting.close();
-
-	}
-	else {
-		cout << "ERROR - File could not be opened!" << endl;
-		throw invalid_argument("ERROR - File could not be opened!");
-		return;
-	}
+string OrdersList::stringToLog() {
+	cout << "OrdersList will write to file gamelog.txt" << endl;
+	//string latestOrderName = this->getOrderList().back()->getName();
+	return stringToBeLogged; //"Order Added: " + latestOrderName;
 }
 
 
@@ -216,6 +201,9 @@ Order& Order::operator=(const Order& order) {
 	this->id = order.id;
 	return *this;
 };
+string Order::stringToLog() {
+	return "unspecified order";
+}
 
 //**************** METHOD ************************
 bool Order::isTerritoryMine(string territoryToFind) const {
@@ -245,6 +233,10 @@ int Order::getModifier() const
 	return modifier;
 }
 
+Territory* Order::getSource() const {
+	return source;
+}
+
 void Order::setOwner(Player* owner)
 {
 	orderOwner = owner;
@@ -255,9 +247,14 @@ void Order::setTarget(Territory* target)
 	this->target = target;
 }
 
+void Order::setSource(Territory* source) 
+{
+	this->source = source;
+}
+
 void Order::setModifier(int modifier)
 {
-	this->modifier = modifier; 
+	this->modifier = modifier;
 }
 
 
@@ -309,8 +306,14 @@ DeployOrder::DeployOrder(const Order& order) {
 */
 bool DeployOrder::validate() {
 	int reinforcementPool = 100;
-	bool armiesOK = (numberOfArmies <= reinforcementPool); // checking if the player's reinforcement pool has enough armies****************************************;
-	bool sourceOK = this->isTerritoryMine(sourceTerritory); // checking if the player owns the source territory
+	bool armiesOK = (modifier <= reinforcementPool); // checking if the player's reinforcement pool has enough armies****************************************;
+	bool sourceOK = false;
+	//	sourceOK = this->isTerritoryMine(sourceTerritory); // checking if the player owns the source territory
+	vector<Territory*> tOwned = orderOwner->getTowned();
+	for (Territory* p : tOwned) {
+		if (target == p)
+			sourceOK = true;
+	}
 	return (sourceOK && armiesOK);
 }
 /*
@@ -326,43 +329,53 @@ void DeployOrder::execute() {
 		return;
 	}
 	else {
-		int sourceArmies = this->findTerritory(sourceTerritory)->getArmiesPlaced();
+		cout << "DEBUG: DEPLOY ORDER IN EXECUTION" << endl;
+		cout << "DEBUG: TARGET TERRITORY IS " << target->getTerritoryName() << endl;
+		int sourceArmies = target->getArmiesPlaced();
 
-		this->findTerritory(sourceTerritory)->setArmiesPlaced(sourceArmies + numberOfArmies);
+		target->setArmiesPlaced(sourceArmies + modifier);
+		cout << "DEBUG: THE TERRITORY NOW HAS " << target->getArmiesPlaced() << " ARMIES ON IT" << endl;
 
 		cout << "This execution was successful!" << endl;
+		//Notify();
 	}
 }
 /*
 	DeployOrder logging function.
 */
-void DeployOrder::stringToLog() {
-	cout << "DeployOrder will write to file gamelog.txt here" << endl;
-
-	ofstream filewriting;
-
-	filewriting.open("gamelog.txt", ios::app);
-
-	if (filewriting) {
-		//write to file 
-		filewriting << "DeployOrder log data" << endl; //call saveEffect here?
-		cout << "Successfully added log to file." << endl;
-		cout << endl;
-		filewriting.close();
-
-	}
-	else {
-		cout << "ERROR - File could not be opened!" << endl;
-		throw invalid_argument("ERROR - File could not be opened!");
-		return;
-	}
+string DeployOrder::stringToLog() {
+	cout << "DeployOrder will write to file gamelog.txt" << endl;
+	return "Order Executed: Deploy";
 }
 
 
 /*
 	AdvanceOrder Default Constructor
 */
-AdvanceOrder::AdvanceOrder() : Order(count) { /* deliberately empty */ }
+AdvanceOrder::AdvanceOrder() : Order(count) {
+
+	/*string targetTString;
+	cout << "Choose The Territory to advance upon: ";
+	cin >> targetTString;
+	cout << "DEBUG: TRYING TO ACCESS TOATTACK" << endl;
+	vector<Territory*> toAtk = orderOwner->toAttack();
+	cout << "DEBUG: TRYING TO SET TARGET" << endl;
+	for (Territory* p : toAtk) {
+		if (p->getTerritoryName() == targetTString)
+			target = p;
+		cout << "DEBUG: TARGET WAS CORRECTLY SET" << endl;
+	}*/
+
+
+	cout << "How many armies would you like to deploy there?" << endl;
+	int armiesToPlace;
+	cin >> armiesToPlace;
+	armiesToMove = armiesToPlace;
+
+	// THIS IS THE PROBLEM AREA: Exception thrown: read access violation. **this** was 0x24.
+	//source = orderOwner->toDefend()[0]; // Will be assigned later
+	//target = orderOwner->toAttack()[0]; // Will be assigned later
+}
 /*
 	AdvanceOrder Constructor overloading with id.
 	-Parameters-
@@ -370,16 +383,12 @@ AdvanceOrder::AdvanceOrder() : Order(count) { /* deliberately empty */ }
 */
 AdvanceOrder::AdvanceOrder(int theId, Player* calledOrder) : Order(theId) {
 	orderOwner = calledOrder;
-	cout << "Player " << calledOrder->getName() << " has declared an Advance order.\nEnter the source territory: ";
-	cin >> sourceTerritory;
-	cout << "\nEnter the target territory: ";
-	cin >> targetTerritory;
+	cout << "Player " << calledOrder->getName() << " has declared an Advance order.";
 	cout << "\nHow Many Armies Would You Like to Move: ";
 	cin >> armiesToMove;
 	cout << "\nThe Order has been confirmed." << endl;
 
-	source = nullptr; // Will be assigned later
-	target = nullptr; // Will be assigned later
+	
 }
 /*
 	AdvanceOrder Destructor
@@ -415,21 +424,23 @@ bool AdvanceOrder::validate() {
 
 	// Checking that the player owns the source territory
 	vector<Territory*> playerOwnedT = orderOwner->getTowned();
+	string name = getSource()->getTerritoryName();
 	for (Territory* p : playerOwnedT) {
-		if (p->getTerritoryName() == sourceTerritory) {
-			source = p;
+		if (p->getTerritoryName() == getSource()->getTerritoryName()) {
 			sourceBelongsToPlayer = true;
+
+			break;
 		}
 	}
 	// Checking that the target is adjacent to the source
-	vector<Territory*> adjT = source->getAdjTerritories();
+	vector<Territory*> adjT = getSource()->getAdjTerritories();
 	for (Territory* p : adjT) {
-		if (p->getTerritoryName() == targetTerritory) {
-			target = p;
+		if (p->getTerritoryName() == getTarget()->getTerritoryName()) {
 			targetIsAdjacent = true;
+			break;
 		}
 	}
-	if (source->getArmiesPlaced() < armiesToMove)
+	if (getSource() != NULL && getSource()->getArmiesPlaced() < armiesToMove)
 		notEnoughArmies = true;
 
 	if (sourceBelongsToPlayer == false) {
@@ -446,15 +457,22 @@ bool AdvanceOrder::validate() {
 	}
 	cout << "The Order is Valid: Proceeding with Execution";
 	return true;
-
 }
 /*
 	AdvanceOrder execute function
 	This method calls the validate function, then executes the order if it is validated or invalid.
 */
-void AdvanceOrder::execute() {
+void AdvanceOrder::execute() {											// Last Step is to Give the Player a card if they have conquered this turn
 	cout << "Executing " << this->getName() << "..." << endl;
+	//if (modifier == 0) { //Advance is in attack mode
+	//	setSource(orderOwner->toDefend()[0]);
+	//}
+	//else {
+	//	setSource(orderOwner->toDefend()[0]);
+	//}
+	cout << "DEBUG: ATTEMPTING TO VALIDATE" << endl;
 	bool canExecute = validate();
+	cout << "DEBUG: VALIDATION COMPLETED" << endl;
 
 	if (!canExecute) {
 		cout << "This execution is invalid. Skipping this Order." << endl;
@@ -462,43 +480,65 @@ void AdvanceOrder::execute() {
 	}
 	else {
 		//execution occurs...
+
 		// If the Player is Moving Armies Between Their Territories
-		if (target->getOwner() == source->getOwner()) {
-			int srcArmiesAfter = source->getArmiesPlaced() - armiesToMove;
-			source->setArmiesPlaced(srcArmiesAfter);
-			int targetArmiesAfter = target->getArmiesPlaced() + armiesToMove;
-			target->setArmiesPlaced(targetArmiesAfter);
+		if (getTarget()->getOwner() == getSource()->getOwner()) {
+			int srcArmiesAfter = getSource()->getArmiesPlaced() - armiesToMove;
+			getSource()->setArmiesPlaced(srcArmiesAfter);
+			int targetArmiesAfter = getTarget()->getArmiesPlaced() + armiesToMove;
+			getTarget()->setArmiesPlaced(targetArmiesAfter);
 		}
 		// If the Player is Attacking Another
-		if (target->getOwner() != source->getOwner()) {
+		if (getTarget()->getOwner() != getSource()->getOwner()) {
+			// Checking that a Negotiate order is not active
+			for (Player* p : this->getOwner()->getCantAttack()) {
+				if (getTarget()->getOwner() == p) {
+					cout << "There is a Negotiate Order Active Between the Two Players. The Attack has been Canceled." << endl;
+					return;
+				}
+			}
+			// Loop continues as long as there are attackers left
+			while (armiesToMove != 0) {
+				// At the beginnings check if defenders are still standing, covers the case where there are no defenders
+				if (getTarget()->getArmiesPlaced() == 0) {
+					cout << "The Territory Has Been Conquered. The Remaining Attackers will be moved to it." << endl;
+					getTarget()->setOwner(getOwner());
+					getTarget()->setArmiesPlaced(armiesToMove);
+					break;
+				}
 
+				int attackerRoll = (rand() % 10) + 1;
+				int defenderRoll = (rand() % 10) + 1;
+				// Checking if a defender gets killed
+				if (attackerRoll <= 6) {
+					getTarget()->setArmiesPlaced(getTarget()->getArmiesPlaced() - 1);
+				}
+				// Checking if an attacker gets killed
+				if (defenderRoll <= 7) {
+					armiesToMove = armiesToMove - 1;
+				}
+			}
 		}
 		cout << "This execution was successful!" << endl;
+		//Notify();
+		return;
 	}
 }
+
 /*
 	AdvanceOrder logging function.
 */
-void AdvanceOrder::stringToLog() {
+Territory* AdvanceOrder::getSource()
+{
+	return sourceTerritory;
+}
+void AdvanceOrder::setSource(Territory* source)
+{
+	sourceTerritory = source;
+}
+string AdvanceOrder::stringToLog() {
 	cout << "AdvanceOrder will write to file gamelog.txt here" << endl;
-
-	ofstream filewriting;
-
-	filewriting.open("gamelog.txt", ios::app);
-
-	if (filewriting) {
-		//write to file 
-		filewriting << "AdvanceOrder log data" << endl; //call saveEffect here?
-		cout << "Successfully added log to file." << endl;
-		cout << endl;
-		filewriting.close();
-
-	}
-	else {
-		cout << "ERROR - File could not be opened!" << endl;
-		throw invalid_argument("ERROR - File could not be opened!");
-		return;
-	}
+	return "Order Executed: Advance";
 }
 
 
@@ -551,6 +591,15 @@ BombOrder::BombOrder(const Order& order) {
 bool BombOrder::validate() {
 	bool targetBelongsToPlayer = false;
 	bool targetIsAdjacent = false;
+	bool hasCard = false;
+
+	// Check that the player owns the given card
+	for (Card* c : this->getOwner()->getHandOfCards()) {
+		if (c->getType() == 0) {
+			this->getOwner()->getPlayerHand()->eraseCard(c);
+			hasCard = true;
+		}
+	}
 	// If the target belongs to the player that issued the order, the order is invalid.
 	vector<Territory*> playerOwnedT = this->getOwner()->getTowned();
 	for (Territory* p : playerOwnedT) {
@@ -576,6 +625,10 @@ bool BombOrder::validate() {
 		cout << "The Order is Invalid: You Do Not Own A Territory Adjacent to the Target" << endl;
 		return false;
 	}
+	else if (hasCard == false) {
+		cout << "The Order is Invalid: You Do Not Have a Bomb Card" << endl;
+		return false;
+	}
 	cout << "The Order is Valid: Proceeding with Execution";
 	return true;
 }
@@ -598,31 +651,15 @@ void BombOrder::execute() {
 		int newNumArmies = currentArmies / 2; // PLACEHOLDER
 		target->setArmiesPlaced(newNumArmies);
 		cout << "This execution was successful!" << endl;
+		//Notify();
 	}
 }
 /*
 	BombOrder logging function.
 */
-void BombOrder::stringToLog() {
+string BombOrder::stringToLog() {
 	cout << "BombOrder will write to file gamelog.txt here" << endl;
-
-	ofstream filewriting;
-
-	filewriting.open("gamelog.txt", ios::app);
-
-	if (filewriting) {
-		//write to file 
-		filewriting << "BombOrder log data" << endl; //call saveEffect here?
-		cout << "Successfully added log to file." << endl;
-		cout << endl;
-		filewriting.close();
-
-	}
-	else {
-		cout << "ERROR - File could not be opened!" << endl;
-		throw invalid_argument("ERROR - File could not be opened!");
-		return;
-	}
+	return "Order Executed: Bomb";
 }
 
 
@@ -672,7 +709,7 @@ bool BlockadeOrder::validate() {
 	bool hasCard = false;
 	bool targetOK = this->isTerritoryMine(targetTerritory); // checking if the player owns the target territory
 
-		// checks whether the player has the correct card and erase it
+	// checks whether the player has the correct card and erase it
 	for (Card* c : this->getOwner()->getHandOfCards()) {
 		if (c->getType() == 2) {
 			this->getOwner()->getPlayerHand()->eraseCard(c);
@@ -716,31 +753,15 @@ void BlockadeOrder::execute() {
 
 		cout << "The neutral player now owns this territory" << endl;
 		cout << "This execution was successful!" << endl;
+		//Notify();
 	}
 }
 /*
 	BlockadeOrder logging function.
 */
-void BlockadeOrder::stringToLog() {
+string BlockadeOrder::stringToLog() {
 	cout << "BlockadeOrder will write to file gamelog.txt here" << endl;
-
-	ofstream filewriting;
-
-	filewriting.open("gamelog.txt", ios::app);
-
-	if (filewriting) {
-		//write to file 
-		filewriting << "BlockadeOrder log data" << endl; //call saveEffect here?
-		cout << "Successfully added log to file." << endl;
-		cout << endl;
-		filewriting.close();
-
-	}
-	else {
-		cout << "ERROR - File could not be opened!" << endl;
-		throw invalid_argument("ERROR - File could not be opened!");
-		return;
-	}
+	return "Order Executed: Blockade";
 }
 
 
@@ -829,38 +850,24 @@ void AirliftOrder::execute() {
 		this->findTerritory(targetTerritory)->setArmiesPlaced(targetArmies + numberOfArmies);
 
 		cout << "This execution was successful!" << endl;
+		//Notify();
 	}
 }
 /*
 	AirliftOrder logging function.
 */
-void AirliftOrder::stringToLog() {
+string AirliftOrder::stringToLog() {
 	cout << "AirliftOrder will write to file gamelog.txt here" << endl;
-
-	ofstream filewriting;
-
-	filewriting.open("gamelog.txt", ios::app);
-
-	if (filewriting) {
-		//write to file 
-		filewriting << "AirliftOrder log data" << endl; //call saveEffect here?
-		cout << "Successfully added log to file." << endl;
-		cout << endl;
-		filewriting.close();
-
-	}
-	else {
-		cout << "ERROR - File could not be opened!" << endl;
-		throw invalid_argument("ERROR - File could not be opened!");
-		return;
-	}
+	return "Order Executed: Airlift";
 }
 
 
 /*
 	NegotiateOrder Default Constructor
 */
-NegotiateOrder::NegotiateOrder() : Order(count) { /* deliberately empty */ }
+NegotiateOrder::NegotiateOrder() : Order(count) {
+	targetPlayer = getTarget()->getOwner();
+}
 /*
 	NegotiateOrder Constructor overloading with id.
 	-Parameters-
@@ -876,6 +883,7 @@ NegotiateOrder::~NegotiateOrder() {  }
 */
 NegotiateOrder::NegotiateOrder(const NegotiateOrder& order) {
 	this->id = order.id;
+	this->targetPlayer = order.targetPlayer;
 }
 /*
 	NegotiateOrder Assignment Operator
@@ -895,52 +903,55 @@ NegotiateOrder::NegotiateOrder(const Order& order) {
 	This is a dummy validation to validate whether the order can be executed or not.
 */
 bool NegotiateOrder::validate() {
-	if (this->id % 2 == 0)
-		return true;
-	if (this->id % 2 == 1)
+	bool hasCard = false;
+	// Check that the player owns the given card
+	for (Card* c : this->getOwner()->getHandOfCards()) {
+		if (c->getType() == 4) {
+			this->getOwner()->getPlayerHand()->eraseCard(c);
+			hasCard = true;
+		}
+	}
+	// Checking that the Player who called the order isnt the target
+	if (getOwner() == targetPlayer) {
+		cout << "The Order is Invalid: You Cannot Negotiate with Yourself" << endl;
 		return false;
+	}
+	else if (hasCard == false) {
+		cout << "The Order is Invalid: You Do Not Have a Diplomacy Card" << endl;
+		return false;
+	}
+	cout << "The Order is Valid: Proceeding with Execution";
+	return true;
 }
 /*
 	NegotiateOrder execute function
 	This method calls the validate function, then executes the order if it is validated or invalid.
 */
 void NegotiateOrder::execute() {
+	cout << "Executing " << this->getName() << "..." << endl;
 	bool canExecute = validate();
 
-	cout << "Executing " << this->getName() << "..." << endl;
 	if (!canExecute) {
 		cout << "This execution is invalid. Skipping this Order." << endl;
 		return;
 	}
 	else {
 		//execution occurs...
-
+		getOwner()->getCantAttack().push_back(targetPlayer);
+		targetPlayer->getCantAttack().push_back(this->getOwner());
 		cout << "This execution was successful!" << endl;
+
+		//Notify();
+		return;
+
 	}
 }
 /*
 	NegotiateOrder logging function.
 */
-void NegotiateOrder::stringToLog() {
+string NegotiateOrder::stringToLog() {
 	cout << "NegotiateOrder will write to file gamelog.txt here" << endl;
-
-	ofstream filewriting;
-
-	filewriting.open("gamelog.txt", ios::app);
-
-	if (filewriting) {
-		//write to file 
-		filewriting << "NegotiateOrder log data" << endl; //call saveEffect here?
-		cout << "Successfully added log to file." << endl;
-		cout << endl;
-		filewriting.close();
-
-	}
-	else {
-		cout << "ERROR - File could not be opened!" << endl;
-		throw invalid_argument("ERROR - File could not be opened!");
-		return;
-	}
+	return "Order Executed: Negotiate";
 }
 
 

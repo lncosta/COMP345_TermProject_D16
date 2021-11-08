@@ -1,6 +1,12 @@
-/*COMP 345 Section D - Assignment #1
+#pragma once
+#include <vector>
+#include <string>
+#include "Orders.h"
+#include "Player.h"
+
+/*COMP 345 Section D - Assignment #2
 * Fall 2021
-* Due October 8th, 2021
+* Due November 12th, 2021
 Written by
 Yupei Hsu 40139071
 Sarah-Noemie Laurin 40150861
@@ -8,11 +14,7 @@ Arie Naccache 40099156
 Luiza Nogueira Costa 40124771
 Tomas Pereira 40128504
 */
-#pragma once
-#include <vector>
-#include <string>
-#include "Orders.h"
-#include "Player.h"
+
 using std::string;
 using std::ostream;
 using std::istream;
@@ -23,16 +25,18 @@ enum Type { BOMB, REINFORCEMENT, BLOCKADE, AIRLIFT, DIPLOMACY };
 
 class Player;
 class Order;
-class OrdersList; 
+class OrdersList;
 class Order;
 
 
 class Card; // forward declaration
+class Deck;
 
 class Hand {
 private:
 	// Data members
 	vector<Card*> handOfCards;
+	Deck* deck;
 
 public:
 	// Constructors
@@ -43,9 +47,11 @@ public:
 
 	//Accessor methods
 	vector<Card*> getHandOfCards();
+	Deck* getDeck();
 
 	// Mutator methods
 	void setHandOfCards(vector<Card*>& cards);
+	void setDeck(Deck* d);
 
 	// Assignment Operators
 	Hand& operator =(const Hand& h);
@@ -128,6 +134,7 @@ public:
 
 	// Methods
 	void play(Player& p, Deck& d);
+	void play(Player* p);
 	string orderType();
 
 	// Destructor

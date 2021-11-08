@@ -7,9 +7,9 @@
 #include <vector>
 using namespace std;
 
-/*COMP 345 Section D - Assignment #1
+/*COMP 345 Section D - Assignment #2
 * Fall 2021
-* Due October 8th, 2021
+* Due November 12th, 2021
 Written by
 Yupei Hsu 40139071
 Sarah-Noemie Laurin 40150861
@@ -26,7 +26,7 @@ enum class OrderType { Deploy, Advance, Bomb, Blockade, Airlift, Negotiate, Unsp
 	Order class.
 	It is the base class for all kinds of Orders.
 */
-class Order : ILoggable {
+class Order : public Subject {
 
 public:
 	int id;
@@ -34,7 +34,7 @@ public:
 	static int count;
 
 	Order();
-	~Order();
+	virtual ~Order();
 	Order(int test);
 	Order(Player* owner);
 	Order(int theID, Player* owner);
@@ -47,14 +47,16 @@ public:
 	virtual OrderType getOrderType() { return type; }
 	virtual Player* getOwner() const;
 	virtual Territory* getTarget() const;
+	virtual Territory* getSource() const;
 	virtual int getModifier() const;
+	virtual void setSource(Territory* source);
 	virtual void setOwner(Player* owner);
 	virtual void setTarget(Territory* target);
 	virtual void setModifier(int modifier);
 	virtual bool isTerritoryMine(string territoryToFind) const;
 	virtual Territory* findTerritory(string territoryToFind) const;
 
-	virtual void stringToLog() = 0;
+	virtual string stringToLog();
 
 	Order& operator=(const Order& order);
 	friend ostream& operator<<(ostream& output, const Order& order);
@@ -71,7 +73,8 @@ private:
 	const string description = "Unspecified order description";
 	Player* orderOwner;
 	Territory* target;
-	int modifier; 
+	Territory* source;
+	int modifier;
 };
 
 /*
@@ -90,7 +93,7 @@ public:
 	DeployOrder();
 	DeployOrder(int thisId);
 	DeployOrder(Player* owner);
-	~DeployOrder();
+	virtual ~DeployOrder();
 	DeployOrder(const DeployOrder& order);
 	DeployOrder(const Order& order);
 
@@ -102,7 +105,7 @@ public:
 	void setId(int theId) { this->id = theId; }
 	OrderType getOrderType() { return type; }
 
-	virtual void stringToLog();
+	virtual string stringToLog();
 
 	DeployOrder& operator=(const DeployOrder& order);
 	friend ostream& operator<<(ostream& output, const DeployOrder& dorder);
@@ -116,9 +119,7 @@ class AdvanceOrder : public Order {
 private:
 	const string nameOfOrder = "Advance";
 	const string description = "Move some armies from one of the current player's territories (source) to an adjacent territory (target).";
-	string targetTerritory;
-	Territory* target;
-	string sourceTerritory;
+	Territory* sourceTerritory;
 	Territory* source;
 	int armiesToMove;
 public:
@@ -126,7 +127,7 @@ public:
 
 	AdvanceOrder();
 	AdvanceOrder(int thisId, Player* orderOwner);
-	~AdvanceOrder();
+	virtual ~AdvanceOrder();
 	AdvanceOrder(const AdvanceOrder& order);
 	AdvanceOrder(const Order& order);
 
@@ -136,8 +137,10 @@ public:
 	string getDesc() const { return AdvanceOrder::description; }
 	void setId(int theId) { this->id = theId; }
 	OrderType getOrderType() { return type; }
+	Territory* getSource();
+	void setSource(Territory* source);
 
-	virtual void stringToLog();
+	virtual string stringToLog();
 
 	AdvanceOrder& operator=(const AdvanceOrder& order);
 	friend ostream& operator<<(ostream& output, const AdvanceOrder& aorder);
@@ -158,7 +161,7 @@ public:
 
 	BombOrder();
 	BombOrder(int thisId, Player* calledOrder);
-	~BombOrder();
+	virtual ~BombOrder();
 	BombOrder(const BombOrder& order);
 	BombOrder(const Order& order);
 
@@ -169,7 +172,7 @@ public:
 	void setId(int theId) { this->id = theId; }
 	OrderType getOrderType() { return type; }
 
-	virtual void stringToLog();
+	virtual string stringToLog();
 
 	BombOrder& operator=(const BombOrder& order);
 	friend ostream& operator<<(ostream& output, const BombOrder& border);
@@ -190,7 +193,7 @@ public:
 	BlockadeOrder();
 	BlockadeOrder(int thisId);
 	BlockadeOrder(Player* owner);
-	~BlockadeOrder();
+	virtual ~BlockadeOrder();
 	BlockadeOrder(const BlockadeOrder& order);
 	BlockadeOrder(const Order& order);
 
@@ -201,7 +204,7 @@ public:
 	void setId(int theId) { this->id = theId; }
 	OrderType getOrderType() { return type; }
 
-	virtual void stringToLog();
+	virtual string stringToLog();
 
 	BlockadeOrder& operator=(const BlockadeOrder& order);
 	friend ostream& operator<<(ostream& output, const BlockadeOrder& border);
@@ -225,7 +228,7 @@ public:
 	AirliftOrder(int thisId);
 	AirliftOrder(int thisId, Player* calledOrder);
 	AirliftOrder(Player* calledOrder);
-	~AirliftOrder();
+	virtual ~AirliftOrder();
 	AirliftOrder(const AirliftOrder& order);
 	AirliftOrder(const Order& order);
 
@@ -236,7 +239,7 @@ public:
 	void setId(int theId) { this->id = theId; }
 	OrderType getOrderType() { return type; }
 
-	virtual void stringToLog();
+	virtual string stringToLog();
 
 	AirliftOrder& operator=(const AirliftOrder& order);
 	friend ostream& operator<<(ostream& output, const AirliftOrder& aorder);
@@ -250,12 +253,13 @@ class NegotiateOrder : public Order {
 private:
 	const string nameOfOrder = "Negotiate";
 	const string description = "Prevent attacks between the current player and another player until the end of the turn.";
+	Player* targetPlayer;
 public:
 	OrderType type = OrderType::Negotiate;
 
 	NegotiateOrder();
 	NegotiateOrder(int thisId);
-	~NegotiateOrder();
+	virtual ~NegotiateOrder();
 	NegotiateOrder(const NegotiateOrder& order);
 	NegotiateOrder(const Order& order);
 
@@ -266,7 +270,7 @@ public:
 	OrderType getOrderType() { return type; }
 	void setId(int theId) { this->id = theId; }
 
-	virtual void stringToLog();
+	virtual string stringToLog();
 
 	NegotiateOrder& operator=(const NegotiateOrder& order);
 	friend ostream& operator<<(ostream& output, const NegotiateOrder& norder);
@@ -276,12 +280,13 @@ public:
 	OrdersList class.
 	It acts as a list of orders and enables its manipulation.
 */
-class OrdersList : ILoggable {
+class OrdersList : public Subject {
 private:
 	std::vector<Order*> orderList;
+	string stringToBeLogged;
 public:
 	OrdersList();
-	~OrdersList();
+	virtual ~OrdersList();
 	OrdersList(const OrdersList& list);
 	const std::vector<Order*>& getOrderList() const { return orderList; }
 
@@ -290,7 +295,7 @@ public:
 	void remove(int toRemove);
 	int getCount() { orderList.size(); }
 
-	virtual void stringToLog();
+	virtual string stringToLog();
 
 	OrdersList& operator=(const OrdersList& olist);
 
