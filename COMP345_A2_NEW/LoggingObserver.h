@@ -1,3 +1,4 @@
+
 #pragma once
 #include <list>
 #include <string>
@@ -52,4 +53,3 @@ public:
 	//Notify() will call Update()
 	virtual void Update(string log); //takes illogable as parameter?
 };
-

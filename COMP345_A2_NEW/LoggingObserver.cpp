@@ -1,3 +1,4 @@
+
 #include "LoggingObserver.h"
 #include "Orders.h"
 #include "GameEngine.h"
@@ -79,7 +80,7 @@ void LogObserver::Update(string nextLog) {
 
 	if (filewriting) {
 		//write to file 
-		filewriting << nextLog << endl; 
+		filewriting << nextLog << endl;
 
 		cout << "Successfully added log to file." << endl;
 		cout << endl;
@@ -91,3 +92,4 @@ void LogObserver::Update(string nextLog) {
 		return;
 	}
 }
+

@@ -1,3 +1,4 @@
+
 ﻿#include "Player.h"
 #include <iostream>
 #include <vector>
@@ -470,4 +471,5 @@ void printVector(vector<T> vec) {
 	for (T i : vec) {
 		cout << i << endl;
 	}
+
 }

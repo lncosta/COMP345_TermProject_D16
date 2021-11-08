@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <algorithm>
 #include <random>
@@ -60,7 +61,7 @@ bool CommandProcessor::validate(string input, string currentState) {
 			}
 		}
 		else if (input == "gamestart") {
-			if (currentState == "playersadded") {
+			if (currentState == "playersadded" || currentState == "gamestart") {
 				return true;
 			}
 		}
@@ -224,11 +225,14 @@ int GameEngine::menu(int i)
 		{
 			if (input == "loadmap") {
 				bool res = loadMap();
-				if (!res) {
-					break;
+				if (res) {
+					c->saveEffect(input);
+					transition("maploaded");
 				}
-				c->saveEffect(input);
-				transition("maploaded");
+				else {
+					transition("start");
+				}
+				
 			}
 			else if (input == "validatemap") {
 				map->validateWrapper();
@@ -243,15 +247,32 @@ int GameEngine::menu(int i)
 
 			}
 			else if (input == "addplayer") {
-				addPlayer();
+				
+				string playerName;
+				cin >> playerName;
+				addPlayer(playerName);
 				c->saveEffect(input);
-				transition("playersadded");
+				if (players.size() >= 6) {
+					cout << "Player limit has been reached. Game will now start." << endl;
+					c->saveEffect("gamestart");
+					transition("gamestart");
+				}
+				else {
+					transition("playersadded");
+				}
+				
 			}
 			else if (input == "gamestart") {
-				assignTerritories();
-				c->saveEffect(input);
-				transition("assignreinforcement");
-				mainGameLoop();
+				if (players.size() > 1) {
+					assignTerritories();
+					c->saveEffect(input);
+					transition("assignreinforcement");
+					mainGameLoop();
+				}
+				else {
+					cout << "There are not enough players in the game to start yet." << endl;
+				}
+				
 			}
 			else if (input == "replay") {
 				players.clear();
@@ -353,32 +374,28 @@ int GameEngine::mainGameLoop(void)
 
 }
 
-/*
+
 void GameEngine::addPlayer(string name) {
 
 	//Creating Player Objects:
 
-Player* temp = new Player();
-(temp).setName(name);
-cout << "Welcome to Warzone, " << name << "!" << endl;
-players.push_back(temp);
+	Player* temp = new Player();
+	temp->setName(name);
+	cout << "Welcome to Warzone, " << name << "!" << endl;
+	players.push_back(temp);
 
 
-cout << "All players have been added! Here is who will be playing:" << endl;
-for (Player p : players) {
-	cout << "Player " << (p).getPlayerID() << " - " << (p).getName() << endl;
-}
+
 }
 
-*/
+
 
 void GameEngine::addPlayer(void) {
 	int n = 0;
-	//cout << "Welcome to Warzone!" << endl;
 	cout << "This is the Player creation menu." << endl;
-	while (n < 1) {
+	while (n < 2 || n > 6) {
 		cout << "Please enter the number of desired players. " << endl;
-		cout << "The number should be greater than or equal to one." << endl;
+		cout << "The number should be between 2 and 6." << endl;
 		cin >> n;
 	}
 
@@ -477,13 +494,13 @@ void GameEngine::executeOrdersPhase(void) {
 			for (auto o : toexc) {
 				if (o->getOrderType() == OrderType::Deploy) { //Execute all deploy orders first.
 					orderObserver = new LogObserver(o);
-					
-					o->execute(); 
-					
+
+					o->execute();
+
 					delete orderObserver; //delete the observer before deleting the order
 					orderObserver = nullptr; //if we used smart pointers we wouldn't have to do this deletion here
-					
-					toDeleteFrom->remove(0); 
+
+					toDeleteFrom->remove(0);
 				}
 			}
 
@@ -551,6 +568,10 @@ bool GameEngine::assignTerritories(void) {
 	auto rng = std::default_random_engine{};
 	std::shuffle(begin(copy), end(copy), rng);
 
+	cout << "All players have been added! Here is who will be playing:" << endl;
+	for (Player* p : players) {
+		cout << "Player " << p->getPlayerID() << " - " << p->getName() << endl;
+	}
 
 	int playerCount = players.size();
 	int count = 0;
@@ -564,7 +585,7 @@ bool GameEngine::assignTerritories(void) {
 	}
 
 	//Shuffle players to determine play order:
-	shuffle(begin(players), end(players), rng);
+	random_shuffle(players.begin(), players.end());
 
 	//Create Deck object:
 
@@ -584,9 +605,3 @@ bool GameEngine::assignTerritories(void) {
 	//Enter play phase.
 	return true;
 }
-
-
-
-
-
-

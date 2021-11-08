@@ -47,7 +47,9 @@ public:
 	virtual OrderType getOrderType() { return type; }
 	virtual Player* getOwner() const;
 	virtual Territory* getTarget() const;
+	virtual Territory* getSource() const;
 	virtual int getModifier() const;
+	virtual void setSource(Territory* source);
 	virtual void setOwner(Player* owner);
 	virtual void setTarget(Territory* target);
 	virtual void setModifier(int modifier);
@@ -71,6 +73,7 @@ private:
 	const string description = "Unspecified order description";
 	Player* orderOwner;
 	Territory* target;
+	Territory* source;
 	int modifier;
 };
 

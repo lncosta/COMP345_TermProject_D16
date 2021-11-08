@@ -564,4 +564,3 @@ bool Map::validateWrapper(void) {
 	}
 
 }
-
