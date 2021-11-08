@@ -1,9 +1,9 @@
 #pragma once
 #include "CommandProcessing.h"
-
+#include <limits>
 using namespace std;
 
-// -----------------------------------FileCommandProcessor class ----------------------------------------
+// -----------------------------------FileLineReader class ----------------------------------------
 FileLineReader::FileLineReader() {
 	fileName = "not defined";
 }
@@ -11,8 +11,9 @@ FileLineReader::FileLineReader(string fileName) {
 	this->fileName = fileName;
 }
 
+// This method reads a file line by line
 string FileLineReader::readLineFromFile(void) {
-	input.open("copy.txt");
+	input.open(fileName);
 	string current;
 
 	// get the first line of the file
@@ -22,8 +23,8 @@ string FileLineReader::readLineFromFile(void) {
 	// remove the first line from the file
 	int count = 0;
 	string line;
-	ifstream inFile("copy.txt");
-	ofstream outFile("removefirstline.txt");
+	ifstream inFile(fileName);
+	ofstream outFile("removedfirstline.txt");
 	while (getline(inFile, line)) {
 		count++;
 		if (count != 1) {
@@ -36,7 +37,7 @@ string FileLineReader::readLineFromFile(void) {
 	// delete the original file
 	remove("copy.txt");
 	// change the file name of removeline.txt to copy.txt
-	rename("removefirstline.txt", "copy.txt");
+	rename("removedfirstline.txt", "copy.txt");
 
 	return(current);
 }
@@ -51,6 +52,7 @@ FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileLineReader* process
 	fprocessor = processor;
 }
 
+// this class is inherited from CommandProcessor, so it can overwrite the getCommand() and change the source to file
 Command* FileCommandProcessorAdapter::getCommand() {
 	// use adaptee object to read commands from a file
 	string input = fprocessor->readLineFromFile();
@@ -59,19 +61,26 @@ Command* FileCommandProcessorAdapter::getCommand() {
 
 }
 
+
 // -----------------------------------CommandProcessor class ----------------------------------------
+
+
 string CommandProcessor::readCommand(void) {
-	string input;
-	cin >> input;
+	string input;	
+
+	getline(cin, input); // get the whole line from user's input	
 	return input;
+	
 }
 
 Command* CommandProcessor::saveCommand(string command) {
 	Command* temp = new Command(command);
 	commandVector.push_back(temp);
+	Notify();
 	return temp;
 }
 
+//can be used by the GameEngine to read and save a command when needed
 Command* CommandProcessor::getCommand(void)
 {
 	string input = readCommand();
@@ -113,7 +122,7 @@ bool CommandProcessor::validate(string input, string currentState) {
 			}
 		}
 		else if (input == "gamestart") {
-			if (currentState == "playersadded") {
+			if (currentState == "playersadded" || currentState == "gamestart") {
 				return true;
 			}
 		}
@@ -127,11 +136,10 @@ bool CommandProcessor::validate(string input, string currentState) {
 				return true;
 			}
 		}
-
-
 	}
 
 	cout << "It is a game command, but not valid in the current state" << endl;
+
 
 
 	return false;
@@ -142,12 +150,12 @@ vector<Command*>CommandProcessor::getCommandVector() {
 	return commandVector;
 };
 
+string CommandProcessor::stringToLog() {
+	cout << "CommandProcessor will write to file gamelog.txt here" << endl;
+	return "Inputted command: " + commandVector.back()->returnCommand();
+}
 
 // -----------------------------------Command class ----------------------------------------
-
-Command::Command() {
-
-}
 Command::Command(string input) {
 	this->command = input;
 }
@@ -170,7 +178,7 @@ void Command::saveEffect(string input) {
 		theEffect = "Map has been validated.";
 	}
 	else if (input == "addplayer") {
-		theEffect = "Player(s) has been added.";
+		theEffect = "The player has been added.";
 	}
 	else if (input == "gamestart") {
 		theEffect = "Reinforcement has been assigned.";
@@ -183,5 +191,11 @@ void Command::saveEffect(string input) {
 	}
 
 	this->effect = theEffect;
+	Notify();
+}
+
+string Command::stringToLog() {
+	cout << "Command will write to file gamelog.txt here" << endl;
+	return "Current effect: " + effect;
 }
 

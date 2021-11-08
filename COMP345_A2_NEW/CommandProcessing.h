@@ -4,62 +4,56 @@
 #include <fstream>
 #include <vector>
 #include "commandProcessing.h"
+#include "LoggingObserver.h"
+
+/*COMP 345 Section D - Assignment #2
+* Fall 2021
+* Due November 12th, 2021
+Written by
+Yupei Hsu 40139071
+Sarah-Noemie Laurin 40150861
+Arie Naccache 40099156
+Luiza Nogueira Costa 40124771
+Tomas Pereira 40128504
+*/
 using namespace std;
 
 
-class Command {
+class Command : public Subject {
 	string command;
 	string effect;
 public:
 	//Constructors
 	Command(void);
-	~Command(void);
 	Command(string command);
-
-	//Getter and setter
 	string returnCommand(void);
 	string returnEffect(void);
+	//The Command::saveEffect() method can be used to save the effect of the command as a string. 
+	void saveEffect(string input);
 
-	//Assignment operator
-	//Command& operator =(const Command& other);
-
-	//Stream insertion:
-	//friend ostream& operator << (ostream& out, const Command& c);
-	//friend istream& operator >> (istream& in, Command& c);
-
-	//Member function
-	void saveEffect(string effect);
+	virtual string stringToLog();
 };
 
 
-class CommandProcessor {
+class CommandProcessor : public Subject {
 private:
 	// Data members	
 	vector<Command*> commandVector;
 
-public:
-	// constructors
-	/*CommandProcessor(void);*/
-	//~CommandProcessor(void);
-
-	// getter
-	vector<Command*> getCommandVector();
-
-	//Assignment operator
-	//CommandProcessor& operator =(const CommandProcessor& other);
-
-	//Stream insertion:
-	//friend ostream& operator << (ostream& out, const CommandProcessor& cp);
-	//friend istream& operator >> (istream& in, CommandProcessor& cp);
-
-	// Member functions
-	// getCommnad(void) is for GameEngine/ Player objects's use, which reads a command and then saves the command
-	virtual string readCommand(void);
+protected:
+	//The protected CommandProcessor::readCommand() method reads a string from the console. 
+	string readCommand(void);
+	//The protected CommandProcessor::saveCommand() method saves the command in the list of commands.
 	Command* saveCommand(string command);
-	Command* getCommand(void);
+public:
+	// The public CommandProcessor::getCommand() method can be used by the GameEngine to read and save a command when needed. 
+	Command* getCommand(void); 
+	//The CommandProcessor::validate() command can be used to validate if a given command is valid in the current game state. 
 	bool validate(string input, string currentState);
-
+	vector<Command*> getCommandVector();
+	virtual string stringToLog();
 };
+
 
 
 class FileLineReader {
@@ -107,6 +101,3 @@ public:
 	/*friend ostream& operator << (ostream& out, const FileCommandProcessorAdapter& fp);
 	friend istream& operator >> (istream& in, FileCommandProcessorAdapter& fp);	 */
 };
-
-
-

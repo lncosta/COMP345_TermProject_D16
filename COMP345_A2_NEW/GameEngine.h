@@ -5,13 +5,23 @@
 #include "Cards.h"
 #include "Map.h"
 #include "Orders.h"
+#include "LoggingObserver.h"
 #include "CommandProcessing.h"
 
+/*COMP 345 Section D - Assignment #2
+* Fall 2021
+* Due November 12th, 2021
+Written by
+Yupei Hsu 40139071
+Sarah-Noemie Laurin 40150861
+Arie Naccache 40099156
+Luiza Nogueira Costa 40124771
+Tomas Pereira 40128504
+*/
 
 using namespace std;
 
-
-class GameEngine {
+class GameEngine : public Subject {
 
 private:
 	string state;
@@ -19,16 +29,17 @@ private:
 	Map* map;
 	Deck* deck;
 
-public:	
+
+public:
 
 	//Constructors
 	GameEngine(void);
-	~GameEngine(void);
 	GameEngine(const GameEngine& other);
 
 	//Getter and setter
 	void setState(string newState);
 	string getState(void);
+
 
 	//Assignment operator
 	GameEngine& operator =(const GameEngine& other);
@@ -37,14 +48,18 @@ public:
 	friend ostream& operator << (ostream& out, const GameEngine& g);
 	friend istream& operator >> (istream& in, GameEngine& g);
 
-	//Member function
+	//Methods
 	int menu(int i);
-	void transition(string newState); 
+	void transition(string newState);
 	void addPlayer(void);
 	void reinforcementPhase(void);
 	void issueOrdersPhase(void);
 	void executeOrdersPhase(void);
 	int mainGameLoop(void);
-	bool loadMap(void);
+	void addPlayer(string name);
+	bool loadMap(string fileName);
 	bool assignTerritories(void);
+	virtual string stringToLog();
+
 };
+
