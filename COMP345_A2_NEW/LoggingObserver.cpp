@@ -1,3 +1,4 @@
+
 #include "LoggingObserver.h"
 #include "Orders.h"
 #include "GameEngine.h"
@@ -91,3 +92,4 @@ void LogObserver::Update(string nextLog) {
 		return;
 	}
 }
+

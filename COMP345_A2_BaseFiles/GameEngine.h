@@ -1,4 +1,5 @@
 #pragma once
+#include "LoggingObserver.h"
 #include <string>
 #include <iostream>
 #include <vector>
@@ -8,7 +9,7 @@ using namespace std;
 
 
 
-class GameEngine {
+class GameEngine : public Subject {
 
 private:
 	string state;
@@ -38,13 +39,14 @@ public:
 	//Methods
 	int menu(int i);
 	void transition(int index); // if validated ok ,then call setState;	
-
+	//inherited method
+	virtual string stringToLog();
 
 
 
 };
 
-class Command {
+class Command : public Subject {
 	string command;
 	string effect;
 	void saveEffect(string effect);
@@ -54,11 +56,12 @@ public:
 	Command(string command);
 	string returnCommand(void);
 	
-
+	//inherited method
+	virtual string stringToLog();
 };
 
 
-class CommandProcessor {
+class CommandProcessor : public Subject {
 private:
 	// Data members	
 	vector<Command*> commandVector;
@@ -66,7 +69,8 @@ private:
 	// Methods
 	string readCommand(void);
 	Command* saveCommand(string command);
-	
+	//inherited method
+	virtual string stringToLog();
 
 
 public:

@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <algorithm>
 #include <random>
@@ -604,8 +605,3 @@ bool GameEngine::assignTerritories(void) {
 	//Enter play phase.
 	return true;
 }
-
-
-
-
-
