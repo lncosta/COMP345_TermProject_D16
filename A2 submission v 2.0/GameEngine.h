@@ -31,10 +31,15 @@ private:
 
 
 public:
+	//Neutral Player:
+	Player* neutral; 
 
 	//Constructors
 	GameEngine(void);
 	GameEngine(const GameEngine& other);
+
+	//Destructor:
+	~GameEngine(void); 
 
 	//Getter and setter
 	void setState(string newState);

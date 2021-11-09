@@ -27,6 +27,23 @@ GameEngine::GameEngine(const GameEngine& other)
 	state = other.state;
 }
 
+GameEngine::~GameEngine(void)
+{
+	cout << "Destroying Game Engine" << endl;
+	if (neutral != NULL) {
+		delete neutral;
+		neutral = NULL;
+	}
+	if (map != NULL) {
+		delete map;
+		map = NULL;
+	}
+	if (deck!= NULL) {
+		delete deck;
+		deck = NULL;
+	}
+}
+
 void GameEngine::setState(string newState)
 {
 	state = newState;
@@ -525,12 +542,12 @@ bool GameEngine::loadMap(string fileName) {
 	}
 }
 bool GameEngine::assignTerritories(void) {
-	//Shuffle the vector before assigning. Solution from https://stackoverflow.com/questions/6926433/how-to-shuffle-a-stdvector
+	//Shuffle the vector before assigning territories:
 	string result;
 	bool intl = false;
 	vector<Territory*> copy = map->getTerritoyVector();
-	auto rng = std::default_random_engine{};
-	std::shuffle(begin(copy), end(copy), rng);
+	random_shuffle(copy.begin(), copy.end());
+	//Determine whether user input will be used:
 	cout << "Would you like to use console input to play the game? Y/N" << endl;
 	cin >> result;
 	while (result != "N" && result != "n" && result != "y" && result != "Y") {
@@ -539,6 +556,7 @@ bool GameEngine::assignTerritories(void) {
 	if (result == "Y" || result == "y") {
 		intl = true;
 	}
+	//Print out players:
 	cout << "All players have been added! Here is who will be playing:" << endl;
 	for (Player* p : players) {
 		cout << "Player " << p->getPlayerID() << " - " << p->getName() << endl;
@@ -547,8 +565,10 @@ bool GameEngine::assignTerritories(void) {
 		}
 	}
 
-
-
+	//Create neutral player:
+	neutral = new Player(); 
+	neutral->setName("Neutral"); 
+	//Assign territories:
 	int playerCount = players.size();
 	int count = 0;
 	int index = 0;
@@ -564,8 +584,8 @@ bool GameEngine::assignTerritories(void) {
 	random_shuffle(players.begin(), players.end());
 
 	//Create Deck object:
-
 	deck = new Deck();
+
 	//Add initial army value and draw cards:
 	for (auto p : players) {
 		p->getPlayerHand()->setDeck(deck);
