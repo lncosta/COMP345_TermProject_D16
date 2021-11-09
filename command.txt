@@ -1,8 +1,0 @@
-start
-loadmap europe.map
-validatemap
-addplayer yupei
-addplayer steve
-gamestart
-quit
-
