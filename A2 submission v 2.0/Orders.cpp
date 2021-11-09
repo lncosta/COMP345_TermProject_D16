@@ -687,20 +687,9 @@ BlockadeOrder::BlockadeOrder(const Order& order) {
 */
 bool BlockadeOrder::validate() {
 	bool hasCard = false;
-	bool targetOK = this->isTerritoryMine(targetTerritory); // checking if the player owns the target territory
+	bool targetOK = this->isTerritoryMine(target->getTerritoryName()); // checking if the player owns the target territory
 
-	// checks whether the player has the correct card and erase it
-	for (Card* c : this->getOwner()->getHandOfCards()) {
-		if (c->getType() == 2) {
-			this->getOwner()->getPlayerHand()->eraseCard(c);
-			hasCard = true;
-			return (hasCard && targetOK);
-		}
-		else {
-			cout << "Invalid Order. \nPlayer " << this->getOwner()->getName() << " does not own a blockade card.\n" << endl;
-			return false;
-		}
-	}
+	return targetOK; 
 }
 /*
 	BlockadeOrder execute function
@@ -715,23 +704,17 @@ void BlockadeOrder::execute() {
 		return;
 	}
 	else {
-		Territory* temp = this->findTerritory(targetTerritory);
-		int targetArmies = temp->getArmiesPlaced();
-
-		std::vector<Territory*>::iterator it = std::find(this->getOwner()->getTowned().begin(), this->getOwner()->getTowned().end(), this->findTerritory(targetTerritory));
-		if (it != this->getOwner()->getTowned().end()) {
-			// find the index of the Territory*
-			int index = std::distance(this->getOwner()->getTowned().begin(), it);
-			Territory* territoryBlockaded = this->getOwner()->getTowned()[index];
-			this->getOwner()->getTowned().erase(it);
+		//Set army number to double:
+		target->setArmiesPlaced(2 * target->getArmiesPlaced());
+		// create a neutral player, give them the target territory and double the armies on it
+		if (neutralPlayer == NULL) {
+			neutralPlayer = new Player();
+			neutralPlayer->setName("Neutral");
 		}
+		neutralPlayer->addTerritory(target);
+		getOwner()->removeTerritory(target);
 
-		// create a neutral player, give him the target territory and double the armies on it
-		Player neutralPlayer;
-		neutralPlayer.addTerritory(temp);
-		temp->setArmiesPlaced(targetArmies * 2);
-
-		cout << "The neutral player now owns this territory" << endl;
+		cout << "The neutral player now owns this territory." << endl;
 		cout << "This execution was successful!" << endl;
 		//Notify();
 	}

@@ -68,7 +68,7 @@ public:
 	friend class BlockadeOrder;
 	friend class NegotiateOrder;
 
-
+	Player* neutralPlayer;
 private:
 	const string nameOfOrder = "Unspecified Order";
 	const string description = "Unspecified order description";
@@ -209,6 +209,7 @@ public:
 
 	BlockadeOrder& operator=(const BlockadeOrder& order);
 	friend ostream& operator<<(ostream& output, const BlockadeOrder& border);
+
 };
 
 /*

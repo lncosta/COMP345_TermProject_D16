@@ -21,6 +21,7 @@ Tomas Pereira 40128504
 
 using namespace std;
 
+
 class GameEngine : public Subject {
 
 private:
@@ -60,6 +61,7 @@ public:
 	void reinforcementPhase(void);
 	void issueOrdersPhase(void);
 	void executeOrdersPhase(void);
+	void removePlayer(Player* toRemove);
 	int mainGameLoop(void);
 	void addPlayer(string name);
 	bool loadMap(string fileName);

@@ -232,7 +232,7 @@ vector<Territory*> Player::toAttack()
 	}
 	//At a later development stage, priority will be determined using sorting and the player profile:
 	//sort(attack.begin(), attack.end());
-	
+
 	//For testing purposes while priority definition is still not implemented, priority is set to random:
 	random_shuffle(attack.begin(), attack.end());
 	return attack;
@@ -446,6 +446,7 @@ Order* Player::discoverOrderType(string x) {
 		newOrder->setOwner(this);
 		determineTarget(1, newOrder); 
 		newOrder->setModifier(0);
+		newOrder->neutralPlayer = neutral; 
 
 	}
 	else if (x.compare(options[4]) == 0) {

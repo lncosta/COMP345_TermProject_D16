@@ -280,7 +280,9 @@ void GameEngine::startupPhase()
 
 }
 
-
+void GameEngine::removePlayer(Player* toRemove) {
+	players.erase(remove(players.begin(), players.end(), toRemove), players.end());
+}
 int GameEngine::mainGameLoop(void)
 
 {
@@ -302,6 +304,7 @@ int GameEngine::mainGameLoop(void)
 			}
 		}
 		if (winningPlayers.size() <= 1) {
+			cout << "Player " << winningPlayers[0]->getName() << " has won!" << endl; 
 			winningCondition = true;
 		}
 		else {
@@ -312,7 +315,7 @@ int GameEngine::mainGameLoop(void)
 				if (find(winningPlayers.begin(), winningPlayers.end(), p) == winningPlayers.end()) {
 					//One of the players does not own any territories.
 					cout << "Player " << p->getName() << " does not own any territories and thus must be removed from the game." << endl;
-					players.erase(players.begin() + i);
+					removePlayer(p); 
 				}
 				i++;
 			}
@@ -556,18 +559,23 @@ bool GameEngine::assignTerritories(void) {
 	if (result == "Y" || result == "y") {
 		intl = true;
 	}
+	//Create neutral player:
+	neutral = new Player();
+	neutral->setName("Neutral");
 	//Print out players:
 	cout << "All players have been added! Here is who will be playing:" << endl;
 	for (Player* p : players) {
 		cout << "Player " << p->getPlayerID() << " - " << p->getName() << endl;
-		if (intl) {
+		if (intl) { //Sets intelligence modifier for all players (demo purposes):
 			p->intelligent = true;
 		}
+		//Associate the neutral player with all players:
+		p->neutral = neutral;
+		//Associate Map with players:
+		p->map = map;
 	}
 
-	//Create neutral player:
-	neutral = new Player(); 
-	neutral->setName("Neutral"); 
+	
 	//Assign territories:
 	int playerCount = players.size();
 	int count = 0;

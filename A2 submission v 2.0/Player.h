@@ -24,9 +24,11 @@ class OrdersList;
 class Hand;
 class Order;
 class DeployOrder;
+class Map;
+
 
 class Player {
-	static int playersCreated;
+	
 private:
 	//Data members:
 	int playerID;
@@ -36,6 +38,7 @@ private:
 	vector<Card*> cards; //Will become a Hand* pointer once code is integrated with Part 5 of assignment. For now, a hand is simply considered a collection of cards held by the Player itself. 
 	OrdersList* orders;
 	vector<Player*> cannotAttack; // Used with the negotiate to store the players that can't be attacked
+	static int playersCreated;
 
 	//From Cards
 	Hand* playerHand;
@@ -92,6 +95,8 @@ public:
 	//Intelligent player:
 	bool intelligent;
 
+	Player* neutral;
+	Map* map;
 
 	//Friend classes:
 	friend class Card;
