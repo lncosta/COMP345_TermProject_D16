@@ -32,6 +32,7 @@ public:
 	int id;
 	OrderType type = OrderType::Unspecified;
 	static int count;
+	int armyModifier; 
 
 	Order();
 	virtual ~Order();

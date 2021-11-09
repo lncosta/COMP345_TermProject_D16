@@ -354,27 +354,6 @@ string DeployOrder::stringToLog() {
 */
 AdvanceOrder::AdvanceOrder() : Order(count) {
 
-	/*string targetTString;
-	cout << "Choose The Territory to advance upon: ";
-	cin >> targetTString;
-	cout << "DEBUG: TRYING TO ACCESS TOATTACK" << endl;
-	vector<Territory*> toAtk = orderOwner->toAttack();
-	cout << "DEBUG: TRYING TO SET TARGET" << endl;
-	for (Territory* p : toAtk) {
-		if (p->getTerritoryName() == targetTString)
-			target = p;
-		cout << "DEBUG: TARGET WAS CORRECTLY SET" << endl;
-	}*/
-
-
-	cout << "How many armies would you like to deploy there?" << endl;
-	int armiesToPlace;
-	cin >> armiesToPlace;
-	armiesToMove = armiesToPlace;
-
-	// THIS IS THE PROBLEM AREA: Exception thrown: read access violation. **this** was 0x24.
-	//source = orderOwner->toDefend()[0]; // Will be assigned later
-	//target = orderOwner->toAttack()[0]; // Will be assigned later
 }
 /*
 	AdvanceOrder Constructor overloading with id.
@@ -421,12 +400,12 @@ bool AdvanceOrder::validate() {
 	bool sourceBelongsToPlayer = false;
 	bool targetIsAdjacent = false;
 	bool notEnoughArmies = false;
-
+	
 	// Checking that the player owns the source territory
 	vector<Territory*> playerOwnedT = orderOwner->getTowned();
 	string name = getSource()->getTerritoryName();
 	for (Territory* p : playerOwnedT) {
-		if (p->getTerritoryName() == getSource()->getTerritoryName()) {
+		if (p->getTerritoryName() == name) {
 			sourceBelongsToPlayer = true;
 
 			break;
@@ -455,7 +434,7 @@ bool AdvanceOrder::validate() {
 		cout << "The Order is Invalid: The Source Territory Does Not Have Enough Armies to Move" << endl;
 		return false;
 	}
-	cout << "The Order is Valid: Proceeding with Execution";
+	cout << "The Order is Valid: Proceeding with Execution" << endl;
 	return true;
 }
 /*
@@ -464,12 +443,6 @@ bool AdvanceOrder::validate() {
 */
 void AdvanceOrder::execute() {											// Last Step is to Give the Player a card if they have conquered this turn
 	cout << "Executing " << this->getName() << "..." << endl;
-	//if (modifier == 0) { //Advance is in attack mode
-	//	setSource(orderOwner->toDefend()[0]);
-	//}
-	//else {
-	//	setSource(orderOwner->toDefend()[0]);
-	//}
 	cout << "DEBUG: ATTEMPTING TO VALIDATE" << endl;
 	bool canExecute = validate();
 	cout << "DEBUG: VALIDATION COMPLETED" << endl;
@@ -482,14 +455,14 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 		//execution occurs...
 
 		// If the Player is Moving Armies Between Their Territories
-		if (getTarget()->getOwner() == getSource()->getOwner()) {
-			int srcArmiesAfter = getSource()->getArmiesPlaced() - armiesToMove;
+		if (getModifier() == 1) {
+			int srcArmiesAfter = getSource()->getArmiesPlaced() - armyModifier;
 			getSource()->setArmiesPlaced(srcArmiesAfter);
-			int targetArmiesAfter = getTarget()->getArmiesPlaced() + armiesToMove;
+			int targetArmiesAfter = getTarget()->getArmiesPlaced() + armyModifier;
 			getTarget()->setArmiesPlaced(targetArmiesAfter);
 		}
 		// If the Player is Attacking Another
-		if (getTarget()->getOwner() != getSource()->getOwner()) {
+		else {
 			// Checking that a Negotiate order is not active
 			for (Player* p : this->getOwner()->getCantAttack()) {
 				if (getTarget()->getOwner() == p) {
@@ -498,12 +471,19 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 				}
 			}
 			// Loop continues as long as there are attackers left
-			while (armiesToMove != 0) {
+			while (armyModifier > 0) {
 				// At the beginnings check if defenders are still standing, covers the case where there are no defenders
-				if (getTarget()->getArmiesPlaced() == 0) {
+				if (getTarget()->getArmiesPlaced() <= 0) {
 					cout << "The Territory Has Been Conquered. The Remaining Attackers will be moved to it." << endl;
+					//Remove territory from original owner:
+					(getTarget()->getOwner())->removeTerritory(getTarget());
+					//Make territory transfer and move armies:
 					getTarget()->setOwner(getOwner());
-					getTarget()->setArmiesPlaced(armiesToMove);
+					getOwner()->addTerritory(getTarget()); 
+					int srcArmiesAfter = getSource()->getArmiesPlaced() - armyModifier;
+					getSource()->setArmiesPlaced(srcArmiesAfter);
+					int targetArmiesAfter = getTarget()->getArmiesPlaced() + armyModifier;
+					getTarget()->setArmiesPlaced(targetArmiesAfter);
 					break;
 				}
 
@@ -515,7 +495,7 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 				}
 				// Checking if an attacker gets killed
 				if (defenderRoll <= 7) {
-					armiesToMove = armiesToMove - 1;
+					armyModifier = armyModifier - 1;
 				}
 			}
 		}

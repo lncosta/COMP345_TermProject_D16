@@ -75,6 +75,14 @@ vector<Territory*> Territory::getAdjTerritories(void) {
 	return adjTerritories;
 }
 
+void Territory::printAdjTerritories(void) {
+	cout << "{";
+	for (auto t : adjTerritories) {
+		cout << t->getTerritoryName() << ", "; 
+	}
+	cout << "\b\b}" << endl; 
+}
+
 void Territory::addAdj(Territory* o)
 {
 	adjTerritories.push_back(o);

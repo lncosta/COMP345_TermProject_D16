@@ -61,6 +61,7 @@ public:
 	int getPlayerID(void);
 	int getArmiesHeld(void);
 	vector<Territory*> getTowned(void);
+	void removeTerritory(Territory* toRemove);
 	vector<Card*> getCards(void);
 	OrdersList* getOrders(void);
 	vector<Player*> getCantAttack(void);
@@ -73,9 +74,12 @@ public:
 	~Player(void);
 	//Methods:
 	void printOrderList(void);
+	int deployArmies(void);
 	Order* discoverOrderType(string x);
 	vector<Territory*> toDefend();
 	vector<Territory*> toAttack();
+	void determineTarget(int state, Order* order);
+	void determineSource(int state, Order* order);
 	void issueOrder();
 	void addTerritory(Territory* ter);
 

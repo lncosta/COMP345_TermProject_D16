@@ -62,6 +62,7 @@ public:
 	int getContinentID(void);
 	int getTerritoryID(void);
 	vector<Territory*> getAdjTerritories(void);
+	void printAdjTerritories(void);
 	void addAdj(Territory* o);
 	void setOwner(Player* o);
 	Player* getOwner(void);
