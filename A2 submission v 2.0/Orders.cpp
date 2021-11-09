@@ -846,7 +846,7 @@ string AirliftOrder::stringToLog() {
 	NegotiateOrder Default Constructor
 */
 NegotiateOrder::NegotiateOrder() : Order(count) {
-	targetPlayer = getTarget()->getOwner();
+	
 }
 /*
 	NegotiateOrder Constructor overloading with id.
@@ -883,23 +883,13 @@ NegotiateOrder::NegotiateOrder(const Order& order) {
 	This is a dummy validation to validate whether the order can be executed or not.
 */
 bool NegotiateOrder::validate() {
-	bool hasCard = false;
-	// Check that the player owns the given card
-	for (Card* c : this->getOwner()->getHandOfCards()) {
-		if (c->getType() == 4) {
-			this->getOwner()->getPlayerHand()->eraseCard(c);
-			hasCard = true;
-		}
-	}
+	Player* targetPlayer = getTarget()->getOwner();
 	// Checking that the Player who called the order isnt the target
 	if (getOwner() == targetPlayer) {
 		cout << "The Order is Invalid: You Cannot Negotiate with Yourself" << endl;
 		return false;
 	}
-	else if (hasCard == false) {
-		cout << "The Order is Invalid: You Do Not Have a Diplomacy Card" << endl;
-		return false;
-	}
+	
 	cout << "The Order is Valid: Proceeding with Execution";
 	return true;
 }
@@ -917,6 +907,7 @@ void NegotiateOrder::execute() {
 	}
 	else {
 		//execution occurs...
+		Player* targetPlayer = getTarget()->getOwner(); 
 		getOwner()->getCantAttack().push_back(targetPlayer);
 		targetPlayer->getCantAttack().push_back(this->getOwner());
 		cout << "This execution was successful!" << endl;

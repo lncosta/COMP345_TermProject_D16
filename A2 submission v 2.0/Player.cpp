@@ -7,6 +7,7 @@
 #include <array>
 using namespace std;
 
+
 class Cards;
 class Order;
 class OrderList;
@@ -52,6 +53,7 @@ Player::Player(void)
 	playerID = playersCreated;
 	orders = new OrdersList();
 	playerHand = new Hand();
+	intelligent = false;
 }
 
 Player::Player(const Player& other)
@@ -239,6 +241,7 @@ void Player::determineTarget(int state, Order* order) {
 	vector<Territory*> defend = toDefend();
 	vector<Territory*> attack = toAttack();
 	Territory* target; 
+	
 	if (state == 1) { //Target is one of Player's own territories -> taken from toDefend()
 		cout << "Territories available as a target:" << endl;
 		int i = 1; 
@@ -248,17 +251,24 @@ void Player::determineTarget(int state, Order* order) {
 			t->printAdjTerritories();
 			i++;
 		}
-		int index;
-		cout << "Please select one of the territories above by typing their index value: " << endl; 
-		cin >> index;
-		if (defend.size() >= index && index > 0) {
-			cout << "Territory selected as target: " << defend[index - 1]->getTerritoryName() << endl;
-			target = defend[index - 1];
+		if (intelligent) {
+			int index;
+			cout << "Please select one of the territories above by typing their index value: " << endl;
+			cin >> index;
+			if (defend.size() >= index && index > 0) {
+				cout << "Territory selected as target: " << defend[index - 1]->getTerritoryName() << endl;
+				target = defend[index - 1];
+			}
+			else {
+				cout << "Default territory selected as target: " << defend[0]->getTerritoryName() << endl;
+				target = defend[0];
+			}
 		}
 		else {
 			cout << "Default territory selected as target: " << defend[0]->getTerritoryName() << endl;
 			target = defend[0];
 		}
+		
 		
 	}
 	else {	//Target is one of the enemy territory -> taken from toAttack
@@ -270,16 +280,23 @@ void Player::determineTarget(int state, Order* order) {
 			t->printAdjTerritories();
 			i++; 
 		}
-		cout << "Please select one of the territories above by typing their index value: " << endl;
-		cin >> index;
-		if (attack.size() >= index && index > 0) {
-			cout << "Territory selected as target: " << attack[index - 1]->getTerritoryName() << endl;
-			target = attack[index - 1];
+		if (intelligent) {
+			cout << "Please select one of the territories above by typing their index value: " << endl;
+			cin >> index;
+			if (attack.size() >= index && index > 0) {
+				cout << "Territory selected as target: " << attack[index - 1]->getTerritoryName() << endl;
+				target = attack[index - 1];
+			}
+			else {
+				cout << "Default territory selected as target: " << attack[0]->getTerritoryName() << endl;
+				target = attack[0];
+			}
 		}
 		else {
 			cout << "Default territory selected as target: " << attack[0]->getTerritoryName() << endl;
 			target = attack[0];
 		}
+		
 	}
 
 	//Setting target information to the created order:
@@ -299,17 +316,24 @@ void Player::determineSource(int state, Order* order) {
 			t->printAdjTerritories();
 			i++;
 		}
-		int index;
-		cout << "Please select one of the territories above by typing their index value: " << endl;
-		cin >> index;
-		if (defend.size() >= index && index > 0) {
-			cout << "Territory selected as source:" << defend[index - 1]->getTerritoryName() << endl;
-			source = defend[index - 1];
+		if (intelligent) {
+			int index;
+			cout << "Please select one of the territories above by typing their index value: " << endl;
+			cin >> index;
+			if (defend.size() >= index && index > 0) {
+				cout << "Territory selected as source:" << defend[index - 1]->getTerritoryName() << endl;
+				source = defend[index - 1];
+			}
+			else {
+				cout << "Default territory selected as target:" << defend[0]->getTerritoryName() << endl;
+				source = defend[0];
+			}
 		}
 		else {
 			cout << "Default territory selected as target:" << defend[0]->getTerritoryName() << endl;
 			source = defend[0];
 		}
+		
 	}
 	order->setSource(source); 
 
@@ -328,6 +352,9 @@ void Player::printOrderList(void) {
 	cout << *getPlayerHand();
 }
 int Player::deployArmies(void) {
+	if (!intelligent) {
+		return 10;
+	}
 	cout << "Please indicate how many armies you would like to attempt to deploy:" << endl; 
 	int x; 
 	cin >> x;
@@ -372,13 +399,19 @@ Order* Player::discoverOrderType(string x) {
 		}
 	}
 	else if (x.compare(options[1]) == 0) { //Still requires the moving from current to target mechanism
-		cout << "You have issued an advance order. Please indicate whether you would like to attack another player's territory or defend one of your own:" << endl;
 		string cmd;
-		cin >> cmd;
-		while (cmd != "attack" && cmd != "defend") {
+		if (!intelligent) {
+			cmd = "attack";
+		}
+		else {
 			cout << "You have issued an advance order. Please indicate whether you would like to attack another player's territory or defend one of your own:" << endl;
 			cin >> cmd;
+			while (cmd != "attack" && cmd != "defend") {
+				cout << "You have issued an advance order. Please indicate whether you would like to attack another player's territory or defend one of your own:" << endl;
+				cin >> cmd;
+			}
 		}
+		
 		if (cmd == "attack") {
 			newOrder = new AdvanceOrder();
 			newOrder->setOwner(this);
@@ -443,6 +476,7 @@ void Player::issueOrder()
 	string x;
 	Card* played;
 	LogObserver* orderObserver = new LogObserver(orders);
+	int index = 0;
 
 	vector<Territory*> defend = toDefend();
 	vector<Territory*> attack = toAttack();
@@ -466,17 +500,32 @@ void Player::issueOrder()
 	else { //Attack and Card phase.
 		printOrderList();
 		cout << "0 - ADVANCE" << endl;
-		cout << "Please select a card to play (type the correct integer)." << endl;
-		int index;
-		cin >> index;
-		if (index == 0) {
-			x = "advance";
-			played = new Card();
+		if (!intelligent) {
+			
+			if (getHandOfCards().size() < 1) {
+				x = "advance";
+				played = new Card();
+			}
+			else {
+				index = 1 + (rand() % static_cast<int>(getHandOfCards().size() - 1 + 1));
+				played = getPlayerHand()->getHandOfCards()[index - 1];
+				x = played->orderType();
+			}
 		}
 		else {
-			played = getPlayerHand()->getHandOfCards()[index - 1];
-			x = played->orderType();
+			cout << "Please select a card to play (type the correct integer)." << endl;
+			
+			cin >> index;
+			if (index == 0) {
+				x = "advance";
+				played = new Card();
+			}
+			else {
+				played = getPlayerHand()->getHandOfCards()[index - 1];
+				x = played->orderType();
+			}
 		}
+		
 
 
 		vector<string> options2;

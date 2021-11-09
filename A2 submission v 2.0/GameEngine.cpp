@@ -423,15 +423,19 @@ void GameEngine::issueOrdersPhase(void) {
 		cout << "Player - " << p->getName() << endl;
 		round = true;
 		while (round) {
-			if (p->getPlayerHand()->getHandOfCards().size() < 1 && p->getArmiesHeld() < 1) {
-				cout << "The player does not own any armies and has an empty hand of cards. Player may not issue any orders." << endl;
-				round = false;
-				break;
-			}
 			p->issueOrder();
 			string orderIssued = (p->getOrders())->getOrderList().back()->getName();
 			cout << "Would you like to issue more orders? Y/N" << endl;
-			cin >> result;
+			if (!p->intelligent && p->getOrders()->getOrderList().size() < 5) {
+				result = "Y";
+			}
+			else if (!p->intelligent) {
+				result = "N";
+			}
+			else {
+				cin >> result;
+			}
+			
 			while (result != "N" && result != "n" && result != "y" && result != "Y") {
 				cin >> result;
 			}
@@ -522,14 +526,28 @@ bool GameEngine::loadMap(string fileName) {
 }
 bool GameEngine::assignTerritories(void) {
 	//Shuffle the vector before assigning. Solution from https://stackoverflow.com/questions/6926433/how-to-shuffle-a-stdvector
+	string result;
+	bool intl = false;
 	vector<Territory*> copy = map->getTerritoyVector();
 	auto rng = std::default_random_engine{};
 	std::shuffle(begin(copy), end(copy), rng);
-
+	cout << "Would you like to use console input to play the game? Y/N" << endl;
+	cin >> result;
+	while (result != "N" && result != "n" && result != "y" && result != "Y") {
+		cin >> result;
+	}
+	if (result == "Y" || result == "y") {
+		intl = true;
+	}
 	cout << "All players have been added! Here is who will be playing:" << endl;
 	for (Player* p : players) {
 		cout << "Player " << p->getPlayerID() << " - " << p->getName() << endl;
+		if (intl) {
+			p->intelligent = true;
+		}
 	}
+
+
 
 	int playerCount = players.size();
 	int count = 0;
@@ -554,11 +572,23 @@ bool GameEngine::assignTerritories(void) {
 		p->setArmiesHeld(50);
 		deck->draw(p);
 		deck->draw(p);
+		//For demo purposes, add a card of each type to the player:
+		int counter = 0; 
+		for (int types = 0; types <5; types++) {
+			for (int cards = 0; cards < (1 * 5); cards++) { // creates 3 cards (1 card for the demo only) per player per type of card
+				counter++; // the first card has ID == 1
+
+				Card* pointer = new Card(types, counter);
+				p->addCard(pointer); 
+			}
+		}
 		cout << "Player " << p->getName() + " has received the following cards: " << endl;
 		for (auto c : p->getHandOfCards()) {
 			cout << *c;
 		}
 	}
+
+	
 
 	//Enter play phase.
 	return true;

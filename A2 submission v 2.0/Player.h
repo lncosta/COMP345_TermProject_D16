@@ -89,6 +89,9 @@ public:
 	vector<Card*> getHandOfCards();
 	Hand* getPlayerHand();
 
+	//Intelligent player:
+	bool intelligent;
+
 
 	//Friend classes:
 	friend class Card;
