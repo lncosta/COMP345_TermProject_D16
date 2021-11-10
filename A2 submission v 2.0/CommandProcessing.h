@@ -20,64 +20,89 @@ using namespace std;
 
 
 class Command : public Subject {
+	// Data member	
 	string command;
 	string effect;
 public:
-	//Constructors
+	//Constructor
 	Command(void);
 	Command(string command);
-	string returnCommand(void);
-	string returnEffect(void);
-	//The Command::saveEffect() method can be used to save the effect of the command as a string. 
-	void saveEffect(string input);
+	Command(const Command& other);
 
+	//Destructor
+	~Command(void);
+
+	//Getter and setter
+	string returnCommand(void);
+	string returnEffect(void);		
+
+	//Assignment operator
+	Command& operator =(const Command& other);
+
+	//Stream insertion
+	friend ostream& operator << (ostream& out, const Command& c);
+	
+	void saveEffect(string input); 
+	
+	//Method
 	virtual string stringToLog();
 };
 
 
 class CommandProcessor : public Subject {
 private:
-	// Data members	
+	// Data member
 	vector<Command*> commandVector;
 
-protected:
-	//The protected CommandProcessor::readCommand() method reads a string from the console. 
-	string readCommand(void);
-	//The protected CommandProcessor::saveCommand() method saves the command in the list of commands.
+protected:	
+	//Method
+	string readCommand(void);	
 	Command* saveCommand(string command);
-public:
-	// The public CommandProcessor::getCommand() method can be used by the GameEngine to read and save a command when needed. 
-	Command* getCommand(void); 
-	//The CommandProcessor::validate() command can be used to validate if a given command is valid in the current game state. 
-	bool validate(string input, string currentState);
+public:	 
+	//Constructor
+	CommandProcessor(void);
+	CommandProcessor(const CommandProcessor& other);
+
+	//Destructor
+	~CommandProcessor(void);
+
+	//Getter
 	vector<Command*> getCommandVector();
+
+	//Assignment operator
+	CommandProcessor& operator =(const CommandProcessor& other);
+
+	//Stream insertion
+	friend ostream& operator << (ostream& out, const CommandProcessor& cp);
+
+	//Method
+	Command* getCommand(void); 	 
+	bool validate(string input, string currentState);	
 	virtual string stringToLog();
 };
 
-
-
 class FileLineReader {
-
+	//Data member
 	string fileName;
-	//ifstream input;
-
 
 public:
-	//constructor	
+	//Constructor	
 	FileLineReader();
 	FileLineReader(string fileName);
-	virtual string readLineFromFile(void);
+	FileLineReader(const FileLineReader& other);
+
+	//Destructor
+	~FileLineReader();
+
 	//Assignment operator
-	//FileCommandProcessor& operator =(const FileCommandProcessor& other);
+	FileLineReader& operator =(const FileLineReader& other);
 
-	//Stream insertion:
-	//friend ostream& operator << (ostream& out, const FileCommandProcessor& f);
-	//friend istream& operator >> (istream& in, FileCommandProcessor& f);
+	//Stream insertion
+	friend ostream& operator << (ostream& out, const FileLineReader& f);
 
-	//Member function
-
+	//Method
+	virtual string readLineFromFile(void);
 };
-
 
 
 // The client is GameEngine::menu()
@@ -85,18 +110,25 @@ public:
 // The adaptee is FileCommandProcessor that reads commands from a file
 // FileCommandProcessorAdapter is the adapter
 class FileCommandProcessorAdapter : public CommandProcessor {
+
 	// addptee class object
 	FileLineReader* fprocessor;
+
 public:
-	//constructor
+	//Constructor
 	FileCommandProcessorAdapter();
 	FileCommandProcessorAdapter(FileLineReader* processor);
+	FileCommandProcessorAdapter(const FileCommandProcessorAdapter& other);
+
+	//Destructor
+	~FileCommandProcessorAdapter();
+
+	//Getter
 	Command* getCommand(void);
 	
 	//Assignment operator
-	//FileCommandProcessorAdapter& operator =(const FileCommandProcessorAdapter& other);
+	FileCommandProcessorAdapter& operator =(const FileCommandProcessorAdapter& other);
 
 	//Stream insertion:
-	/*friend ostream& operator << (ostream& out, const FileCommandProcessorAdapter& fp);
-	friend istream& operator >> (istream& in, FileCommandProcessorAdapter& fp);	 */
+	friend ostream& operator << (ostream& out, const FileCommandProcessorAdapter& fp);
 };
