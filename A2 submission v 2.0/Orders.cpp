@@ -766,24 +766,12 @@ AirliftOrder::AirliftOrder(const Order& order) {
 	AirliftOrder validate function
 */
 bool AirliftOrder::validate() {
-	bool hasCard = false;
 	bool armiesOK = false;
 	bool sourceOK = this->isTerritoryMine(sourceTerritory); // checking if the player owns the source territory
 	bool targetOK = this->isTerritoryMine(targetTerritory); // checking if the player owns the target territory
 	if (sourceOK) armiesOK = (numberOfArmies >= this->findTerritory(sourceTerritory)->getArmiesPlaced()); // checking if the source has enough armies
 
-		// checks whether the player has the correct card and erase it
-	for (Card* c : this->getOwner()->getHandOfCards()) {
-		if (c->getType() == 3) {
-			this->getOwner()->getPlayerHand()->eraseCard(c);
-			hasCard = true;
-			return (hasCard && sourceOK && targetOK && armiesOK);
-		}
-		else {
-			cout << "Invalid Order. \nPlayer " << this->getOwner()->getName() << " does not own an airlift card.\n" << endl;
-			return false;
-		}
-	}
+	return (sourceOK && targetOK && armiesOK);
 }
 /*
 	AirliftOrder execute function

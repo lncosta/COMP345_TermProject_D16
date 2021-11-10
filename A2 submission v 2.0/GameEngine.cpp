@@ -269,12 +269,6 @@ void GameEngine::startupPhase()
 		commandObserver = nullptr;
 	}
 
-	cout << "-----------------------------";
-	for (Command* c : processor->getCommandVector()) {
-		cout << c->returnCommand();
-		cout << " : " << c->returnEffect() << endl;
-	}
-
 	delete processorObserver;
 	processorObserver = nullptr;
 
@@ -305,6 +299,10 @@ int GameEngine::mainGameLoop(void)
 		}
 		if (winningPlayers.size() <= 1) {
 			cout << "Player " << winningPlayers[0]->getName() << " has won!" << endl;
+			winningCondition = true;
+		}
+		else if (players.size() <= 1) {
+			cout << "Player " << players[0]->getName() << " has won!" << endl;
 			winningCondition = true;
 		}
 		else {
