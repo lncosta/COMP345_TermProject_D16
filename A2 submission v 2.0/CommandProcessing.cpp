@@ -57,10 +57,15 @@ Command* FileCommandProcessorAdapter::getCommand() {
 	// use adaptee object to read commands from a file
 	string input = fprocessor->readLineFromFile();
 	Command* temp = CommandProcessor::saveCommand(input);
+	stringToBeLogged = input;
+	Notify();
 	return temp;
 
 }
 
+string FileCommandProcessorAdapter::stringToLog() {
+	return "Inputted command: " + stringToBeLogged;
+}
 
 // -----------------------------------CommandProcessor class ----------------------------------------
 
@@ -150,7 +155,6 @@ vector<Command*>CommandProcessor::getCommandVector() {
 };
 
 string CommandProcessor::stringToLog() {
-	cout << "CommandProcessor will write to file gamelog.txt here" << endl;
 	return "Inputted command: " + commandVector.back()->returnCommand();
 }
 
@@ -194,7 +198,6 @@ void Command::saveEffect(string input) {
 }
 
 string Command::stringToLog() {
-	cout << "Command will write to file gamelog.txt here" << endl;
 	return "Current effect: " + effect;
 }
 

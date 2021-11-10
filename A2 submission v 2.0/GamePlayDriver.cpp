@@ -4,7 +4,6 @@
 
 int main(void) {
 	ofstream filewriting;
-
 	filewriting.open("gamelog.txt");
 
 	if (filewriting) {

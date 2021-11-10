@@ -151,9 +151,7 @@ void OrdersList::remove(int toRemove) {
 	OrdersList logging function.
 */
 string OrdersList::stringToLog() {
-	cout << "OrdersList will write to file gamelog.txt" << endl;
-	//string latestOrderName = this->getOrderList().back()->getName();
-	return stringToBeLogged; //"Order Added: " + latestOrderName;
+	return stringToBeLogged; 
 }
 
 
@@ -337,15 +335,14 @@ void DeployOrder::execute() {
 		cout << "DEBUG: THE TERRITORY NOW HAS " << target->getArmiesPlaced() << " ARMIES ON IT" << endl;
 
 		cout << "This execution was successful!" << endl;
-		//Notify();
+		Notify();
 	}
 }
 /*
 	DeployOrder logging function.
 */
 string DeployOrder::stringToLog() {
-	cout << "DeployOrder will write to file gamelog.txt" << endl;
-	return "Order Executed: Deploy";
+	return "Order Executed: Deploy\nDeploy: " + getDesc();
 }
 
 
@@ -500,7 +497,7 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 			}
 		}
 		cout << "This execution was successful!" << endl;
-		//Notify();
+		Notify();
 		return;
 	}
 }
@@ -517,8 +514,7 @@ void AdvanceOrder::setSource(Territory* source)
 	sourceTerritory = source;
 }
 string AdvanceOrder::stringToLog() {
-	cout << "AdvanceOrder will write to file gamelog.txt here" << endl;
-	return "Order Executed: Advance";
+	return "Order Executed: Advance\nAdvance: " + getDesc();
 }
 
 
@@ -638,8 +634,7 @@ void BombOrder::execute() {
 	BombOrder logging function.
 */
 string BombOrder::stringToLog() {
-	cout << "BombOrder will write to file gamelog.txt here" << endl;
-	return "Order Executed: Bomb";
+	return "Order Executed: Bomb\nBomb: " + getDesc();
 }
 
 
@@ -723,8 +718,7 @@ void BlockadeOrder::execute() {
 	BlockadeOrder logging function.
 */
 string BlockadeOrder::stringToLog() {
-	cout << "BlockadeOrder will write to file gamelog.txt here" << endl;
-	return "Order Executed: Blockade";
+	return "Order Executed: Blockade\nBlockade: " + getDesc();
 }
 
 
@@ -820,8 +814,7 @@ void AirliftOrder::execute() {
 	AirliftOrder logging function.
 */
 string AirliftOrder::stringToLog() {
-	cout << "AirliftOrder will write to file gamelog.txt here" << endl;
-	return "Order Executed: Airlift";
+	return "Order Executed: Airlift\nAirlift: " + getDesc();
 }
 
 
@@ -904,8 +897,7 @@ void NegotiateOrder::execute() {
 	NegotiateOrder logging function.
 */
 string NegotiateOrder::stringToLog() {
-	cout << "NegotiateOrder will write to file gamelog.txt here" << endl;
-	return "Order Executed: Negotiate";
+	return "Order Executed: Negotiate\nNegotiate: " + getDesc();
 }
 
 

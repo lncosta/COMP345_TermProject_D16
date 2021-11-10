@@ -76,7 +76,6 @@ ostream& operator<<(ostream& out, const GameEngine& g)
 }
 
 string GameEngine::stringToLog() {
-	//cout << "GameEngine will write to file gamelog.txt here" << endl;
 	return "Transitioned to state: " + state;
 }
 
@@ -133,6 +132,7 @@ void GameEngine::startupPhase()
 			outFile.close();
 			fprocessor = new FileLineReader("copy.txt"); // adaptee
 			adapter = new FileCommandProcessorAdapter(fprocessor);// adapter (inherited from target)
+			processorObserver = new LogObserver(adapter);
 		}
 
 	} while (source != "console" && source != "file");
@@ -164,6 +164,8 @@ void GameEngine::startupPhase()
 
 		}
 
+		commandObserver = new LogObserver(c);
+
 		// if an input has a parameter, split the parameter from the command itself
 		vector<string> v = split(s, " ");
 		string input = v[0];
@@ -171,8 +173,6 @@ void GameEngine::startupPhase()
 		if (v.size() == 2)
 			parameter = v[1];
 		
-
-		commandObserver = new LogObserver(c);
 
 		isValid = processor->validate(input, currentState);
 
