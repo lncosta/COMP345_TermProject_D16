@@ -151,7 +151,7 @@ void OrdersList::remove(int toRemove) {
 	OrdersList logging function.
 */
 string OrdersList::stringToLog() {
-	return stringToBeLogged; 
+	return stringToBeLogged;
 }
 
 
@@ -245,7 +245,7 @@ void Order::setTarget(Territory* target)
 	this->target = target;
 }
 
-void Order::setSource(Territory* source) 
+void Order::setSource(Territory* source)
 {
 	this->source = source;
 }
@@ -364,7 +364,7 @@ AdvanceOrder::AdvanceOrder(int theId, Player* calledOrder) : Order(theId) {
 	cin >> armiesToMove;
 	cout << "\nThe Order has been confirmed." << endl;
 
-	
+
 }
 /*
 	AdvanceOrder Destructor
@@ -397,7 +397,7 @@ bool AdvanceOrder::validate() {
 	bool sourceBelongsToPlayer = false;
 	bool targetIsAdjacent = false;
 	bool notEnoughArmies = false;
-	
+
 	// Checking that the player owns the source territory
 	vector<Territory*> playerOwnedT = orderOwner->getTowned();
 	string name = getSource()->getTerritoryName();
@@ -416,7 +416,7 @@ bool AdvanceOrder::validate() {
 			break;
 		}
 	}
-	if (getSource() != NULL && getSource()->getArmiesPlaced() < armiesToMove)
+	if (getSource() != NULL && getSource()->getArmiesPlaced() < armyModifier)
 		notEnoughArmies = true;
 
 	if (sourceBelongsToPlayer == false) {
@@ -472,11 +472,12 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 				// At the beginnings check if defenders are still standing, covers the case where there are no defenders
 				if (getTarget()->getArmiesPlaced() <= 0) {
 					cout << "The Territory Has Been Conquered. The Remaining Attackers will be moved to it." << endl;
+					this->getOwner()->setConquered(true);
 					//Remove territory from original owner:
 					(getTarget()->getOwner())->removeTerritory(getTarget());
 					//Make territory transfer and move armies:
 					getTarget()->setOwner(getOwner());
-					getOwner()->addTerritory(getTarget()); 
+					getOwner()->addTerritory(getTarget());
 					int srcArmiesAfter = getSource()->getArmiesPlaced() - armyModifier;
 					getSource()->setArmiesPlaced(srcArmiesAfter);
 					int targetArmiesAfter = getTarget()->getArmiesPlaced() + armyModifier;
@@ -579,18 +580,15 @@ bool BombOrder::validate() {
 	// If the target belongs to the player that issued the order, the order is invalid.
 	vector<Territory*> playerOwnedT = this->getOwner()->getTowned();
 	for (Territory* p : playerOwnedT) {
-		if (p->getTerritoryName() == targetTerritory) {
-			target = p;
+		if (p == target) {
 			targetBelongsToPlayer = true;
 		}
 	}
 	// If the target territory is not adjacent to one of the territory owned by the player issuing the order, then the order is invalid.
-	for (Territory* p : playerOwnedT) {
-		vector<Territory*> adjT = p->getAdjTerritories();
-		for (Territory* q : adjT) {
-			if (q->getTerritoryName() == targetTerritory)
-				targetIsAdjacent = true;
-		}
+	vector<Territory*> adjT = getTarget()->getAdjTerritories();
+	for (Territory* p : adjT) {
+		if (p->getOwner() == getOwner())
+			targetIsAdjacent = true;
 	}
 
 	if (targetBelongsToPlayer == true) {
@@ -623,11 +621,11 @@ void BombOrder::execute() {
 	}
 	else {
 		//execution occurs...
-		int currentArmies = target->getArmiesPlaced();
+		int currentArmies = getTarget()->getArmiesPlaced();
 		int newNumArmies = currentArmies / 2; // PLACEHOLDER
-		target->setArmiesPlaced(newNumArmies);
+		getTarget()->setArmiesPlaced(newNumArmies);
 		cout << "This execution was successful!" << endl;
-		//Notify();
+		Notify();
 	}
 }
 /*
@@ -684,7 +682,7 @@ bool BlockadeOrder::validate() {
 	bool hasCard = false;
 	bool targetOK = this->isTerritoryMine(target->getTerritoryName()); // checking if the player owns the target territory
 
-	return targetOK; 
+	return targetOK;
 }
 /*
 	BlockadeOrder execute function
@@ -700,7 +698,7 @@ void BlockadeOrder::execute() {
 	}
 	else {
 		//Set army number to double:
-		target->setArmiesPlaced(2 * target->getArmiesPlaced());
+		getTarget()->setArmiesPlaced(2 * getTarget()->getArmiesPlaced());
 		// create a neutral player, give them the target territory and double the armies on it
 		if (neutralPlayer == NULL) {
 			neutralPlayer = new Player();
@@ -822,7 +820,7 @@ string AirliftOrder::stringToLog() {
 	NegotiateOrder Default Constructor
 */
 NegotiateOrder::NegotiateOrder() : Order(count) {
-	
+
 }
 /*
 	NegotiateOrder Constructor overloading with id.
@@ -865,7 +863,7 @@ bool NegotiateOrder::validate() {
 		cout << "The Order is Invalid: You Cannot Negotiate with Yourself" << endl;
 		return false;
 	}
-	
+
 	cout << "The Order is Valid: Proceeding with Execution";
 	return true;
 }
@@ -883,7 +881,7 @@ void NegotiateOrder::execute() {
 	}
 	else {
 		//execution occurs...
-		Player* targetPlayer = getTarget()->getOwner(); 
+		Player* targetPlayer = getTarget()->getOwner();
 		getOwner()->getCantAttack().push_back(targetPlayer);
 		targetPlayer->getCantAttack().push_back(this->getOwner());
 		cout << "This execution was successful!" << endl;

@@ -28,7 +28,7 @@ class Map;
 
 
 class Player {
-	
+
 private:
 	//Data members:
 	int playerID;
@@ -39,6 +39,7 @@ private:
 	OrdersList* orders;
 	vector<Player*> cannotAttack; // Used with the negotiate to store the players that can't be attacked
 	static int playersCreated;
+	bool conqueredThisTurn;
 
 	//From Cards
 	Hand* playerHand;
@@ -57,6 +58,7 @@ public:
 	void setTOwned(vector<Territory*> const& other);
 	void setCards(vector<Card*>& cards);
 	void setOrdersList(OrdersList* orders);
+	void setConquered(bool answer);
 	Player& operator =(const Player& other);
 
 	//Accessor methods:
@@ -68,6 +70,7 @@ public:
 	vector<Card*> getCards(void);
 	OrdersList* getOrders(void);
 	vector<Player*> getCantAttack(void);
+	bool getConquered(void);
 
 	//Stream Insertions:
 	friend ostream& operator << (ostream& out, const Player& p);

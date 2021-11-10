@@ -146,6 +146,9 @@ void Player::setOrdersList(OrdersList* orders)
 {
 	this->orders = orders;
 }
+void Player::setConquered(bool answer) {
+	this->conqueredThisTurn = answer;
+}
 
 //Acessors:
 string Player::getName(void) {
@@ -174,6 +177,10 @@ OrdersList* Player::getOrders(void) {
 
 vector<Player*> Player::getCantAttack() {
 	return cannotAttack;
+}
+
+bool Player::getConquered(void) {
+	return conqueredThisTurn;
 }
 
 // From Cards: 
@@ -240,11 +247,11 @@ vector<Territory*> Player::toAttack()
 void Player::determineTarget(int state, Order* order) {
 	vector<Territory*> defend = toDefend();
 	vector<Territory*> attack = toAttack();
-	Territory* target; 
-	
+	Territory* target;
+
 	if (state == 1) { //Target is one of Player's own territories -> taken from toDefend()
 		cout << "Territories available as a target:" << endl;
-		int i = 1; 
+		int i = 1;
 		for (auto t : defend) {
 			cout << i << " - " << t->getTerritoryName() << " - Army count: " << t->getArmiesPlaced();
 			cout << " - Adjacent to: ";
@@ -268,17 +275,17 @@ void Player::determineTarget(int state, Order* order) {
 			cout << "Default territory selected as target: " << defend[0]->getTerritoryName() << endl;
 			target = defend[0];
 		}
-		
-		
+
+
 	}
 	else {	//Target is one of the enemy territory -> taken from toAttack
 		cout << "Territories available as a target: " << endl;
-		int i = 1, index; 
+		int i = 1, index;
 		for (auto t : attack) {
 			cout << i << " - " << t->getTerritoryName() << " - Army count: " << t->getArmiesPlaced() << " - Owner: " << t->getOwner()->getName();
-			cout << " - Adjacent to: "; 
+			cout << " - Adjacent to: ";
 			t->printAdjTerritories();
-			i++; 
+			i++;
 		}
 		if (intelligent) {
 			cout << "Please select one of the territories above by typing their index value: " << endl;
@@ -296,7 +303,7 @@ void Player::determineTarget(int state, Order* order) {
 			cout << "Default territory selected as target: " << attack[0]->getTerritoryName() << endl;
 			target = attack[0];
 		}
-		
+
 	}
 
 	//Setting target information to the created order:
@@ -333,9 +340,9 @@ void Player::determineSource(int state, Order* order) {
 			cout << "Default territory selected as target:" << defend[0]->getTerritoryName() << endl;
 			source = defend[0];
 		}
-		
+
 	}
-	order->setSource(source); 
+	order->setSource(source);
 
 }
 void Player::printOrderList(void) {
@@ -355,8 +362,8 @@ int Player::deployArmies(void) {
 	if (!intelligent) {
 		return 10;
 	}
-	cout << "Please indicate how many armies you would like to attempt to deploy:" << endl; 
-	int x; 
+	cout << "Please indicate how many armies you would like to attempt to deploy:" << endl;
+	int x;
 	cin >> x;
 	if (x >= 1) {
 		return x;
@@ -377,13 +384,13 @@ Order* Player::discoverOrderType(string x) {
 		if (armiesHeld <= 0) {
 			cout << "Player does not own enough armies to deploy to a new territory." << endl;
 			newOrder = NULL;
-			return newOrder; 
+			return newOrder;
 
 		}
 		newOrder = new DeployOrder();
-		determineTarget(1, newOrder); 
+		determineTarget(1, newOrder);
 		int armiesToPlace = deployArmies();
-		
+
 		if (armiesToPlace <= armiesHeld) {
 			newOrder->setModifier(armiesToPlace);
 			newOrder->armyModifier = armiesToPlace;
@@ -411,15 +418,15 @@ Order* Player::discoverOrderType(string x) {
 				cin >> cmd;
 			}
 		}
-		
+
 		if (cmd == "attack") {
 			newOrder = new AdvanceOrder();
 			newOrder->setOwner(this);
 			determineTarget(0, newOrder);
-			determineSource(0, newOrder); 
+			determineSource(0, newOrder);
 			newOrder->setModifier(0);	//Advance set to attack mode
-			newOrder->armyModifier = deployArmies(); 
-			
+			newOrder->armyModifier = deployArmies();
+
 		}
 		else {
 			newOrder = new AdvanceOrder();
@@ -444,9 +451,9 @@ Order* Player::discoverOrderType(string x) {
 		cout << "You have issued a blockade order:" << endl;
 		newOrder = new BlockadeOrder();
 		newOrder->setOwner(this);
-		determineTarget(1, newOrder); 
+		determineTarget(1, newOrder);
 		newOrder->setModifier(0);
-		newOrder->neutralPlayer = neutral; 
+		newOrder->neutralPlayer = neutral;
 
 	}
 	else if (x.compare(options[4]) == 0) {
@@ -481,7 +488,7 @@ void Player::issueOrder()
 
 	vector<Territory*> defend = toDefend();
 	vector<Territory*> attack = toAttack();
-	cout << "----------------------------------" << endl; 
+	cout << "----------------------------------" << endl;
 	cout << "Territories available to defend:" << endl;
 	for (auto t : defend) {
 		cout << *t << "Army count: " << t->getArmiesPlaced() << endl;
@@ -493,7 +500,7 @@ void Player::issueOrder()
 	}
 	cout << "----------------------------------" << endl;
 	if (armiesHeld > 0) { //Deployment phase.
-		
+
 		cout << "Player must deploy armies." << endl;
 		cout << "Armies held: " << armiesHeld << endl;
 		issued = discoverOrderType("reinforcement");
@@ -502,7 +509,7 @@ void Player::issueOrder()
 		printOrderList();
 		cout << "0 - ADVANCE" << endl;
 		if (!intelligent) {
-			
+
 			if (getHandOfCards().size() < 1) {
 				x = "advance";
 				played = new Card();
@@ -515,7 +522,7 @@ void Player::issueOrder()
 		}
 		else {
 			cout << "Please select a card to play (type the correct integer)." << endl;
-			
+
 			cin >> index;
 			if (index == 0) {
 				x = "advance";
@@ -526,7 +533,7 @@ void Player::issueOrder()
 				x = played->orderType();
 			}
 		}
-		
+
 
 
 		vector<string> options2;

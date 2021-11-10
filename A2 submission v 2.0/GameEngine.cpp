@@ -38,7 +38,7 @@ GameEngine::~GameEngine(void)
 		delete map;
 		map = NULL;
 	}
-	if (deck!= NULL) {
+	if (deck != NULL) {
 		delete deck;
 		deck = NULL;
 	}
@@ -113,10 +113,10 @@ void GameEngine::startupPhase()
 	// Process user's input to extract the source (console or file wtih fileName) 
 	do {
 
-	
+
 		cout << "Please enter -console or -file <filename> to choose the input source." << endl;
 		cin >> source;
-				
+
 		if (source == "console") {
 			processor = new CommandProcessor();
 			processorObserver = new LogObserver(processor);
@@ -153,7 +153,7 @@ void GameEngine::startupPhase()
 			cout << "Enter your command" << endl;
 			c = processor->getCommand();
 			s = c->returnCommand();
-			
+
 
 		}
 		else if (source == "file") {
@@ -172,13 +172,13 @@ void GameEngine::startupPhase()
 		string parameter = "";
 		if (v.size() == 2)
 			parameter = v[1];
-		
+
 
 		isValid = processor->validate(input, currentState);
 
-		if (!isValid) {			
-				continue;		
-				
+		if (!isValid) {
+			continue;
+
 		}
 		else
 		{
@@ -191,7 +191,7 @@ void GameEngine::startupPhase()
 				else {
 					transition("start");
 				}
-				
+
 			}
 			else if (input == "validatemap") {
 				map->validateWrapper();
@@ -206,7 +206,7 @@ void GameEngine::startupPhase()
 
 			}
 			else if (input == "addplayer") {
-				
+
 				string playerName;
 				if (source == "console") {
 					if (parameter == "") {
@@ -215,12 +215,12 @@ void GameEngine::startupPhase()
 					}
 					playerName = parameter;
 				}
-				else if (source == "file") {					
+				else if (source == "file") {
 
 					playerName = parameter;
 				}
 
-				
+
 				addPlayer(playerName);
 				c->saveEffect(input);
 				if (players.size() >= 6) {
@@ -231,7 +231,7 @@ void GameEngine::startupPhase()
 				else {
 					transition("playersadded");
 				}
-				
+
 			}
 			else if (input == "gamestart") {
 				if (players.size() > 1) {
@@ -247,11 +247,11 @@ void GameEngine::startupPhase()
 						cout << "There are not enough players in the game to start yet." << endl;
 						cout << "Please modify your file to provide enough players." << endl;
 						exit(0);
-						
+
 					}
 
 				}
-				
+
 			}
 			else if (input == "replay") {
 				players.clear();
@@ -304,7 +304,7 @@ int GameEngine::mainGameLoop(void)
 			}
 		}
 		if (winningPlayers.size() <= 1) {
-			cout << "Player " << winningPlayers[0]->getName() << " has won!" << endl; 
+			cout << "Player " << winningPlayers[0]->getName() << " has won!" << endl;
 			winningCondition = true;
 		}
 		else {
@@ -315,7 +315,7 @@ int GameEngine::mainGameLoop(void)
 				if (find(winningPlayers.begin(), winningPlayers.end(), p) == winningPlayers.end()) {
 					//One of the players does not own any territories.
 					cout << "Player " << p->getName() << " does not own any territories and thus must be removed from the game." << endl;
-					removePlayer(p); 
+					removePlayer(p);
 				}
 				i++;
 			}
@@ -455,7 +455,7 @@ void GameEngine::issueOrdersPhase(void) {
 			else {
 				cin >> result;
 			}
-			
+
 			while (result != "N" && result != "n" && result != "y" && result != "Y") {
 				cin >> result;
 			}
@@ -507,9 +507,9 @@ void GameEngine::executeOrdersPhase(void) {
 				toDeleteFrom->remove(0);
 			}
 			else {
-				int newTerritorySize = p->getTowned().size();
-				if (newTerritorySize > terrOwned) {
+				if (p->getConquered() == true) {
 					deck->draw(p);
+					p->setConquered(false);
 				}
 				doneCount++;
 			}
@@ -575,7 +575,7 @@ bool GameEngine::assignTerritories(void) {
 		p->map = map;
 	}
 
-	
+
 	//Assign territories:
 	int playerCount = players.size();
 	int count = 0;
@@ -601,13 +601,13 @@ bool GameEngine::assignTerritories(void) {
 		deck->draw(p);
 		deck->draw(p);
 		//For demo purposes, add a card of each type to the player:
-		int counter = 0; 
-		for (int types = 0; types <5; types++) {
+		int counter = 0;
+		for (int types = 0; types < 5; types++) {
 			for (int cards = 0; cards < (1 * 5); cards++) { // creates 3 cards (1 card for the demo only) per player per type of card
 				counter++; // the first card has ID == 1
 
 				Card* pointer = new Card(types, counter);
-				p->addCard(pointer); 
+				p->addCard(pointer);
 			}
 		}
 		cout << "Player " << p->getName() + " has received the following cards: " << endl;
@@ -616,12 +616,11 @@ bool GameEngine::assignTerritories(void) {
 		}
 	}
 
-	
+
 
 	//Enter play phase.
 	return true;
 }
-
 
 
 
