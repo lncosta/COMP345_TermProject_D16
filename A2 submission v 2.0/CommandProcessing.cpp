@@ -13,8 +13,17 @@ FileLineReader::FileLineReader(string fileName) {
 
 // This method reads a file line by line
 string FileLineReader::readLineFromFile(void) {
+
 	ifstream input;
 	input.open(fileName);
+
+	// check if the file is empty
+	if (input.peek() == std::ifstream::traits_type::eof()) {
+		cout << "The command file is empty!" << endl;
+		exit(0);
+	}
+
+
 	string current;
 
 	// get the first line of the file
