@@ -13,6 +13,7 @@ FileLineReader::FileLineReader(string fileName) {
 
 // This method reads a file line by line
 string FileLineReader::readLineFromFile(void) {
+	ifstream input;
 	input.open(fileName);
 	string current;
 
@@ -57,15 +58,10 @@ Command* FileCommandProcessorAdapter::getCommand() {
 	// use adaptee object to read commands from a file
 	string input = fprocessor->readLineFromFile();
 	Command* temp = CommandProcessor::saveCommand(input);
-	stringToBeLogged = input;
-	Notify();
 	return temp;
 
 }
 
-string FileCommandProcessorAdapter::stringToLog() {
-	return "Inputted command: " + stringToBeLogged;
-}
 
 // -----------------------------------CommandProcessor class ----------------------------------------
 

@@ -122,23 +122,25 @@ void GameEngine::startupPhase()
 
 		cout << "Please enter -console or -file <filename> to choose the input source." << endl;
 		cin >> source;
+		
 
 		if (source == "console") {
 			processor = new CommandProcessor();
-			processorObserver = new LogObserver(processor);
+			processorObserver = new LogObserver(processor);			
 		}
 		else if (source == "file") {
 			string fileName;
-			cin >> fileName;
+			cin >> fileName;			
 			// copy the source file so that we can delete the top line after reading it
 			ifstream inFile(fileName);
 			ofstream outFile("copy.txt");
 			outFile << inFile.rdbuf();
 			inFile.close();
-			outFile.close();
+			outFile.close();			
 			fprocessor = new FileLineReader("copy.txt"); // adaptee
 			adapter = new FileCommandProcessorAdapter(fprocessor);// adapter (inherited from target)
 			processorObserver = new LogObserver(adapter);
+			
 		}
 
 	} while (source != "console" && source != "file");
@@ -195,7 +197,7 @@ void GameEngine::startupPhase()
 					transition("maploaded");
 				}
 				else {
-					transition("start");
+					continue;
 				}
 
 			}
@@ -219,14 +221,9 @@ void GameEngine::startupPhase()
 						cout << "Please add the player's name after the space" << endl;
 						continue;
 					}
-					playerName = parameter;
-				}
-				else if (source == "file") {
-
-					playerName = parameter;
-				}
-
-
+					
+				}	
+				playerName = parameter;
 				addPlayer(playerName);
 				c->saveEffect(input);
 				if (players.size() >= 6) {
@@ -243,7 +240,7 @@ void GameEngine::startupPhase()
 				if (players.size() > 1) {
 					assignTerritories();
 					c->saveEffect(input);
-					transition("assignreinforcement");
+					transition("assignreinforcement");		
 					mainGameLoop();
 				}
 				else {
@@ -296,6 +293,8 @@ int GameEngine::mainGameLoop(void)
 	while (!loopstop) {
 
 		cout << *this << endl;
+
+
 
 		//Check for winning condition:
 		vector<Player*> winningPlayers;

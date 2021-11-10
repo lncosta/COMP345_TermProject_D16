@@ -59,7 +59,7 @@ public:
 class FileLineReader {
 
 	string fileName;
-	ifstream input;
+	//ifstream input;
 
 
 public:
@@ -87,16 +87,12 @@ public:
 class FileCommandProcessorAdapter : public CommandProcessor {
 	// addptee class object
 	FileLineReader* fprocessor;
-	string stringToBeLogged;
-
 public:
 	//constructor
 	FileCommandProcessorAdapter();
 	FileCommandProcessorAdapter(FileLineReader* processor);
 	Command* getCommand(void);
-
-	virtual string stringToLog();
-
+	
 	//Assignment operator
 	//FileCommandProcessorAdapter& operator =(const FileCommandProcessorAdapter& other);
 
