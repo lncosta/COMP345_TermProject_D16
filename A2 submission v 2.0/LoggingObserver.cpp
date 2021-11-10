@@ -53,7 +53,18 @@ Subject::~Subject() {
 	Subject Assignment Operator
 */
 Subject& Subject::operator=(const Subject& sub) {
-
+	//empty current list to start the copy
+	for (Observer* individualObs : *_observers) {
+		delete individualObs;
+		individualObs = nullptr;
+	}
+	(*_observers).clear();
+	
+	list<Observer*> newObservers = (*sub._observers);
+	for (Observer* individualObs : newObservers) {
+		this->_observers->push_back(individualObs);
+	}
+	return *this;
 }
 /*
 	Subject Attach function
@@ -113,6 +124,12 @@ LogObserver::LogObserver(Subject* s) {
 	_subject->Attach(this);
 }
 /*
+	LogObserver Copy Constructor
+*/
+LogObserver::LogObserver(const LogObserver& logobs) {
+	(*_subject) = (*logobs._subject);
+}
+/*
 	LogObserver Destructor
 */
 LogObserver::~LogObserver() {
@@ -143,6 +160,13 @@ void LogObserver::Update(string nextLog) {
 		throw invalid_argument("ERROR - File could not be opened!");
 		return;
 	}
+}
+/*
+	LogObserver Assignment Operator
+*/
+LogObserver& LogObserver::operator=(const LogObserver& log) {
+	(*_subject) = (*log._subject);
+	return *this;
 }
 /*
 	LogObserver stream insertion
