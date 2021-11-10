@@ -311,6 +311,7 @@ Hand::~Hand() {
 };
 
 Deck::~Deck() {
+	cout << "Destroying Deck" << endl;
 	for (Card* pointer : deckOfCards) {
 		delete pointer;
 		pointer = nullptr;

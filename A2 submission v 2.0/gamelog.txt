@@ -242,28 +242,21 @@ Order Added: Airlift
 Order Added: Blockade
 Order Added: Negotiate
 Order Added: Deploy
-Order Added: Airlift
-Order Added: Airlift
-Order Added: Airlift
-Order Added: Airlift
-Order Added: Deploy
-Order Added: Negotiate
 Order Added: Blockade
 Order Added: Negotiate
-Order Added: Blockade
+Order Added: Airlift
+Order Added: Airlift
 Order Added: Deploy
 Order Added: Airlift
 Order Added: Negotiate
 Order Added: Blockade
-Order Added: Negotiate
+Order Added: Blockade
 Order Added: Deploy
 Order Added: Airlift
+Order Added: Negotiate
+Order Added: Negotiate
 Order Added: Airlift
-Order Added: Negotiate
-Order Added: Negotiate
 Transitioned to state: executeorders
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
 Order Executed: Deploy
 Deploy: Place some armies on one of the current player's territories.
 Order Executed: Deploy
@@ -278,41 +271,20 @@ Transitioned to state: assignreinforcement
 Transitioned to state: issueorders
 Order Added: Deploy
 Order Added: Blockade
-Order Added: Negotiate
-Order Added: Negotiate
-Order Added: Blockade
-Order Added: Deploy
-Order Added: Negotiate
-Order Added: Negotiate
-Order Added: Airlift
-Order Added: Blockade
-Order Added: Deploy
-Order Added: Negotiate
-Order Added: Negotiate
-Order Added: Negotiate
-Order Added: Negotiate
-Order Added: Deploy
-Order Added: Negotiate
 Order Added: Airlift
 Order Added: Negotiate
 Order Added: Blockade
 Order Added: Deploy
-Order Added: Blockade
+Order Added: Negotiate
+Order Added: Negotiate
 Order Added: Negotiate
 Order Added: Blockade
-Order Added: Airlift
 Order Added: Deploy
+Order Added: Blockade
 Order Added: Negotiate
-Order Added: Blockade
-Order Added: Blockade
 Order Added: Airlift
+Order Added: Blockade
 Transitioned to state: executeorders
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
 Order Executed: Deploy
 Deploy: Place some armies on one of the current player's territories.
 Order Executed: Deploy
@@ -322,11 +294,22 @@ Deploy: Place some armies on one of the current player's territories.
 Transitioned to state: assignreinforcement
 Transitioned to state: issueorders
 Order Added: Deploy
-Order Added: Blockade
+Order Added: Negotiate
 Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Blockade
+Order Added: Airlift
 Order Added: Advance
 Order Added: Advance
 Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
 Transitioned to state: win
 Inputted command: gamestart
 Inputted command: quit

@@ -34,6 +34,9 @@ GameEngine::~GameEngine(void)
 		delete neutral;
 		neutral = NULL;
 	}
+	for (auto t : map->getTerritoyVector()) {
+		delete t; 
+	}
 	if (map != NULL) {
 		delete map;
 		map = NULL;
@@ -279,6 +282,7 @@ void GameEngine::startupPhase()
 
 void GameEngine::removePlayer(Player* toRemove) {
 	players.erase(remove(players.begin(), players.end(), toRemove), players.end());
+	delete toRemove; 
 }
 int GameEngine::mainGameLoop(void)
 

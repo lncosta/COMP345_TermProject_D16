@@ -87,7 +87,6 @@ Player::~Player() {
 	towned.clear();
 	cards.clear();
 	
-
 }
 
 //Assignment operators:
