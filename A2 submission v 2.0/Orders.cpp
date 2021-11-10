@@ -793,7 +793,7 @@ void AirliftOrder::execute() {
 		this->findTerritory(targetTerritory)->setArmiesPlaced(targetArmies + numberOfArmies);
 
 		cout << "This execution was successful!" << endl;
-		//Notify();
+		Notify();
 	}
 }
 /*
@@ -874,7 +874,7 @@ void NegotiateOrder::execute() {
 		targetPlayer->getCantAttack().push_back(this->getOwner());
 		cout << "This execution was successful!" << endl;
 
-		//Notify();
+		Notify();
 		return;
 
 	}

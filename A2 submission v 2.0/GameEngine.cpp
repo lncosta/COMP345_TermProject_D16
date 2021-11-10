@@ -316,7 +316,8 @@ int GameEngine::mainGameLoop(void)
 			winningCondition = false;
 			cout << "No player has yet won. The game continues." << endl;
 			int i = 0;
-			for (auto p : players) {
+			vector<Player*> copyP = players; 
+			for (auto p : copyP) {
 				if (find(winningPlayers.begin(), winningPlayers.end(), p) == winningPlayers.end()) {
 					//One of the players does not own any territories.
 					cout << "Player " << p->getName() << " does not own any territories and thus must be removed from the game." << endl;
