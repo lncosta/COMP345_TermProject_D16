@@ -5,30 +5,17 @@
 
 using namespace std;
 
-
-void GameEngine::transition(string newState) {
-
-
-	this->setState(newState);
-
-	cout << "You are transited to state: " << this->getState() << endl;
-	Notify();
-}
-
-
-GameEngine::GameEngine()
-{
+// Constructor
+GameEngine::GameEngine(){
 	state = "start";
-
 }
 
-GameEngine::GameEngine(const GameEngine& other)
-{
+GameEngine::GameEngine(const GameEngine& other){
 	state = other.state;
 }
 
-GameEngine::~GameEngine(void)
-{
+// Destructor
+GameEngine::~GameEngine(void){
 	cout << "Destroying Game Engine" << endl;
 	if (neutral != NULL) {
 		delete neutral;
@@ -50,43 +37,31 @@ GameEngine::~GameEngine(void)
 	}
 }
 
-void GameEngine::setState(string newState)
-{
+// Getter and Setter
+void GameEngine::setState(string newState){
 	state = newState;
 }
 
-
-string GameEngine::getState(void)
-{
+string GameEngine::getState(void){
 	return state;
 }
 
-
-GameEngine& GameEngine::operator =(const GameEngine& other)
-{
+// Assignment operator
+GameEngine& GameEngine::operator =(const GameEngine& other){
 	state = other.state;
 	return *this;
 }
 
-
-istream& operator>>(istream& in, GameEngine& g)
-{
-	in >> g.state;
-	return in;
-}
-
-ostream& operator<<(ostream& out, const GameEngine& g)
-{
+// Stream insertion
+ostream& operator<<(ostream& out, const GameEngine& g){
 	out << "The current State is [ " << g.state << " ]" << endl;
 	return out;
 }
 
-string GameEngine::stringToLog() {
-	return "Transitioned to state: " + state;
-}
+// Method
 
-//https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
-// seperate the input to argument[0](the command) and argument[1](the parameter)
+// This free function split a string to several components according to the delimiter
+//source: https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
 vector<string> split(string s, string delimiter) {
 	size_t pos_start = 0, pos_end, delim_len = delimiter.length();
 	string token;
@@ -102,27 +77,40 @@ vector<string> split(string s, string delimiter) {
 	return res;
 }
 
+// this method sets GameEngine object's state
+void GameEngine::transition(string newState) {
+	this->setState(newState);
+	cout << "You are transited to state: " << this->getState() << endl;
+	Notify();
+}
+
+// redefine the virtual method inherited from Subject class
+string GameEngine::stringToLog() {
+	return "Transitioned to state: " + state;
+}
+
+// This method defines the WarZone game flow and sets up the startup components
+// It allows the user to choose the input source from the console or from a file 
 void GameEngine::startupPhase()
 {
 	string source;
 	string currentState;
 	Command* c{};
 	LogObserver* processorObserver{};
-	LogObserver* commandObserver;
-	bool isValid;
+	LogObserver* commandObserver{};
+	bool isValid{};
 
-	// create pointers of target, adaptee and adapter
+	// create pointers of the target, adaptee and adapter
 	CommandProcessor* processor{};
 	FileLineReader* fprocessor{};
 	FileCommandProcessorAdapter* adapter{};
 
-	// Process user's input to extract the source (console or file wtih fileName) 
+	// verify user's choice which can only be "console" or "file" 
+	// create necessary objects on heap according to user's choice
 	do {
 
-
 		cout << "Please enter -console or -file <filename> to choose the input source." << endl;
-		cin >> source;
-		
+		cin >> source;		
 
 		if (source == "console") {
 			processor = new CommandProcessor();
@@ -139,37 +127,33 @@ void GameEngine::startupPhase()
 			outFile.close();			
 			fprocessor = new FileLineReader("copy.txt"); // adaptee
 			adapter = new FileCommandProcessorAdapter(fprocessor);// adapter (inherited from target)
-			processorObserver = new LogObserver(adapter);
-			
+			processorObserver = new LogObserver(adapter);			
 		}
 
 	} while (source != "console" && source != "file");
 
+	// remove the "enter" from the cin buffer
 	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
+
+	// The game will run until the game state transits to "exitprogram"
 	while (state != "exitprogram") {
 		currentState = this->getState();
 		cout << *this << endl;
-
 		string s;
 
-
 		// depends on user's choice, command is read from commandProcessor object or Adapter object
-		// commands can be read from the console using the CommandProcessor class. 
 		if (source == "console") {
 			string str;
 			cout << "Enter your command" << endl;
 			c = processor->getCommand();
 			s = c->returnCommand();
-
-
 		}
 		else if (source == "file") {
 			string str;
 			c = adapter->getCommand(); // call readLineFromfile()
 			s = c->returnCommand();
 			cout << "-----------------The input from the file is------------------ " << s << endl;
-
 		}
 
 		commandObserver = new LogObserver(c);
@@ -181,12 +165,11 @@ void GameEngine::startupPhase()
 		if (v.size() == 2)
 			parameter = v[1];
 
-
+		//validates if a given command is valid in the current game state. 
 		isValid = processor->validate(input, currentState);
 
 		if (!isValid) {
 			continue;
-
 		}
 		else
 		{
@@ -199,7 +182,6 @@ void GameEngine::startupPhase()
 				else {
 					continue;
 				}
-
 			}
 			else if (input == "validatemap") {
 				map->validateWrapper();
@@ -208,20 +190,16 @@ void GameEngine::startupPhase()
 					c->saveEffect(input);
 					transition("mapvalidated");
 				}
-
 				else
 					transition("start");
-
 			}
 			else if (input == "addplayer") {
-
 				string playerName;
 				if (source == "console") {
 					if (parameter == "") {
 						cout << "Please add the player's name after the space" << endl;
 						continue;
-					}
-					
+					}					
 				}	
 				playerName = parameter;
 				addPlayer(playerName);
@@ -234,7 +212,6 @@ void GameEngine::startupPhase()
 				else {
 					transition("playersadded");
 				}
-
 			}
 			else if (input == "gamestart") {
 				if (players.size() > 1) {
@@ -250,11 +227,8 @@ void GameEngine::startupPhase()
 						cout << "There are not enough players in the game to start yet." << endl;
 						cout << "Please modify your file to provide enough players." << endl;
 						exit(0);
-
 					}
-
 				}
-
 			}
 			else if (input == "replay") {
 				players.clear();
@@ -266,35 +240,32 @@ void GameEngine::startupPhase()
 				c->saveEffect(input);
 				transition("exitprogram");
 			}
-
 		}
 		delete commandObserver;
 		commandObserver = nullptr;
 	}
-
 	delete processorObserver;
 	processorObserver = nullptr;
 
+	if (source == "console") {
+		delete processor;
+		processor = nullptr;
+	}
+	else if (source == "file") {
+		delete adapter;
+		adapter = nullptr;	
+	}
 }
 
-void GameEngine::removePlayer(Player* toRemove) {
-	players.erase(remove(players.begin(), players.end(), toRemove), players.end());
-	delete toRemove; 
-}
+// The methods sets up the main game loop: where players can issue orders and the system executes orders 
 int GameEngine::mainGameLoop(void)
-
 {
 	bool loopstop = false;
-	// winningCondition needs to be implemented. Set it as false to test executeOrderPhase()
 	bool winningCondition = false;
-
-
 
 	while (!loopstop) {
 
 		cout << *this << endl;
-
-
 
 		//Check for winning condition:
 		vector<Player*> winningPlayers;
@@ -329,9 +300,7 @@ int GameEngine::mainGameLoop(void)
 		if (winningCondition) {
 			transition("win");
 			loopstop = true;
-
 		}
-
 		if (state == "assignreinforcement") {
 			reinforcementPhase();
 			transition("issueorders");
@@ -352,30 +321,28 @@ int GameEngine::mainGameLoop(void)
 				executeOrdersPhase();
 				transition("assignreinforcement");
 			}
-
 		}
-
 	}
 	return 0;
-
 }
 
+// This method removes a player from the game
+void GameEngine::removePlayer(Player* toRemove) {
+	players.erase(remove(players.begin(), players.end(), toRemove), players.end());
+	delete toRemove;
+}
 
+// This method takes player's name as the parameter to create a player object 
 void GameEngine::addPlayer(string name) {
 
 	//Creating Player Objects:
-
 	Player* temp = new Player();
 	temp->setName(name);
 	cout << "Welcome to Warzone, " << name << "!" << endl;
 	players.push_back(temp);
-
-
-
 }
 
-
-
+// This method asks player's name from the console to create a player object 
 void GameEngine::addPlayer(void) {
 	int n = 0;
 	cout << "This is the Player creation menu." << endl;
@@ -414,7 +381,6 @@ void GameEngine::reinforcementPhase(void) {
 		p->setArmiesHeld(toAdd);
 
 		//Cheking for player owning all continents:
-
 		for (auto c : map->getContinentVector()) {
 			int playerCount = 0;
 			int territoryCount = 0;
@@ -523,10 +489,9 @@ void GameEngine::executeOrdersPhase(void) {
 			playing = false;
 		}
 	}
-
-
 }
 
+// This methods takes a map's file name to create a Map object 
 bool GameEngine::loadMap(string fileName) {
 	int numberOfMaps = -1;
 	MapLoader load;
@@ -582,7 +547,6 @@ bool GameEngine::assignTerritories(void) {
 		p->map = map;
 	}
 
-
 	//Assign territories:
 	int playerCount = players.size();
 	int count = 0;
@@ -621,8 +585,6 @@ bool GameEngine::assignTerritories(void) {
 			cout << *c;
 		}
 	}
-
-
 
 	//Enter play phase.
 	return true;

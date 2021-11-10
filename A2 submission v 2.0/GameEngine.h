@@ -46,13 +46,11 @@ public:
 	void setState(string newState);
 	string getState(void);
 
-
 	//Assignment operator
 	GameEngine& operator =(const GameEngine& other);
 
-	//Stream Insertion
+	//Stream insertion
 	friend ostream& operator << (ostream& out, const GameEngine& g);
-	friend istream& operator >> (istream& in, GameEngine& g);
 
 	//Methods
 	void startupPhase();

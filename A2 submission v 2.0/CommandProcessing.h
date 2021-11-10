@@ -122,8 +122,7 @@ public:
 
 	//Destructor
 	~FileCommandProcessorAdapter();
-
-	//Getter
+	
 	Command* getCommand(void);
 	
 	//Assignment operator

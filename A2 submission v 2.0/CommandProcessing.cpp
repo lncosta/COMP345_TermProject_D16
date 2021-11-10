@@ -21,7 +21,7 @@ Command::Command(const Command& other) {
 
 // Destructor
 Command::~Command(void) {
-	cout << "Destructor of Command class is called." << endl;
+	cout << "Destroying a command object." << endl;
 }
 
 
@@ -102,7 +102,7 @@ CommandProcessor::CommandProcessor(const CommandProcessor& other) {
 //Destructor
 CommandProcessor::~CommandProcessor(void) {
 
-	cout << "Destructor of CommandProcessor class is called." << endl;
+	cout << "Destroying CommandProcessor." << endl;
 	for (auto p: commandVector) {
 		delete p;
 	}
@@ -231,7 +231,7 @@ FileLineReader::FileLineReader(const FileLineReader& other) {
 
 //Destructor
 FileLineReader::~FileLineReader(void) {
-	cout << "Destructor of FileLineReader class is called." << endl;
+	cout << "Destroying FileLineReader." << endl;
 }
 
 //Assignment operator
@@ -302,12 +302,11 @@ FileCommandProcessorAdapter::FileCommandProcessorAdapter(const FileCommandProces
 
 //Destructor
 FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
+	cout << "Destroying FileCommandProcessorAdapter." << endl;
 	delete fprocessor;
 	fprocessor = nullptr;
 }
 
-//Getter
-Command* getCommand(void);
 
 //Assignment operator
 FileCommandProcessorAdapter& FileCommandProcessorAdapter::operator =(const FileCommandProcessorAdapter& other) {
@@ -328,6 +327,5 @@ Command* FileCommandProcessorAdapter::getCommand() {
 	string input = fprocessor->readLineFromFile();
 	Command* temp = CommandProcessor::saveCommand(input);
 	return temp;
-
 }
 
