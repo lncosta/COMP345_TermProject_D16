@@ -42,6 +42,9 @@ GameEngine::~GameEngine(void)
 		delete deck;
 		deck = NULL;
 	}
+	for (auto p : players) {
+		delete p;
+	}
 }
 
 void GameEngine::setState(string newState)
@@ -542,12 +545,14 @@ bool GameEngine::loadMap(string fileName) {
 		return false;
 	}
 }
+
 bool GameEngine::assignTerritories(void) {
 	//Shuffle the vector before assigning territories:
+	auto rng = std::default_random_engine{};
 	string result;
 	bool intl = false;
 	vector<Territory*> copy = map->getTerritoyVector();
-	random_shuffle(copy.begin(), copy.end());
+	std::shuffle(std::begin(copy), std::end(copy), rng);
 	//Determine whether user input will be used:
 	cout << "Would you like to use console input to play the game? Y/N" << endl;
 	cin >> result;
@@ -587,8 +592,7 @@ bool GameEngine::assignTerritories(void) {
 	}
 
 	//Shuffle players to determine play order:
-	random_shuffle(players.begin(), players.end());
-
+	std::shuffle(std::begin(players), std::end(players), rng);
 	//Create Deck object:
 	deck = new Deck();
 

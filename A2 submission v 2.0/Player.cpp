@@ -84,18 +84,9 @@ Player::~Player() {
 	if (orders != NULL) {
 		delete orders;
 	}
-
-	cout << "Player " << this->getName() << "'s Territories will now be destroyed." << endl;
-	for (auto p : towned) {
-		delete p;
-	}
-	cout << "Player " << this->getName() << "'s Cards will now be destroyed." << endl;
-	for (auto p : cards) {
-		delete p;
-	}
-
 	towned.clear();
 	cards.clear();
+	
 
 }
 
@@ -207,6 +198,12 @@ void Player::addOrder(Order* order) {
 }
 //Gameplay mechanics:
 
+//Global randomizer seed:
+std::random_device rd;
+std::default_random_engine rng(rd());
+
+//auto rng = std::default_random_engine{};
+
 vector<Territory*> Player::toDefend()
 {
 	//Returns territories owned by the player:
@@ -218,7 +215,7 @@ vector<Territory*> Player::toDefend()
 	//sort(defense.begin(), defense.end());
 
 	//For testing purposes while priority definition is still not implemented, priority is set to random:
-	random_shuffle(defense.begin(), defense.end());
+	std::shuffle(std::begin(defense), std::end(defense), rng);
 	return defense;
 }
 
@@ -241,7 +238,7 @@ vector<Territory*> Player::toAttack()
 	//sort(attack.begin(), attack.end());
 
 	//For testing purposes while priority definition is still not implemented, priority is set to random:
-	random_shuffle(attack.begin(), attack.end());
+	std::shuffle(std::begin(attack), std::end(attack), rng);
 	return attack;
 }
 void Player::determineTarget(int state, Order* order) {

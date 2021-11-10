@@ -46,12 +46,6 @@ Territory::Territory(const Territory& other) : adjTerritories(other.adjTerritori
 // Destructor for the territory class
 Territory::~Territory(void) {
 	cout << "The territory " << name << " was deleted." << endl;
-	for (auto p : adjTerritories) {
-		if (p != NULL) {
-			delete p;
-		}
-
-	}
 	adjTerritories.clear();
 }
 vector<Territory*> Continent::getSubGraph(void)
@@ -118,6 +112,7 @@ Map::Map(void) {
 }
 // Destructor for the Map Class
 Map:: ~Map() {
+	
 	continentVector.clear();
 	territoryVector.clear();
 }

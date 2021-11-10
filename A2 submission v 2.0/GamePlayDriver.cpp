@@ -27,5 +27,7 @@ int main(void) {
 
 	delete obs;
 	obs = nullptr;
+	delete currentGame;
+	currentGame = nullptr;
 	return 0;
 }
