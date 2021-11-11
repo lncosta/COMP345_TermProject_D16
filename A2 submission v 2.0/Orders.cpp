@@ -569,19 +569,29 @@ bool BombOrder::validate() {
 	bool targetBelongsToPlayer = false;
 	bool targetIsAdjacent = false;
 
-
-	// If the target belongs to the player that issued the order, the order is invalid.
-	vector<Territory*> playerOwnedT = this->getOwner()->getTowned();
-	for (Territory* p : playerOwnedT) {
-		if (p == target) {
-			targetBelongsToPlayer = true;
+	if (target != NULL) {
+		// If the target belongs to the player that issued the order, the order is invalid.
+		vector<Territory*> playerOwnedT = this->getOwner()->getTowned();
+		for (Territory* p : playerOwnedT) {
+			if (p == target) {
+				targetBelongsToPlayer = true;
+			}
+		}
+		// If the target territory is not adjacent to one of the territory owned by the player issuing the order, then the order is invalid.
+		if (getTarget() != NULL) {
+			vector<Territory*> adjT = getTarget()->getAdjTerritories();
+			for (Territory* p : adjT) {
+				if (p->getOwner() == getOwner())
+					targetIsAdjacent = true;
+			}
+		}
+		else {
+			return false;
 		}
 	}
-	// If the target territory is not adjacent to one of the territory owned by the player issuing the order, then the order is invalid.
-	vector<Territory*> adjT = getTarget()->getAdjTerritories();
-	for (Territory* p : adjT) {
-		if (p->getOwner() == getOwner())
-			targetIsAdjacent = true;
+	else {
+		cout << "The Order is Invalid: The Target Territory is invalid. " << endl;
+		return false;
 	}
 
 	if (targetBelongsToPlayer == true) {
@@ -668,8 +678,11 @@ BlockadeOrder::BlockadeOrder(const Order& order) {
 
 */
 bool BlockadeOrder::validate() {
-	bool targetOK = this->isTerritoryMine(target->getTerritoryName()); // checking if the player owns the target territory
-
+	bool targetOK = false;
+	if (target != NULL) {
+		targetOK = this->isTerritoryMine(target->getTerritoryName()); // checking if the player owns the target territory
+	}
+	 
 	return targetOK;
 }
 /*
@@ -758,6 +771,7 @@ bool AirliftOrder::validate() {
 	bool armiesOK = false;
 	bool sourceOK = this->isTerritoryMine(sourceTerritory); // checking if the player owns the source territory
 	bool targetOK = this->isTerritoryMine(targetTerritory); // checking if the player owns the target territory
+	
 	if (sourceOK) armiesOK = (numberOfArmies >= this->findTerritory(sourceTerritory)->getArmiesPlaced()); // checking if the source has enough armies
 
 	return (sourceOK && targetOK && armiesOK);
@@ -771,7 +785,7 @@ void AirliftOrder::execute() {
 
 	cout << "Executing " << this->getName() << "..." << endl;
 	if (!canExecute) {
-		cout << "This execution is invalid. Skipping this Order." << endl;
+		cout << "This execution is invalid. Skipping this Order. " << endl;
 		return;
 	}
 	else {
@@ -842,15 +856,22 @@ NegotiateOrder::NegotiateOrder(const Order& order) {
 	
 */
 bool NegotiateOrder::validate() {
-	Player* targetPlayer = getTarget()->getOwner();
-	// Checking that the Player who called the order isnt the target
-	if (getOwner() == targetPlayer) {
-		cout << "The Order is Invalid: You Cannot Negotiate with Yourself" << endl;
+	if (getTarget() != NULL) {
+		Player* targetPlayer = getTarget()->getOwner();
+		// Checking that the Player who called the order isnt the target
+		if (getOwner() == targetPlayer) {
+			cout << "The Order is Invalid: You Cannot Negotiate with Yourself. " << endl;
+			return false;
+		}
+
+		cout << "The Order is Valid: Proceeding with Execution. ";
+		return true;
+	}
+	else {
+		cout << "The Order is Invalid: Invalid target. ";
 		return false;
 	}
-
-	cout << "The Order is Valid: Proceeding with Execution";
-	return true;
+	
 }
 /*
 	NegotiateOrder execute function
