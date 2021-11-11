@@ -300,7 +300,7 @@ DeployOrder::DeployOrder(const Order& order) {
 }
 /*
 	DeployOrder validate function
-	This is a dummy validation to validate whether the order can be executed or not.
+	
 */
 bool DeployOrder::validate() {
 	int reinforcementPool = 100;
@@ -391,7 +391,7 @@ AdvanceOrder::AdvanceOrder(const Order& order) {
 }
 /*
 	AdvanceOrder validate function
-	This is a dummy validation to validate whether the order can be executed or not.
+
 */
 bool AdvanceOrder::validate() {
 	bool sourceBelongsToPlayer = false;
@@ -568,15 +568,8 @@ BombOrder::BombOrder(const Order& order) {
 bool BombOrder::validate() {
 	bool targetBelongsToPlayer = false;
 	bool targetIsAdjacent = false;
-	bool hasCard = false;
 
-	// Check that the player owns the given card
-	for (Card* c : this->getOwner()->getHandOfCards()) {
-		if (c->getType() == 0) {
-			this->getOwner()->getPlayerHand()->eraseCard(c);
-			hasCard = true;
-		}
-	}
+
 	// If the target belongs to the player that issued the order, the order is invalid.
 	vector<Territory*> playerOwnedT = this->getOwner()->getTowned();
 	for (Territory* p : playerOwnedT) {
@@ -599,10 +592,6 @@ bool BombOrder::validate() {
 		cout << "The Order is Invalid: You Do Not Own A Territory Adjacent to the Target. " << endl;
 		return false;
 	}
-	else if (hasCard == false) {
-		cout << "The Order is Invalid: You Do Not Have a Bomb Card. " << endl;
-		return false;
-	}
 	cout << "The Order is Valid: Proceeding with Execution. ";
 	return true;
 }
@@ -622,7 +611,7 @@ void BombOrder::execute() {
 	else {
 		//execution occurs...
 		int currentArmies = getTarget()->getArmiesPlaced();
-		int newNumArmies = currentArmies / 2; // PLACEHOLDER
+		int newNumArmies = currentArmies / 2; // Removes half of the armies from the territory
 		getTarget()->setArmiesPlaced(newNumArmies);
 		cout << "This execution was successful!" << endl;
 		Notify();
@@ -676,10 +665,9 @@ BlockadeOrder::BlockadeOrder(const Order& order) {
 }
 /*
 	BlockadeOrder validate function
-	This is a dummy validation to validate whether the order can be executed or not.
+
 */
 bool BlockadeOrder::validate() {
-	bool hasCard = false;
 	bool targetOK = this->isTerritoryMine(target->getTerritoryName()); // checking if the player owns the target territory
 
 	return targetOK;
@@ -706,10 +694,11 @@ void BlockadeOrder::execute() {
 		}
 		neutralPlayer->addTerritory(target);
 		getOwner()->removeTerritory(target);
+		target->setOwner(neutralPlayer);
 
 		cout << "The neutral player now owns this territory." << endl;
 		cout << "This execution was successful!" << endl;
-		//Notify();
+		Notify();
 	}
 }
 /*
@@ -850,7 +839,7 @@ NegotiateOrder::NegotiateOrder(const Order& order) {
 }
 /*
 	NegotiateOrder validate function
-	This is a dummy validation to validate whether the order can be executed or not.
+	
 */
 bool NegotiateOrder::validate() {
 	Player* targetPlayer = getTarget()->getOwner();

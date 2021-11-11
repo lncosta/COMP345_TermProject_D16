@@ -11,16 +11,13 @@ using namespace std;
 class Cards;
 class Order;
 class OrderList;
+
 //Stream insertions:
-
-
 istream& operator>>(istream& in, Player& p)
 {
 	in >> p.name;
 	return in;
 }
-
-
 
 ostream& operator<<(ostream& out, const Player& p)
 {
@@ -40,7 +37,7 @@ ostream& operator<<(ostream& out, const Player& p)
 	return out;
 }
 
-
+//Static variable initalizer:
 int Player::playersCreated = 0;
 
 //Constructors:
@@ -82,7 +79,7 @@ Player::Player(const Player& other)
 Player::~Player() {
 	cout << "Player " << this->getName() << " will now be destroyed." << endl;
 	if (orders != NULL) {
-		delete orders;
+		delete orders; 
 	}
 	towned.clear();
 	cards.clear();
@@ -110,6 +107,7 @@ Player& Player::operator =(const Player& other) {
 	return *this;
 }
 
+//Mutators:
 void Player::setPlayerID(int playerID)
 {
 	this->playerID = playerID;
@@ -165,6 +163,8 @@ OrdersList* Player::getOrders(void) {
 	return orders;
 }
 
+//-------------------------  Part 3 ------------------------------------
+
 vector<Player*> Player::getCantAttack() {
 	return cannotAttack;
 }
@@ -201,8 +201,7 @@ void Player::addOrder(Order* order) {
 std::random_device rd;
 std::default_random_engine rng(rd());
 
-//auto rng = std::default_random_engine{};
-
+//Returns territories owned by the player
 vector<Territory*> Player::toDefend()
 {
 	//Returns territories owned by the player:
@@ -218,6 +217,7 @@ vector<Territory*> Player::toDefend()
 	return defense;
 }
 
+//Returns territories not owned by the Player
 vector<Territory*> Player::toAttack()
 {
 	//Returns enemy territories player has access to through adjacent territories. 
@@ -240,12 +240,21 @@ vector<Territory*> Player::toAttack()
 	std::shuffle(std::begin(attack), std::end(attack), rng);
 	return attack;
 }
+
+//Determines order target based on toDefend or toAttack methods
 void Player::determineTarget(int state, Order* order) {
 	vector<Territory*> defend = toDefend();
 	vector<Territory*> attack = toAttack();
 	Territory* target;
 
 	if (state == 1) { //Target is one of Player's own territories -> taken from toDefend()
+		if (defend.size() == 0) {
+			target = NULL;
+			//Setting target information to the created order:
+			order->setOwner(this);
+			order->setTarget(target);
+			return;
+		}
 		cout << "Territories available as a target:" << endl;
 		int i = 1;
 		for (auto t : defend) {
@@ -267,7 +276,7 @@ void Player::determineTarget(int state, Order* order) {
 				target = defend[0];
 			}
 		}
-		else {
+		else {	//Default target selection
 			cout << "Default territory selected as target: " << defend[0]->getTerritoryName() << endl;
 			target = defend[0];
 		}
@@ -275,6 +284,13 @@ void Player::determineTarget(int state, Order* order) {
 
 	}
 	else {	//Target is one of the enemy territory -> taken from toAttack
+		if (attack.size() == 0) {
+			target = NULL;
+			//Setting target information to the created order:
+			order->setOwner(this);
+			order->setTarget(target);
+			return;
+		}
 		cout << "Territories available as a target: " << endl;
 		int i = 1, index;
 		for (auto t : attack) {
@@ -306,10 +322,17 @@ void Player::determineTarget(int state, Order* order) {
 	order->setOwner(this);
 	order->setTarget(target);
 }
+//Determines order source based on toDefend method
 void Player::determineSource(int state, Order* order) {
 	vector<Territory*> defend = toDefend();
 	Territory* target = order->getTarget();
 	Territory* source = NULL;
+	if (defend.size() == 0) {
+		source = NULL;
+		//Setting target information to the created order:
+		order->setSource(source);
+		return;
+	}
 	if (target != NULL) {
 		cout << "Territories available as a source:" << endl;
 		int i = 1;
@@ -332,7 +355,7 @@ void Player::determineSource(int state, Order* order) {
 				source = defend[0];
 			}
 		}
-		else {
+		else {	//Default source selection
 			cout << "Default territory selected as target:" << defend[0]->getTerritoryName() << endl;
 			source = defend[0];
 		}
@@ -341,9 +364,10 @@ void Player::determineSource(int state, Order* order) {
 	order->setSource(source);
 
 }
+//Prints standard order information as well as player's hand
 void Player::printOrderList(void) {
 	cout << "----------------------------------" << endl;
-	cout << "The following commands are available: " << endl;
+	cout << "The following orders are available: " << endl;
 	cout << "DEPLOY: place some armies on one of the current player's territories." << endl;
 	cout << "ADVANCE: move some armies from one of the current player's territories(source) to an adjacent territory." << endl;
 	cout << "TARGET: If the target territory belongs to the current player, the armies are moved to the target.\nIf the target territory belongs to another player, an attack happens between the two territories." << endl;
@@ -354,6 +378,7 @@ void Player::printOrderList(void) {
 
 	cout << *getPlayerHand();
 }
+//Sets the number of armies to be deployed
 int Player::deployArmies(void) {
 	if (!intelligent) {
 		return 10;
@@ -368,6 +393,7 @@ int Player::deployArmies(void) {
 		return 1;
 	}
 }
+//Given a string, issue the corresponding order
 Order* Player::discoverOrderType(string x) {
 	vector<Territory*> defend = toDefend();
 	vector<Territory*> attack = toAttack();
@@ -382,6 +408,11 @@ Order* Player::discoverOrderType(string x) {
 			newOrder = NULL;
 			return newOrder;
 
+		}
+		if (toDefend().size() == 0) {
+			cout << "Player does not own a territory." << endl;
+			newOrder = NULL;
+			return newOrder;
 		}
 		newOrder = new DeployOrder();
 		determineTarget(1, newOrder);
@@ -474,6 +505,7 @@ Order* Player::discoverOrderType(string x) {
 	return newOrder;
 }
 
+//Issues a order for the Player
 void Player::issueOrder()
 {
 	Order* issued;
@@ -495,7 +527,7 @@ void Player::issueOrder()
 		cout << *t << "Owner: " << (t->getOwner())->getName() << endl;
 	}
 	cout << "----------------------------------" << endl;
-	if (armiesHeld > 0) { //Deployment phase.
+	if (armiesHeld > 0 && toDefend().size() > 0) { //Deployment phase.
 
 		cout << "Player must deploy armies." << endl;
 		cout << "Armies held: " << armiesHeld << endl;
@@ -529,8 +561,6 @@ void Player::issueOrder()
 				x = played->orderType();
 			}
 		}
-
-
 
 		vector<string> options2;
 		for (auto name : getPlayerHand()->getHandOfCards()) {	//Check which commands are available based on player's hand of cards
@@ -573,7 +603,7 @@ void Player::issueOrder()
 	if (issued == NULL) {
 		cout << "Invalid Order. Could not add it to the list." << endl;
 	}
-	else {
+	else { //Add order to OrdersList
 		orders->addOrder(issued);
 		cout << "Order was issued: " << issued->getName() << endl;
 
@@ -585,12 +615,4 @@ void Player::issueOrder()
 	cout << "----------------------------------" << endl;
 	delete orderObserver;
 	orderObserver = nullptr;
-}
-
-
-template <typename T>
-void printVector(vector<T> vec) {
-	for (T i : vec) {
-		cout << i << endl;
-	}
 }

@@ -183,9 +183,7 @@ void GameEngine::startupPhase()
 					c->saveEffect(input);
 					transition("maploaded");
 				}
-				//else {
-				//	continue;
-				//}
+				
 			}
 			//2.2.2 In the maploaded state, the validatemap command is used to validate the map. 
 			//If successful, the game transitions to the mapValidated state
@@ -276,18 +274,22 @@ void GameEngine::startupPhase()
 
 // This method removes players who do not own any territories and checks if there is a winner who controls all the territories
 bool GameEngine::isThereAwinner() {
-	
+	cout << "Checking for a Winner." << endl; 
 	vector<Player*> winningPlayers;
 	// find those players who owns at least one territory and save them in the winningPlayers vector
 	for (auto t : map->getTerritoyVector()) {
-		if (find(winningPlayers.begin(), winningPlayers.end(), t->getOwner()) == winningPlayers.end()) {
+		if (find(winningPlayers.begin(), winningPlayers.end(), t->getOwner()) == winningPlayers.end() && t->getOwner()->getName() != "Neutral") {
 			winningPlayers.push_back(t->getOwner());
 		}
 	}
 	// if there is only one player in the the winningPlayers vector, that player is the winner
-	if (winningPlayers.size() <= 1) {
+	if (winningPlayers.size() == 1) {
 		cout << "Player " << winningPlayers[0]->getName() << " has won!" << endl;
 		return true;
+	}
+	else if (winningPlayers.size() == 0) { //Handles the case where all available territories belong to the Neutral player
+		cout << "The game has resulted in a tie. Better luck next time!" << endl; 
+		return true; 
 	}
 	// if there is only one player in the the players vector because other players are removed from the game, that player is the winner
 	else if (players.size() <= 1) {
@@ -311,6 +313,30 @@ bool GameEngine::isThereAwinner() {
 	return false;
 }
 
+// This method does a simple check of whether any player has won
+bool GameEngine::isThereAwinnerS(void) {
+	vector<Player*> winningPlayers;
+	// find those players who owns at least one territory and save them in the winningPlayers vector
+	for (auto t : map->getTerritoyVector()) {
+		if (find(winningPlayers.begin(), winningPlayers.end(), t->getOwner()) == winningPlayers.end() && t->getOwner()->getName() != "Neutral") {
+			winningPlayers.push_back(t->getOwner());
+		}
+	}
+	// if there is only one player in the the winningPlayers vector, that player is the winner
+	if (winningPlayers.size() == 1) {
+		return true;
+	}
+	else if (winningPlayers.size() == 0) { //Handles the case where all available territories belong to the Neutral player
+		return true;
+	}
+	// if there is only one player in the the players vector because other players are removed from the game, that player is the winner
+	else if (players.size() <= 1) {
+		return true;
+	}
+	
+	return false;
+}
+
 
 // The methods implemnts the play phase, where players can issue orders and the system executes orders 
 int GameEngine::mainGameLoop(void)
@@ -321,7 +347,12 @@ int GameEngine::mainGameLoop(void)
 
 		cout << *this << endl;
 
+
 		if (state == "assignreinforcement") {
+			if (isThereAwinner()) {
+				transition("win");
+				loopstop = true;
+			}
 			reinforcementPhase();
 			transition("issueorders");
 		}
@@ -330,7 +361,10 @@ int GameEngine::mainGameLoop(void)
 			transition("executeorders");
 		}
 		else if (state == "executeorders") {
-
+			if (isThereAwinner()) {
+				transition("win");
+				loopstop = true;
+			}
 			executeOrdersPhase();
 			// check if ther is a winner, if yes, finish the mainGameLoop function, if not, back to assignreinforcement state.
 			if (isThereAwinner()) {
@@ -498,15 +532,17 @@ bool GameEngine::assignTerritories(void) {
 
 //-------------------------  Part 3 ------------------------------------
 
+//Distributes new armies according to number of territories owned by each player
 void GameEngine::reinforcementPhase(void) {
 	for (auto p : players) {
+		p->getCantAttack().empty(); //Clear Negotiate effect
+		int originalArmies = p->getArmiesHeld();
+		//Count territories owened and divide by 3
 		int count = 0;
 		for (auto o : p->getTowned()) {
 			count++;
 		}
-		int toAdd = p->getArmiesHeld() + count / 3;
-
-		p->setArmiesHeld(toAdd);
+		int toAdd = count / 3;
 
 		//Cheking for player owning all continents:
 		for (auto c : map->getContinentVector()) {
@@ -524,16 +560,18 @@ void GameEngine::reinforcementPhase(void) {
 				toAdd += c->armyValue;
 			}
 		}
+		//Default minimum to 3
 		if (toAdd < 3) {
 			toAdd = 3;
 		}
-		p->setArmiesHeld(toAdd);
+		p->setArmiesHeld(toAdd + originalArmies);
 		cout << "Player " << p->getPlayerID() << " - " << p->getName() << " has received " << toAdd << " armies." << endl;
 		cout << "Current army count is: " << p->getArmiesHeld() << endl;
 
 	}
 
 }
+//Has players issue orders in a round-robin fashion until no Player wants to add more orders
 void GameEngine::issueOrdersPhase(void) {
 	//Issuing orders in round-robin fashion:
 	bool round = true;
@@ -543,9 +581,9 @@ void GameEngine::issueOrdersPhase(void) {
 		round = true;
 		while (round) {
 			p->issueOrder();
-			string orderIssued = (p->getOrders())->getOrderList().back()->getName();
+			
 			cout << "Would you like to issue more orders? Y/N" << endl;
-			if (!p->intelligent && p->getOrders()->getOrderList().size() < 5) {
+			if (!p->intelligent && p->getOrders()->getOrderList().size() < 5) {	//Non-intelligent player issues 5 orders per turn
 				result = "Y";
 			}
 			else if (!p->intelligent) {
@@ -568,6 +606,7 @@ void GameEngine::issueOrdersPhase(void) {
 
 }
 
+//Executes top order from each player in a round-robin fashion
 void GameEngine::executeOrdersPhase(void) {
 	bool playing = true;
 	int doneCount = 0;
@@ -582,12 +621,17 @@ void GameEngine::executeOrdersPhase(void) {
 					orderObserver = new LogObserver(o);
 
 					o->execute();
-
+				
 					delete orderObserver; //delete the observer before deleting the order
 					orderObserver = nullptr; //if we used smart pointers we wouldn't have to do this deletion here
 
-					toDeleteFrom->remove(0);
+					toDeleteFrom->remove(0); //Remove top order
+					if (isThereAwinnerS()) {
+						cout << "/////////////////////////////////////" << endl;
+						return;
+					}
 				}
+				
 			}
 
 		}
@@ -599,22 +643,29 @@ void GameEngine::executeOrdersPhase(void) {
 				orderObserver = new LogObserver(toexc[0]);
 
 				toexc[0]->execute();
+			
 
 				delete orderObserver; //delete the observer before deleting the order
 				orderObserver = nullptr; //if we used smart pointers we wouldn't have to do this deletion here
 				//Remove executed order:
 				OrdersList* toDeleteFrom = p->getOrders();
 				toDeleteFrom->remove(0);
+				if (isThereAwinnerS()) {
+					cout << "/////////////////////////////////////" << endl;
+					return;
+				}
 			}
 			else {
+				//Draw card if the player has conquered a territory over their round
 				if (p->getConquered() == true) {
 					deck->draw(p);
 					p->setConquered(false);
 				}
 				doneCount++;
 			}
+			
 		}
-		if (doneCount >= players.size()) {
+		if (doneCount >= players.size()) {	//Return to main game loop once all orders have been executed
 			playing = false;
 		}
 	}

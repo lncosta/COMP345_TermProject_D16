@@ -57,6 +57,7 @@ public:
 	void startupPhase(void);
 	int mainGameLoop(void);
 	bool isThereAwinner(void);
+	bool isThereAwinnerS(void);
 	void transition(string newState);
 	bool loadMap(string fileName);	
 	void addPlayer(void);		

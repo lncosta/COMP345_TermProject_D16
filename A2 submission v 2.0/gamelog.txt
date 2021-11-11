@@ -1,39 +1,23 @@
-Inputted command: 
-Inputted command: start
 Inputted command: start
 Inputted command: loadmap europe.map
 Current effect: Map has been successfully loaded.
 Transitioned to state: maploaded
-Inputted command: loadmap europe.map
 Inputted command: validatemap
 Current effect: Map has been validated.
 Transitioned to state: mapvalidated
-Inputted command: validatemap
 Inputted command: addplayer yupei
 Current effect: The player has been added.
 Transitioned to state: playersadded
-Inputted command: addplayer yupei
 Inputted command: addplayer steve
 Current effect: The player has been added.
-Transitioned to state: playersadded
-Inputted command: addplayer steve
 Inputted command: addplayer sarah
 Current effect: The player has been added.
-Transitioned to state: playersadded
-Inputted command: addplayer sarah
 Inputted command: addplayer tomas
 Current effect: The player has been added.
-Transitioned to state: playersadded
-Inputted command: addplayer tomas
 Inputted command: addplayer luiza
 Current effect: The player has been added.
-Transitioned to state: playersadded
-Inputted command: addplayer luiza
 Inputted command: addplayer arie
 Current effect: The player has been added.
-Current effect: Reinforcement has been assigned.
-Transitioned to state: gamestart
-Inputted command: addplayer arie
 Inputted command: gamestart
 Current effect: Reinforcement has been assigned.
 Transitioned to state: assignreinforcement
@@ -180,27 +164,32 @@ Order Executed: Negotiate
 Negotiate: Prevent attacks between the current player and another player until the end of the turn.
 Order Executed: Bomb
 Bomb: Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
 Order Executed: Bomb
 Bomb: Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.
 Order Executed: Bomb
 Bomb: Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.
 Order Executed: Bomb
 Bomb: Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.
+Order Executed: Bomb
+Bomb: Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.
 Order Executed: Negotiate
 Negotiate: Prevent attacks between the current player and another player until the end of the turn.
 Order Executed: Negotiate
 Negotiate: Prevent attacks between the current player and another player until the end of the turn.
+Order Executed: Bomb
+Bomb: Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
 Order Executed: Negotiate
 Negotiate: Prevent attacks between the current player and another player until the end of the turn.
 Order Executed: Negotiate
 Negotiate: Prevent attacks between the current player and another player until the end of the turn.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
 Transitioned to state: assignreinforcement
 Transitioned to state: issueorders
-Order Added: Deploy
-Order Added: Blockade
-Order Added: Blockade
-Order Added: Blockade
-Order Added: Negotiate
 Order Added: Deploy
 Order Added: Bomb
 Order Added: Negotiate
@@ -208,12 +197,12 @@ Order Added: Blockade
 Order Added: Blockade
 Order Added: Deploy
 Order Added: Blockade
-Order Added: Blockade
 Order Added: Bomb
 Order Added: Blockade
+Order Added: Bomb
 Order Added: Deploy
 Order Added: Blockade
-Order Added: Airlift
+Order Added: Negotiate
 Order Added: Airlift
 Order Added: Blockade
 Order Added: Deploy
@@ -225,6 +214,11 @@ Order Added: Deploy
 Order Added: Blockade
 Order Added: Airlift
 Order Added: Negotiate
+Order Added: Airlift
+Order Added: Deploy
+Order Added: Blockade
+Order Added: Airlift
+Order Added: Airlift
 Order Added: Blockade
 Transitioned to state: executeorders
 Order Executed: Deploy
@@ -241,8 +235,14 @@ Order Executed: Deploy
 Deploy: Place some armies on one of the current player's territories.
 Order Executed: Bomb
 Bomb: Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
 Order Executed: Negotiate
 Negotiate: Prevent attacks between the current player and another player until the end of the turn.
 Order Executed: Bomb
@@ -251,38 +251,54 @@ Order Executed: Negotiate
 Negotiate: Prevent attacks between the current player and another player until the end of the turn.
 Order Executed: Negotiate
 Negotiate: Prevent attacks between the current player and another player until the end of the turn.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
+Order Executed: Negotiate
+Negotiate: Prevent attacks between the current player and another player until the end of the turn.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
+Order Executed: Bomb
+Bomb: Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
 Transitioned to state: assignreinforcement
 Transitioned to state: issueorders
 Order Added: Deploy
-Order Added: Airlift
-Order Added: Airlift
-Order Added: Negotiate
+Order Added: Bomb
+Order Added: Bomb
 Order Added: Blockade
+Order Added: Bomb
 Order Added: Deploy
-Order Added: Negotiate
+Order Added: Bomb
 Order Added: Airlift
-Order Added: Blockade
-Order Added: Negotiate
-Order Added: Deploy
-Order Added: Airlift
-Order Added: Airlift
-Order Added: Airlift
+Order Added: Bomb
 Order Added: Airlift
 Order Added: Deploy
-Order Added: Negotiate
-Order Added: Blockade
-Order Added: Negotiate
+Order Added: Bomb
+Order Added: Airlift
+Order Added: Airlift
 Order Added: Blockade
 Order Added: Deploy
 Order Added: Airlift
-Order Added: Negotiate
+Order Added: Blockade
 Order Added: Blockade
 Order Added: Negotiate
 Order Added: Deploy
-Order Added: Airlift
+Order Added: Negotiate
+Order Added: Bomb
 Order Added: Airlift
 Order Added: Negotiate
+Order Added: Deploy
+Order Added: Blockade
 Order Added: Negotiate
+Order Added: Negotiate
+Order Added: Airlift
 Transitioned to state: executeorders
 Order Executed: Deploy
 Deploy: Place some armies on one of the current player's territories.
@@ -296,20 +312,36 @@ Order Executed: Deploy
 Deploy: Place some armies on one of the current player's territories.
 Order Executed: Deploy
 Deploy: Place some armies on one of the current player's territories.
+Order Executed: Bomb
+Bomb: Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.
+Order Executed: Bomb
+Bomb: Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.
+Order Executed: Bomb
+Bomb: Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.
 Order Executed: Negotiate
 Negotiate: Prevent attacks between the current player and another player until the end of the turn.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
+Order Executed: Bomb
+Bomb: Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
+Order Executed: Bomb
+Bomb: Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.
 Order Executed: Negotiate
 Negotiate: Prevent attacks between the current player and another player until the end of the turn.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
+Order Executed: Bomb
+Bomb: Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
 Order Executed: Negotiate
 Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
+Order Executed: Bomb
+Bomb: Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
 Order Executed: Negotiate
 Negotiate: Prevent attacks between the current player and another player until the end of the turn.
 Order Executed: Negotiate
@@ -317,30 +349,25 @@ Negotiate: Prevent attacks between the current player and another player until t
 Transitioned to state: assignreinforcement
 Transitioned to state: issueorders
 Order Added: Deploy
-Order Added: Blockade
-Order Added: Negotiate
 Order Added: Negotiate
 Order Added: Blockade
-Order Added: Deploy
-Order Added: Negotiate
-Order Added: Negotiate
 Order Added: Airlift
-Order Added: Blockade
+Order Added: Negotiate
 Order Added: Deploy
+Order Added: Bomb
 Order Added: Negotiate
-Order Added: Negotiate
-Order Added: Negotiate
+Order Added: Blockade
 Order Added: Negotiate
 Order Added: Deploy
 Order Added: Negotiate
-Order Added: Airlift
-Order Added: Negotiate
 Order Added: Blockade
+Order Added: Bomb
+Order Added: Negotiate
 Order Added: Deploy
-Order Added: Airlift
-Order Added: Airlift
 Order Added: Blockade
+Order Added: Airlift
 Order Added: Negotiate
+Order Added: Bomb
 Transitioned to state: executeorders
 Order Executed: Deploy
 Deploy: Place some armies on one of the current player's territories.
@@ -350,8 +377,24 @@ Order Executed: Deploy
 Deploy: Place some armies on one of the current player's territories.
 Order Executed: Deploy
 Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
+Order Executed: Negotiate
+Negotiate: Prevent attacks between the current player and another player until the end of the turn.
+Order Executed: Bomb
+Bomb: Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.
+Order Executed: Negotiate
+Negotiate: Prevent attacks between the current player and another player until the end of the turn.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
+Order Executed: Negotiate
+Negotiate: Prevent attacks between the current player and another player until the end of the turn.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
+Order Executed: Bomb
+Bomb: Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.
 Order Executed: Negotiate
 Negotiate: Prevent attacks between the current player and another player until the end of the turn.
 Order Executed: Negotiate
@@ -360,40 +403,47 @@ Order Executed: Negotiate
 Negotiate: Prevent attacks between the current player and another player until the end of the turn.
 Order Executed: Negotiate
 Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
+Order Executed: Bomb
+Bomb: Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.
 Transitioned to state: assignreinforcement
 Transitioned to state: issueorders
 Order Added: Deploy
+Order Added: Negotiate
+Order Added: Negotiate
 Order Added: Blockade
-Order Added: Advance
-Order Added: Advance
-Order Added: Advance
+Order Added: Blockade
 Order Added: Deploy
+Order Added: Bomb
 Order Added: Blockade
-Order Added: Advance
-Order Added: Advance
-Order Added: Advance
+Order Added: Airlift
+Order Added: Airlift
+Order Added: Deploy
+Order Added: Airlift
+Order Added: Negotiate
+Order Added: Blockade
+Order Added: Bomb
 Transitioned to state: executeorders
 Order Executed: Deploy
 Deploy: Place some armies on one of the current player's territories.
 Order Executed: Deploy
 Deploy: Place some armies on one of the current player's territories.
-Transitioned to state: assignreinforcement
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Negotiate
+Negotiate: Prevent attacks between the current player and another player until the end of the turn.
+Order Executed: Bomb
+Bomb: Destroy half of the armies located on an opponent's territory that is adjacent to one of the current player's territories.
+Order Executed: Negotiate
+Negotiate: Prevent attacks between the current player and another player until the end of the turn.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
+Order Executed: Negotiate
+Negotiate: Prevent attacks between the current player and another player until the end of the turn.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
+Order Executed: Blockade
+Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
 Transitioned to state: win
-Inputted command: gamestart
 Inputted command: quit
 Current effect: Program exits
 Transitioned to state: exitprogram
