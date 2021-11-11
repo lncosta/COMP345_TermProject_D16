@@ -592,18 +592,18 @@ bool BombOrder::validate() {
 	}
 
 	if (targetBelongsToPlayer == true) {
-		cout << "The Order is Invalid: The Target Territory is Owned By You" << endl;
+		cout << "The Order is Invalid: The Target Territory is Owned By You. " << endl;
 		return false;
 	}
 	else if (targetIsAdjacent == false) {
-		cout << "The Order is Invalid: You Do Not Own A Territory Adjacent to the Target" << endl;
+		cout << "The Order is Invalid: You Do Not Own A Territory Adjacent to the Target. " << endl;
 		return false;
 	}
 	else if (hasCard == false) {
-		cout << "The Order is Invalid: You Do Not Have a Bomb Card" << endl;
+		cout << "The Order is Invalid: You Do Not Have a Bomb Card. " << endl;
 		return false;
 	}
-	cout << "The Order is Valid: Proceeding with Execution";
+	cout << "The Order is Valid: Proceeding with Execution. ";
 	return true;
 }
 /*
@@ -622,7 +622,7 @@ void BombOrder::execute() {
 	else {
 		//execution occurs...
 		int currentArmies = getTarget()->getArmiesPlaced();
-		int newNumArmies = currentArmies / 2; // PLACEHOLDER // test for 1/2
+		int newNumArmies = currentArmies / 2; // PLACEHOLDER
 		getTarget()->setArmiesPlaced(newNumArmies);
 		cout << "This execution was successful!" << endl;
 		Notify();
