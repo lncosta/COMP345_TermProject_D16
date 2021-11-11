@@ -62,7 +62,7 @@ Subject& Subject::operator=(const Subject& sub) {
 	
 	list<Observer*> newObservers = (*sub._observers);
 	for (Observer* individualObs : newObservers) {
-		this->_observers->push_back(individualObs);
+		this->_observers->push_back(individualObs); //shallow copy because we want to keep a reference of the observers that are attached
 	}
 	return *this;
 }

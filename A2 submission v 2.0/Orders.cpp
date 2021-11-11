@@ -622,7 +622,7 @@ void BombOrder::execute() {
 	else {
 		//execution occurs...
 		int currentArmies = getTarget()->getArmiesPlaced();
-		int newNumArmies = currentArmies / 2; // PLACEHOLDER
+		int newNumArmies = currentArmies / 2; // PLACEHOLDER // test for 1/2
 		getTarget()->setArmiesPlaced(newNumArmies);
 		cout << "This execution was successful!" << endl;
 		Notify();
@@ -789,8 +789,16 @@ void AirliftOrder::execute() {
 		int sourceArmies = this->findTerritory(sourceTerritory)->getArmiesPlaced();
 		int targetArmies = this->findTerritory(targetTerritory)->getArmiesPlaced();
 
-		this->findTerritory(sourceTerritory)->setArmiesPlaced(sourceArmies - numberOfArmies);
-		this->findTerritory(targetTerritory)->setArmiesPlaced(targetArmies + numberOfArmies);
+		if (sourceArmies - numberOfArmies >= 0) {
+			this->findTerritory(sourceTerritory)->setArmiesPlaced(sourceArmies - numberOfArmies);
+			this->findTerritory(targetTerritory)->setArmiesPlaced(targetArmies + numberOfArmies);
+		}
+		else {
+			// if number subtracted is less than 0, set to 0.
+			this->findTerritory(sourceTerritory)->setArmiesPlaced(0);
+			// so then we add only what is available from the sourceArmies
+			this->findTerritory(targetTerritory)->setArmiesPlaced(targetArmies + sourceArmies);
+		}
 
 		cout << "This execution was successful!" << endl;
 		Notify();
