@@ -65,6 +65,6 @@ public:
 	bool loadMap(string fileName);
 	bool assignTerritories(void);
 	virtual string stringToLog();
-
+	bool isThereAwinner();
 };
 

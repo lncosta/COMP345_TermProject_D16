@@ -105,17 +105,19 @@ void GameEngine::startupPhase()
 	FileLineReader* fprocessor{};
 	FileCommandProcessorAdapter* adapter{};
 
-	// verify user's choice which can only be "console" or "file" 
-	// create necessary objects on heap according to user's choice
+	
 	do {
 
+		// 1.2.1 Upon starting the application, a command line option is set to either read commands from the console or from a given file.  
 		cout << "Please enter -console or -file <filename> to choose the input source." << endl;
 		cin >> source;		
 
+		// 1.2.2 Commands can be read from the console 
 		if (source == "console") {
 			processor = new CommandProcessor();
 			processorObserver = new LogObserver(processor);			
 		}
+		// 1.2.3 Commands can be read from a file
 		else if (source == "file") {
 			string fileName;
 			cin >> fileName;			
@@ -142,7 +144,7 @@ void GameEngine::startupPhase()
 		cout << *this << endl;
 		string s;
 
-		// depends on user's choice, command is read from commandProcessor object or Adapter object
+		// 1.2.4 getCommand() reads commands and save commands in a list via commandProcessor object or Adapter object 
 		if (source == "console") {
 			string str;
 			cout << "Enter your command" << endl;
@@ -165,24 +167,28 @@ void GameEngine::startupPhase()
 		if (v.size() == 2)
 			parameter = v[1];
 
-		//validates if a given command is valid in the current game state. 
+		//1.2.5 Commands are validated by the command processor
 		isValid = processor->validate(input, currentState);
 
 		if (!isValid) {
+			//2.2.9 Invalid commands for the current state are rejected(no effect). 
 			continue;
 		}
 		else
 		{
+			//2.2.1 In the start state, the loadmap command results in successfully loading a readable map, transitioning to the maploaded state
 			if (input == "loadmap") {
 				bool res = loadMap(parameter);
 				if (res) {
 					c->saveEffect(input);
 					transition("maploaded");
 				}
-				else {
-					continue;
-				}
+				//else {
+				//	continue;
+				//}
 			}
+			//2.2.2 In the maploaded state, the validatemap command is used to validate the map. 
+			//If successful, the game transitions to the mapValidated state
 			else if (input == "validatemap") {
 				map->validateWrapper();
 
@@ -193,31 +199,42 @@ void GameEngine::startupPhase()
 				else
 					transition("start");
 			}
+			//2.2.3 In the mapValidated state, the addplayer command can be used to create new players and insert them in the game (2-6 players). 
 			else if (input == "addplayer") {
-				string playerName;
 				if (source == "console") {
 					if (parameter == "") {
-						cout << "Please add the player's name after the space" << endl;
+						cout << "Please add the player's name after the space." << endl;
 						continue;
 					}					
-				}	
-				playerName = parameter;
-				addPlayer(playerName);
-				c->saveEffect(input);
-				if (players.size() >= 6) {
-					cout << "Player limit has been reached. Game will now start." << endl;
-					c->saveEffect("gamestart");
-					transition("gamestart");
 				}
-				else {
+
+				// check number of players, only 2-6 are allowed
+				if (players.size() == 0) {
+					//create new players and insert them in the game. 
+					addPlayer(parameter);
+					c->saveEffect(input);
 					transition("playersadded");
+				}
+				
+				else if (players.size() < 6) {
+					addPlayer(parameter);
+					c->saveEffect(input);
+				}		
+				else {
+					cout << "Player limit has been reached. Please enter \"gamestart\"" << endl;
 				}
 			}
 			else if (input == "gamestart") {
 				if (players.size() > 1) {
+					//assignTerritories() fulfill the following tasks:
+					//2.2.4 fairly distributing the territories among all players
+					//2.2.5 randomly determine the order of play of the players in the game
+					//2.2.6 giving 50 initial armies to each player
+					//2.2.7 Each player draws 2 cards each from the deck
 					assignTerritories();
 					c->saveEffect(input);
-					transition("assignreinforcement");		
+					transition("assignreinforcement");	
+					//2.2.8 the gamestart command results transiting to the play phase
 					mainGameLoop();
 				}
 				else {
@@ -257,50 +274,53 @@ void GameEngine::startupPhase()
 	}
 }
 
-// The methods sets up the main game loop: where players can issue orders and the system executes orders 
+// This method removes players who do not own any territories and checks if there is a winner who controls all the territories
+bool GameEngine::isThereAwinner() {
+	
+	vector<Player*> winningPlayers;
+	// find those players who owns at least one territory and save them in the winningPlayers vector
+	for (auto t : map->getTerritoyVector()) {
+		if (find(winningPlayers.begin(), winningPlayers.end(), t->getOwner()) == winningPlayers.end()) {
+			winningPlayers.push_back(t->getOwner());
+		}
+	}
+	// if there is only one player in the the winningPlayers vector, that player is the winner
+	if (winningPlayers.size() <= 1) {
+		cout << "Player " << winningPlayers[0]->getName() << " has won!" << endl;
+		return true;
+	}
+	// if there is only one player in the the players vector because other players are removed from the game, that player is the winner
+	else if (players.size() <= 1) {
+		cout << "Player " << players[0]->getName() << " has won!" << endl;
+		return true;
+	}
+	else {
+		
+		cout << "No player has yet won. The game continues." << endl;
+		int i = 0;
+		vector<Player*> copyP = players;
+		for (auto p : copyP) {
+			if (find(winningPlayers.begin(), winningPlayers.end(), p) == winningPlayers.end()) {
+				//One of the players does not own any territories, and has to be removed from the players vector
+				cout << "Player " << p->getName() << " does not own any territories and thus must be removed from the game." << endl;
+				removePlayer(p);
+			}
+			i++;
+		}
+	}
+	return false;
+}
+
+
+// The methods implemnts the play phase, where players can issue orders and the system executes orders 
 int GameEngine::mainGameLoop(void)
 {
 	bool loopstop = false;
-	bool winningCondition = false;
 
 	while (!loopstop) {
 
 		cout << *this << endl;
 
-		//Check for winning condition:
-		vector<Player*> winningPlayers;
-		for (auto t : map->getTerritoyVector()) {
-			if (find(winningPlayers.begin(), winningPlayers.end(), t->getOwner()) == winningPlayers.end()) {
-				winningPlayers.push_back(t->getOwner());
-			}
-		}
-		if (winningPlayers.size() <= 1) {
-			cout << "Player " << winningPlayers[0]->getName() << " has won!" << endl;
-			winningCondition = true;
-		}
-		else if (players.size() <= 1) {
-			cout << "Player " << players[0]->getName() << " has won!" << endl;
-			winningCondition = true;
-		}
-		else {
-			winningCondition = false;
-			cout << "No player has yet won. The game continues." << endl;
-			int i = 0;
-			vector<Player*> copyP = players; 
-			for (auto p : copyP) {
-				if (find(winningPlayers.begin(), winningPlayers.end(), p) == winningPlayers.end()) {
-					//One of the players does not own any territories.
-					cout << "Player " << p->getName() << " does not own any territories and thus must be removed from the game." << endl;
-					removePlayer(p);
-				}
-				i++;
-			}
-		}
-
-		if (winningCondition) {
-			transition("win");
-			loopstop = true;
-		}
 		if (state == "assignreinforcement") {
 			reinforcementPhase();
 			transition("issueorders");
@@ -308,22 +328,45 @@ int GameEngine::mainGameLoop(void)
 		else if (state == "issueorders") {
 			issueOrdersPhase();
 			transition("executeorders");
-
 		}
 		else if (state == "executeorders") {
 
-			if (winningCondition) {
+			executeOrdersPhase();
+			// check if ther is a winner, if yes, finish the mainGameLoop function, if not, back to assignreinforcement state.
+			if (isThereAwinner()) {
 				transition("win");
 				loopstop = true;
-
 			}
-			else {
-				executeOrdersPhase();
+			else
 				transition("assignreinforcement");
-			}
-		}
+		}		
 	}
 	return 0;
+}
+
+
+// This methods takes a map's file name to create a Map object 
+bool GameEngine::loadMap(string fileName) {
+	int numberOfMaps = -1;
+	MapLoader load;
+	Map* created = nullptr;
+	vector<Map*> mapsCreated;
+
+	try {
+		created = load.loadMap(fileName);
+		mapsCreated.push_back(created);
+		int sum = 0;
+		for (Territory* p : created->getTerritoyVector()) {
+			sum++;
+		}
+		cout << "Territories placed: " << sum << endl;
+		map = created;
+		return true;
+	}
+	catch (const invalid_argument& e) {
+		cout << "The map file provided was invalid. " << endl;
+		return false;
+	}
 }
 
 // This method removes a player from the game
@@ -369,6 +412,90 @@ void GameEngine::addPlayer(void) {
 		cout << "Player " << (*p).getPlayerID() << " - " << (*p).getName() << endl;
 	}
 }
+
+bool GameEngine::assignTerritories(void) {
+	//Shuffle the vector before assigning territories:
+	auto rng = std::default_random_engine{};
+	string result;
+	bool intl = false;
+	vector<Territory*> copy = map->getTerritoyVector();
+	std::shuffle(std::begin(copy), std::end(copy), rng);
+	//Determine whether user input will be used:
+	cout << "Would you like to use console input to play the game? Y/N" << endl;
+	cin >> result;
+	while (result != "N" && result != "n" && result != "y" && result != "Y") {
+		cin >> result;
+	}
+	if (result == "Y" || result == "y") {
+		intl = true;
+	}
+
+
+	//Create neutral player:
+	neutral = new Player();
+	neutral->setName("Neutral");
+	//Print out players:
+	cout << "All players have been added! Here is who will be playing:" << endl;
+	for (Player* p : players) {
+		cout << "Player " << p->getPlayerID() << " - " << p->getName() << endl;
+		if (intl) { //Sets intelligence modifier for all players (demo purposes):
+			p->intelligent = true;
+		}
+		//Associate the neutral player with all players:
+		p->neutral = neutral;
+		//Associate Map with players:
+		p->map = map;
+	}
+
+	//2.2.4 Fairly distributing the territories among all players
+	int playerCount = players.size();
+	int count = 0;
+	int index = 0;
+	for (auto t : copy) {
+		index = count % playerCount;
+		t->setOwner(players[index]);
+		players[index]->addTerritory(t);
+		cout << "Territory " << t->getTerritoryName() << " is now owned by " << t->getOwner()->getName() << endl;
+		count++;
+	}
+
+	//2.2.5 Randomly determine the order of play of the players in the game
+	std::shuffle(std::begin(players), std::end(players), rng);
+	//Create Deck object:
+	deck = new Deck();
+
+	//Add initial army value and draw cards:
+	for (auto p : players) {
+		p->getPlayerHand()->setDeck(deck);
+		// 2.2.6 Give 50 initial armies to each player
+		p->setArmiesHeld(50);
+
+		//2.2.7 Each player draws 2 cards each from the deck
+		deck->draw(p);
+		deck->draw(p);
+		//For demo purposes, add a card of each type to the player:
+		int counter = 0;
+		for (int types = 0; types < 5; types++) {
+			for (int cards = 0; cards < (1 * 5); cards++) { // creates 3 cards (1 card for the demo only) per player per type of card
+				counter++; // the first card has ID == 1
+
+				Card* pointer = new Card(types, counter);
+				p->addCard(pointer);
+			}
+		}
+		cout << "Player " << p->getName() + " has received the following cards: " << endl;
+		for (auto c : p->getHandOfCards()) {
+			cout << *c;
+		}
+	}
+
+	//Enter play phase.
+	return true;
+}
+
+
+
+//-------------------------  Part 3 ------------------------------------
 
 void GameEngine::reinforcementPhase(void) {
 	for (auto p : players) {
@@ -439,6 +566,7 @@ void GameEngine::issueOrdersPhase(void) {
 	}
 
 }
+
 void GameEngine::executeOrdersPhase(void) {
 	bool playing = true;
 	int doneCount = 0;
@@ -491,104 +619,6 @@ void GameEngine::executeOrdersPhase(void) {
 	}
 }
 
-// This methods takes a map's file name to create a Map object 
-bool GameEngine::loadMap(string fileName) {
-	int numberOfMaps = -1;
-	MapLoader load;
-	Map* created = nullptr;
-	vector<Map*> mapsCreated;
-
-	try {
-		created = load.loadMap(fileName);
-		mapsCreated.push_back(created);
-		int sum = 0;
-		for (Territory* p : created->getTerritoyVector()) {
-			sum++;
-		}
-		cout << "Territories placed: " << sum << endl;
-		map = created;
-		return true;
-	}
-	catch (const invalid_argument& e) {
-		cout << "The map file provided was invalid. " << endl;
-		return false;
-	}
-}
-
-bool GameEngine::assignTerritories(void) {
-	//Shuffle the vector before assigning territories:
-	auto rng = std::default_random_engine{};
-	string result;
-	bool intl = false;
-	vector<Territory*> copy = map->getTerritoyVector();
-	std::shuffle(std::begin(copy), std::end(copy), rng);
-	//Determine whether user input will be used:
-	cout << "Would you like to use console input to play the game? Y/N" << endl;
-	cin >> result;
-	while (result != "N" && result != "n" && result != "y" && result != "Y") {
-		cin >> result;
-	}
-	if (result == "Y" || result == "y") {
-		intl = true;
-	}
-	//Create neutral player:
-	neutral = new Player();
-	neutral->setName("Neutral");
-	//Print out players:
-	cout << "All players have been added! Here is who will be playing:" << endl;
-	for (Player* p : players) {
-		cout << "Player " << p->getPlayerID() << " - " << p->getName() << endl;
-		if (intl) { //Sets intelligence modifier for all players (demo purposes):
-			p->intelligent = true;
-		}
-		//Associate the neutral player with all players:
-		p->neutral = neutral;
-		//Associate Map with players:
-		p->map = map;
-	}
-
-	//Assign territories:
-	int playerCount = players.size();
-	int count = 0;
-	int index = 0;
-	for (auto t : copy) {
-		index = count % playerCount;
-		t->setOwner(players[index]);
-		players[index]->addTerritory(t);
-		cout << "Territory " << t->getTerritoryName() << " is now owned by " << t->getOwner()->getName() << endl;
-		count++;
-	}
-
-	//Shuffle players to determine play order:
-	std::shuffle(std::begin(players), std::end(players), rng);
-	//Create Deck object:
-	deck = new Deck();
-
-	//Add initial army value and draw cards:
-	for (auto p : players) {
-		p->getPlayerHand()->setDeck(deck);
-		p->setArmiesHeld(50);
-		deck->draw(p);
-		deck->draw(p);
-		//For demo purposes, add a card of each type to the player:
-		int counter = 0;
-		for (int types = 0; types < 5; types++) {
-			for (int cards = 0; cards < (1 * 5); cards++) { // creates 3 cards (1 card for the demo only) per player per type of card
-				counter++; // the first card has ID == 1
-
-				Card* pointer = new Card(types, counter);
-				p->addCard(pointer);
-			}
-		}
-		cout << "Player " << p->getName() + " has received the following cards: " << endl;
-		for (auto c : p->getHandOfCards()) {
-			cout << *c;
-		}
-	}
-
-	//Enter play phase.
-	return true;
-}
 
 
 

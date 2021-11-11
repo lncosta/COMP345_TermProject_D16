@@ -3,7 +3,6 @@
 #include <limits>
 using namespace std;
 
-
 // -----------------------------------Command class ----------------------------------------
 // Constructors
 Command::Command(void) {
@@ -23,7 +22,6 @@ Command::Command(const Command& other) {
 Command::~Command(void) {
 	cout << "Destroying a command object." << endl;
 }
-
 
 //Getter and Setter
 string Command::returnCommand(void) {
@@ -46,7 +44,6 @@ ostream& operator << (ostream& out, const Command& c) {
 	out << "The command is " << c.command << " and the effect is " << c.effect << endl;
 	return out;
 }
-
 
 //The Command::saveEffect() method can be used to save the effect of the command as a string. 
 void Command::saveEffect(string input) {
@@ -80,10 +77,7 @@ string Command::stringToLog() {
 	return "Current effect: " + effect;
 }
 
-
-
 // -----------------------------------CommandProcessor class ----------------------------------------
-
 
 //Constructor
 CommandProcessor::CommandProcessor(void) {
@@ -97,7 +91,6 @@ CommandProcessor::CommandProcessor(const CommandProcessor& other) {
 		commandVector.push_back(temp);
 	}
 }
-
 
 //Destructor
 CommandProcessor::~CommandProcessor(void) {
@@ -210,21 +203,22 @@ bool CommandProcessor::validate(string input, string currentState) {
 	return false;
 }
 
-
 // redefine the virtual method inherited from Subject class
 string CommandProcessor::stringToLog() {
 	return "Inputted command: " + commandVector.back()->returnCommand();
 }
 
-
 // -----------------------------------FileLineReader class ----------------------------------------
+
 //Constructor
 FileLineReader::FileLineReader() {
 	fileName = "Default";
 }
+
 FileLineReader::FileLineReader(string fileName) {
 	this->fileName = fileName;
 }
+
 FileLineReader::FileLineReader(const FileLineReader& other) {
 	fileName = other.fileName;
 }
@@ -307,7 +301,6 @@ FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
 	fprocessor = nullptr;
 }
 
-
 //Assignment operator
 FileCommandProcessorAdapter& FileCommandProcessorAdapter::operator =(const FileCommandProcessorAdapter& other) {
 	CommandProcessor::operator = (other);
@@ -321,7 +314,7 @@ ostream& operator << (ostream& out, const FileCommandProcessorAdapter& fp) {
 	return out;
 }
 
-// this class is inherited from CommandProcessor, so it can overwrite the getCommand() and change the source to file
+// this class is inherited from CommandProcessor, so it can overwrite the getCommand() and change the input source from console to file
 Command* FileCommandProcessorAdapter::getCommand() {
 	// use adaptee object to read commands from a file
 	string input = fprocessor->readLineFromFile();
