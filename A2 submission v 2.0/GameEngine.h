@@ -52,19 +52,20 @@ public:
 	//Stream insertion
 	friend ostream& operator << (ostream& out, const GameEngine& g);
 
-	//Methods
-	void startupPhase();
+	//Methods	
+	virtual string stringToLog(void);
+	void startupPhase(void);
+	int mainGameLoop(void);
+	bool isThereAwinner(void);
 	void transition(string newState);
-	void addPlayer(void);
+	bool loadMap(string fileName);	
+	void addPlayer(void);		
+	void addPlayer(string name);
+	void removePlayer(Player* toRemove);	
+	bool assignTerritories(void);
 	void reinforcementPhase(void);
 	void issueOrdersPhase(void);
 	void executeOrdersPhase(void);
-	void removePlayer(Player* toRemove);
-	int mainGameLoop(void);
-	void addPlayer(string name);
-	bool loadMap(string fileName);
-	bool assignTerritories(void);
-	virtual string stringToLog();
-	bool isThereAwinner();
+
 };
 

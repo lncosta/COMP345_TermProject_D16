@@ -89,8 +89,8 @@ string GameEngine::stringToLog() {
 	return "Transitioned to state: " + state;
 }
 
-// This method defines the WarZone game flow and sets up the startup components
-// It allows the user to choose the input source from the console or from a file 
+//This method implements the WarZone game flow, which includes a command-based user interaction mechanism 
+// to proceed with the game startup phase
 void GameEngine::startupPhase()
 {
 	string source;
@@ -413,6 +413,7 @@ void GameEngine::addPlayer(void) {
 	}
 }
 
+// This method sets up the necessary components for the game to start
 bool GameEngine::assignTerritories(void) {
 	//Shuffle the vector before assigning territories:
 	auto rng = std::default_random_engine{};
