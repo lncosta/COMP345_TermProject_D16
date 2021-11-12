@@ -109,7 +109,7 @@ void OrdersList::addOrder(Order* order) {
 	this->orderList.push_back(order);
 	cout << "Added order successfully." << endl;
 	stringToBeLogged = "Order Added: " + order->getName();
-	Notify();
+	Notify(); //5.2.2 When an order is inserted in a player's list of orders, the order is written into the log file. 
 };
 /*
 	OrdersList move function
@@ -307,10 +307,12 @@ bool DeployOrder::validate() {
 	bool armiesOK = (modifier <= reinforcementPool); // checking if the player's reinforcement pool has enough armies****************************************;
 	bool sourceOK = false;
 	//	sourceOK = this->isTerritoryMine(sourceTerritory); // checking if the player owns the source territory
-	vector<Territory*> tOwned = orderOwner->getTowned();
-	for (Territory* p : tOwned) {
-		if (target == p)
-			sourceOK = true;
+	if (target != NULL) {
+		vector<Territory*> tOwned = orderOwner->getTowned();
+		for (Territory* p : tOwned) {
+			if (target == p)
+				sourceOK = true;
+		}
 	}
 	return (sourceOK && armiesOK);
 }
@@ -335,7 +337,7 @@ void DeployOrder::execute() {
 		cout << "DEBUG: THE TERRITORY NOW HAS " << target->getArmiesPlaced() << " ARMIES ON IT" << endl;
 
 		cout << "This execution was successful!" << endl;
-		Notify();
+		Notify(); // 5.2.3 When an order is executed, its effect is written into the log file.
 	}
 }
 /*
@@ -398,41 +400,47 @@ bool AdvanceOrder::validate() {
 	bool targetIsAdjacent = false;
 	bool notEnoughArmies = false;
 
-	// Checking that the player owns the source territory
-	vector<Territory*> playerOwnedT = orderOwner->getTowned();
-	string name = getSource()->getTerritoryName();
-	for (Territory* p : playerOwnedT) {
-		if (p->getTerritoryName() == name) {
-			sourceBelongsToPlayer = true;
+	if (getSource() != NULL && getTarget() != NULL) {
+		// Checking that the player owns the source territory
+		vector<Territory*> playerOwnedT = orderOwner->getTowned();
+		string name = getSource()->getTerritoryName();
+		for (Territory* p : playerOwnedT) {
+			if (p->getTerritoryName() == name) {
+				sourceBelongsToPlayer = true;
 
-			break;
+				break;
+			}
 		}
-	}
-	// Checking that the target is adjacent to the source
-	vector<Territory*> adjT = getSource()->getAdjTerritories();
-	for (Territory* p : adjT) {
-		if (p->getTerritoryName() == getTarget()->getTerritoryName()) {
-			targetIsAdjacent = true;
-			break;
+		// Checking that the target is adjacent to the source
+		vector<Territory*> adjT = getSource()->getAdjTerritories();
+		for (Territory* p : adjT) {
+			if (p->getTerritoryName() == getTarget()->getTerritoryName()) {
+				targetIsAdjacent = true;
+				break;
+			}
 		}
-	}
-	if (getSource() != NULL && getSource()->getArmiesPlaced() < armyModifier)
-		notEnoughArmies = true;
+		if (getSource()->getArmiesPlaced() < armyModifier)
+			notEnoughArmies = true;
 
-	if (sourceBelongsToPlayer == false) {
-		cout << "The Order is Invalid: The Source Territory is Not Owned By You" << endl;
+		if (sourceBelongsToPlayer == false) {
+			cout << "The Order is Invalid: The Source Territory is Not Owned By You. " << endl;
+			return false;
+		}
+		else if (targetIsAdjacent == false) {
+			cout << "The Order is Invalid: The Target Territory is Not Adjacent to the Source. " << endl;
+			return false;
+		}
+		else if (notEnoughArmies == true) {		// Maybe Not a Case for Invalidity since not in document
+			cout << "The Order is Invalid: The Source Territory Does Not Have Enough Armies to Move. " << endl;
+			return false;
+		}
+		cout << "The Order is Valid: Proceeding with Execution. " << endl;
+		return true;
+	}
+	else {
+		cout << "The Order is Invalid: The Source Territory or Target Territory is invalid. " << endl;
 		return false;
 	}
-	else if (targetIsAdjacent == false) {
-		cout << "The Order is Invalid: The Target Territory is Not Adjacent to the Source" << endl;
-		return false;
-	}
-	else if (notEnoughArmies == true) {		// Maybe Not a Case for Invalidity since not in document
-		cout << "The Order is Invalid: The Source Territory Does Not Have Enough Armies to Move" << endl;
-		return false;
-	}
-	cout << "The Order is Valid: Proceeding with Execution" << endl;
-	return true;
 }
 /*
 	AdvanceOrder execute function
@@ -498,7 +506,7 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 			}
 		}
 		cout << "This execution was successful!" << endl;
-		Notify();
+		Notify();  // 5.2.3 When an order is executed, its effect is written into the log file.
 		return;
 	}
 }
@@ -624,7 +632,7 @@ void BombOrder::execute() {
 		int newNumArmies = currentArmies / 2; // Removes half of the armies from the territory
 		getTarget()->setArmiesPlaced(newNumArmies);
 		cout << "This execution was successful!" << endl;
-		Notify();
+		Notify(); // 5.2.3 When an order is executed, its effect is written into the log file.
 	}
 }
 /*
@@ -682,6 +690,9 @@ bool BlockadeOrder::validate() {
 	if (target != NULL) {
 		targetOK = this->isTerritoryMine(target->getTerritoryName()); // checking if the player owns the target territory
 	}
+	else {
+		cout << "The Order is Invalid: The Target Territory is invalid. " << endl;
+	}
 	 
 	return targetOK;
 }
@@ -711,7 +722,7 @@ void BlockadeOrder::execute() {
 
 		cout << "The neutral player now owns this territory." << endl;
 		cout << "This execution was successful!" << endl;
-		Notify();
+		Notify(); // 5.2.3 When an order is executed, its effect is written into the log file.
 	}
 }
 /*
@@ -769,11 +780,16 @@ AirliftOrder::AirliftOrder(const Order& order) {
 */
 bool AirliftOrder::validate() {
 	bool armiesOK = false;
-	bool sourceOK = this->isTerritoryMine(sourceTerritory); // checking if the player owns the source territory
-	bool targetOK = this->isTerritoryMine(targetTerritory); // checking if the player owns the target territory
-	
-	if (sourceOK) armiesOK = (numberOfArmies >= this->findTerritory(sourceTerritory)->getArmiesPlaced()); // checking if the source has enough armies
+	bool sourceOK = false;
+	bool targetOK = false;
 
+	if (getTarget() != NULL && getSource() != NULL) {
+		sourceOK = this->isTerritoryMine(sourceTerritory); // checking if the player owns the source territory
+		targetOK = this->isTerritoryMine(targetTerritory); // checking if the player owns the target territory
+
+		if (sourceOK) armiesOK = (numberOfArmies >= this->findTerritory(sourceTerritory)->getArmiesPlaced()); // checking if the source has enough armies
+	}
+	
 	return (sourceOK && targetOK && armiesOK);
 }
 /*
@@ -804,7 +820,7 @@ void AirliftOrder::execute() {
 		}
 
 		cout << "This execution was successful!" << endl;
-		Notify();
+		Notify(); // 5.2.3 When an order is executed, its effect is written into the log file.
 	}
 }
 /*
@@ -882,7 +898,7 @@ void NegotiateOrder::execute() {
 	bool canExecute = validate();
 
 	if (!canExecute) {
-		cout << "This execution is invalid. Skipping this Order." << endl;
+		cout << "This execution is invalid. Skipping this Order. " << endl;
 		return;
 	}
 	else {
@@ -892,7 +908,7 @@ void NegotiateOrder::execute() {
 		targetPlayer->getCantAttack().push_back(this->getOwner());
 		cout << "This execution was successful!" << endl;
 
-		Notify();
+		Notify();  // 5.2.3 When an order is executed, its effect is written into the log file.
 		return;
 
 	}

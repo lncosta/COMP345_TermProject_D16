@@ -81,7 +81,7 @@ vector<string> split(string s, string delimiter) {
 void GameEngine::transition(string newState) {
 	this->setState(newState);
 	cout << "You are transited to state: " << this->getState() << endl;
-	Notify();
+	Notify(); //5.2.4 When the game engine state changes, the new state is written into the log file. 
 }
 
 // redefine the virtual method inherited from Subject class

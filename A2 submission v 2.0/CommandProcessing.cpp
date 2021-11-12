@@ -56,7 +56,7 @@ void Command::saveEffect(string input) {
 		theEffect = "Map has been validated.";
 	}
 	else if (input == "addplayer") {
-		theEffect = "The player has been added.";
+		theEffect = "The player has been added. ";
 	}
 	else if (input == "gamestart") {
 		theEffect = "Reinforcement has been assigned.";
@@ -69,7 +69,7 @@ void Command::saveEffect(string input) {
 	}
 
 	this->effect = theEffect;
-	Notify();
+	Notify(); //5.2.1 When a command is read, it is written in the log file. When a command is executed, its effect is written in the log file.
 }
 
 // redefine the virtual method inherited from Subject class
@@ -138,7 +138,7 @@ string CommandProcessor::readCommand(void) {
 Command* CommandProcessor::saveCommand(string command) {
 	Command* temp = new Command(command);
 	commandVector.push_back(temp);
-	Notify();
+	Notify(); //5.2.1 When a command is read, it is written in the log file. When a command is executed, its effect is written in the log file.
 	return temp;
 }
 
