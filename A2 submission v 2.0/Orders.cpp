@@ -284,12 +284,18 @@ DeployOrder::~DeployOrder() {  }
 */
 DeployOrder::DeployOrder(const DeployOrder& order) {
 	this->id = order.id;
+	this->armyModifier = order.armyModifier;
+	this->neutralPlayer = order.neutralPlayer;
+	this->type = order.type;
 }
 /*
 	DeployOrder Assignment Operator
 */
 DeployOrder& DeployOrder::operator=(const DeployOrder& order) {
 	this->id = order.id;
+	this->armyModifier = order.armyModifier;
+	this->neutralPlayer = order.neutralPlayer;
+	this->type = order.type;
 	return *this;
 };
 /*
@@ -297,16 +303,18 @@ DeployOrder& DeployOrder::operator=(const DeployOrder& order) {
 */
 DeployOrder::DeployOrder(const Order& order) {
 	this->id = order.id;
+	this->armyModifier = order.armyModifier;
+	this->neutralPlayer = order.neutralPlayer;
 }
 /*
 	DeployOrder validate function
-	
+
 */
 bool DeployOrder::validate() {
 	int reinforcementPool = 100;
 	bool armiesOK = (modifier <= reinforcementPool); // checking if the player's reinforcement pool has enough armies****************************************;
 	bool sourceOK = false;
-	
+
 	if (target != NULL) {
 		vector<Territory*> tOwned = orderOwner->getTowned();
 		for (Territory* p : tOwned) {
@@ -377,12 +385,19 @@ AdvanceOrder::~AdvanceOrder() {  }
 */
 AdvanceOrder::AdvanceOrder(const AdvanceOrder& order) {
 	this->id = order.id;
+	this->armyModifier = order.armyModifier;
+	this->neutralPlayer = order.neutralPlayer;
+	this->type = order.type;
+	this->setTarget(order.getTarget());
 }
 /*
 	AdvanceOrder Assignment Operator
 */
 AdvanceOrder& AdvanceOrder::operator=(const AdvanceOrder& order) {
 	this->id = order.id;
+	this->armyModifier = order.armyModifier;
+	this->neutralPlayer = order.neutralPlayer;
+	this->type = order.type;
 	return *this;
 };
 /*
@@ -390,6 +405,8 @@ AdvanceOrder& AdvanceOrder::operator=(const AdvanceOrder& order) {
 */
 AdvanceOrder::AdvanceOrder(const Order& order) {
 	this->id = order.id;
+	this->armyModifier = order.armyModifier;
+	this->neutralPlayer = order.neutralPlayer;
 }
 /*
 	AdvanceOrder validate function
@@ -564,6 +581,8 @@ BombOrder::BombOrder(const BombOrder& order) {
 */
 BombOrder& BombOrder::operator=(const BombOrder& order) {
 	this->id = order.id;
+	this->orderOwner = order.orderOwner;
+	this->target = order.target;
 	return *this;
 };
 /*
@@ -671,12 +690,20 @@ BlockadeOrder::~BlockadeOrder() {  }
 */
 BlockadeOrder::BlockadeOrder(const BlockadeOrder& order) {
 	this->id = order.id;
+	this->orderOwner = order.orderOwner;
+	this->target = order.target;
+	this->armyModifier = order.armyModifier;
+	this->neutralPlayer = order.neutralPlayer;
 }
 /*
 	BlockadeOrder Assignment Operator
 */
 BlockadeOrder& BlockadeOrder::operator=(const BlockadeOrder& order) {
 	this->id = order.id;
+	this->orderOwner = order.orderOwner;
+	this->target = order.target;
+	this->armyModifier = order.armyModifier;
+	this->neutralPlayer = order.neutralPlayer;
 	return *this;
 };
 /*
@@ -684,6 +711,8 @@ BlockadeOrder& BlockadeOrder::operator=(const BlockadeOrder& order) {
 */
 BlockadeOrder::BlockadeOrder(const Order& order) {
 	this->id = order.id;
+	this->armyModifier = order.armyModifier;
+	this->neutralPlayer = order.neutralPlayer;
 }
 /*
 	BlockadeOrder validate function
@@ -697,7 +726,7 @@ bool BlockadeOrder::validate() {
 	else {
 		cout << "The Order is Invalid: The Target Territory is invalid. " << endl;
 	}
-	 
+
 	return targetOK;
 }
 /*
@@ -765,12 +794,16 @@ AirliftOrder::~AirliftOrder() {  }
 */
 AirliftOrder::AirliftOrder(const AirliftOrder& order) {
 	this->id = order.id;
+	this->armyModifier = order.armyModifier;
+	this->neutralPlayer = order.neutralPlayer;
 }
 /*
 	AirliftOrder Assignment Operator
 */
 AirliftOrder& AirliftOrder::operator=(const AirliftOrder& order) {
 	this->id = order.id;
+	this->armyModifier = order.armyModifier;
+	this->neutralPlayer = order.neutralPlayer;
 	return *this;
 };
 /*
@@ -778,6 +811,8 @@ AirliftOrder& AirliftOrder::operator=(const AirliftOrder& order) {
 */
 AirliftOrder::AirliftOrder(const Order& order) {
 	this->id = order.id;
+	this->armyModifier = order.armyModifier;
+	this->neutralPlayer = order.neutralPlayer;
 }
 /*
 	AirliftOrder validate function
@@ -794,8 +829,8 @@ bool AirliftOrder::validate() {
 		targetOK = this->isTerritoryMine(targetTerritory); // checking if the player owns the target territory
 
 		if (sourceOK) armiesOK = (numberOfArmies >= this->findTerritory(sourceTerritory)->getArmiesPlaced()); // checking if the source has enough armies
-	}	
-	
+	}
+
 	return (sourceOK && targetOK && armiesOK);
 }
 /*
@@ -858,13 +893,16 @@ NegotiateOrder::~NegotiateOrder() {  }
 */
 NegotiateOrder::NegotiateOrder(const NegotiateOrder& order) {
 	this->id = order.id;
-	this->targetPlayer = order.targetPlayer;
+	this->armyModifier = order.armyModifier;
+	this->neutralPlayer = order.neutralPlayer;
 }
 /*
 	NegotiateOrder Assignment Operator
 */
 NegotiateOrder& NegotiateOrder::operator=(const NegotiateOrder& order) {
 	this->id = order.id;
+	this->armyModifier = order.armyModifier;
+	this->neutralPlayer = order.neutralPlayer;
 	return *this;
 };
 /*
@@ -872,10 +910,12 @@ NegotiateOrder& NegotiateOrder::operator=(const NegotiateOrder& order) {
 */
 NegotiateOrder::NegotiateOrder(const Order& order) {
 	this->id = order.id;
+	this->armyModifier = order.armyModifier;
+	this->neutralPlayer = order.neutralPlayer;
 }
 /*
 	NegotiateOrder validate function
-	
+
 */
 bool NegotiateOrder::validate() {
 	if (getTarget() != NULL) {
@@ -893,7 +933,7 @@ bool NegotiateOrder::validate() {
 		cout << "The Order is Invalid: Invalid target. ";
 		return false;
 	}
-	
+
 }
 /*
 	NegotiateOrder execute function
