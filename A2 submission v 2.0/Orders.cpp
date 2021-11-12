@@ -272,7 +272,7 @@ DeployOrder::DeployOrder(Player* owner) : Order(owner) {
 	cout << "Player " << owner->getName() << " has declared a deploy order.\nEnter the source territory: ";
 	cin >> sourceTerritory;
 	cout << "What is the number of armies to be deployed: ";
-	cin >> numberOfArmies;
+	cin >> armyModifier;
 	cout << "\nThe Order has been confirmed." << endl;
 }
 /*
@@ -306,7 +306,7 @@ bool DeployOrder::validate() {
 	int reinforcementPool = 100;
 	bool armiesOK = (modifier <= reinforcementPool); // checking if the player's reinforcement pool has enough armies****************************************;
 	bool sourceOK = false;
-	//	sourceOK = this->isTerritoryMine(sourceTerritory); // checking if the player owns the source territory
+	
 	if (target != NULL) {
 		vector<Territory*> tOwned = orderOwner->getTowned();
 		for (Territory* p : tOwned) {
@@ -480,6 +480,7 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 				// At the beginnings check if defenders are still standing, covers the case where there are no defenders
 				if (getTarget()->getArmiesPlaced() <= 0) {
 					cout << "The Territory Has Been Conquered. The Remaining Attackers will be moved to it." << endl;
+					//indicate if a player conconquered a territory
 					this->getOwner()->setConquered(true);
 					//Remove territory from original owner:
 					(getTarget()->getOwner())->removeTerritory(getTarget());
@@ -496,9 +497,12 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 				int attackerRoll = (rand() % 10) + 1;
 				int defenderRoll = (rand() % 10) + 1;
 				// Checking if a defender gets killed
+				//Each attacking army unit involved has 60% chances of killing one defending army. 
 				if (attackerRoll <= 6) {
 					getTarget()->setArmiesPlaced(getTarget()->getArmiesPlaced() - 1);
 				}
+
+				// Each defending army unit has 70 % chances of killing one attacking army unit.
 				// Checking if an attacker gets killed
 				if (defenderRoll <= 7) {
 					armyModifier = armyModifier - 1;
@@ -750,7 +754,7 @@ AirliftOrder::AirliftOrder(Player* owner) : Order(owner) {
 	cout << "Player " << owner->getName() << " has declared an airlift order.\nEnter the source territory: ";
 	cin >> sourceTerritory;
 	cout << "What is the number of armies to be airlifted: ";
-	cin >> numberOfArmies;
+	cin >> armyModifier;
 	cout << "Now enter the target territory: ";
 	cin >> targetTerritory;
 	cout << "\nThe Order has been confirmed." << endl;
@@ -782,13 +786,15 @@ bool AirliftOrder::validate() {
 	bool armiesOK = false;
 	bool sourceOK = false;
 	bool targetOK = false;
+	int numberOfArmies = armyModifier;
 
+	//If the source or target does not belong to the player that issued the order, the order is invalid. 
 	if (getTarget() != NULL && getSource() != NULL) {
 		sourceOK = this->isTerritoryMine(sourceTerritory); // checking if the player owns the source territory
 		targetOK = this->isTerritoryMine(targetTerritory); // checking if the player owns the target territory
 
 		if (sourceOK) armiesOK = (numberOfArmies >= this->findTerritory(sourceTerritory)->getArmiesPlaced()); // checking if the source has enough armies
-	}
+	}	
 	
 	return (sourceOK && targetOK && armiesOK);
 }
@@ -798,7 +804,7 @@ bool AirliftOrder::validate() {
 */
 void AirliftOrder::execute() {
 	bool canExecute = validate();
-
+	int numberOfArmies = armyModifier;
 	cout << "Executing " << this->getName() << "..." << endl;
 	if (!canExecute) {
 		cout << "This execution is invalid. Skipping this Order. " << endl;

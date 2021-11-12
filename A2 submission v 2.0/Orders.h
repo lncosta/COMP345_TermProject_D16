@@ -87,7 +87,7 @@ private:
 	const string nameOfOrder = "Deploy";
 	const string description = "Place some armies on one of the current player's territories.";
 	string sourceTerritory;
-	int numberOfArmies;
+	
 public:
 	OrderType type = OrderType::Deploy;
 
@@ -222,7 +222,6 @@ private:
 	const string description = "Advance some armies from one of the current player's territories to any another territory.";
 	string targetTerritory;
 	string sourceTerritory;
-	int numberOfArmies;
 public:
 	OrderType type = OrderType::Airlift;
 

@@ -361,10 +361,14 @@ int GameEngine::mainGameLoop(void)
 			transition("executeorders");
 		}
 		else if (state == "executeorders") {
+
+			//3.2.7 If during order execution one player controls all territories, the game goes to the win state
 			if (isThereAwinner()) {
 				transition("win");
 				loopstop = true;
 			}
+
+			//3.2.6 Once all orders have been executed, the game engine goes back to the reinforcement phase.
 			executeOrdersPhase();
 			// check if ther is a winner, if yes, finish the mainGameLoop function, if not, back to assignreinforcement state.
 			if (isThereAwinner()) {
@@ -510,14 +514,17 @@ bool GameEngine::assignTerritories(void) {
 		deck->draw(p);
 		//For demo purposes, add a card of each type to the player:
 		int counter = 0;
-		for (int types = 0; types < 5; types++) {
-			for (int cards = 0; cards < (1 * 5); cards++) { // creates 3 cards (1 card for the demo only) per player per type of card
-				counter++; // the first card has ID == 1
+		if (!p->intelligent) {
+			for (int types = 0; types < 5; types++) {
+				for (int cards = 0; cards < 5 ; cards++) { // creates 3 cards (1 card for the demo only) per player per type of card
+					counter++; // the first card has ID == 1
 
-				Card* pointer = new Card(types, counter);
-				p->addCard(pointer);
+					Card* pointer = new Card(types, counter);
+					p->addCard(pointer);
+				}
 			}
 		}
+	
 		cout << "Player " << p->getName() + " has received the following cards: " << endl;
 		for (auto c : p->getHandOfCards()) {
 			cout << *c;
@@ -531,8 +538,8 @@ bool GameEngine::assignTerritories(void) {
 
 
 //-------------------------  Part 3 ------------------------------------
-
-//Distributes new armies according to number of territories owned by each player
+//3.3.2
+//3.2.1  Distributes new armies according to number of territories owned by each player
 void GameEngine::reinforcementPhase(void) {
 	for (auto p : players) {
 		p->getCantAttack().empty(); //Clear Negotiate effect
@@ -555,6 +562,7 @@ void GameEngine::reinforcementPhase(void) {
 					playerCount++;
 				}
 			}
+			// if so, get a bonus
 			if (territoryCount == playerCount) {
 				cout << "Player " << p->getName() << " owns the entirety of " << c->name << " and gains a +" << c->armyValue << " bonus." << endl;
 				toAdd += c->armyValue;
@@ -571,7 +579,9 @@ void GameEngine::reinforcementPhase(void) {
 	}
 
 }
-//Has players issue orders in a round-robin fashion until no Player wants to add more orders
+//3.3.3
+//3.2.2 Has players issue orders in a round-robin fashion until no Player wants to add more orders
+//3.2.3 After all players have signified that they dont have any more orders to isse, the orders execution phases starts. 
 void GameEngine::issueOrdersPhase(void) {
 	//Issuing orders in round-robin fashion:
 	bool round = true;
@@ -597,6 +607,7 @@ void GameEngine::issueOrdersPhase(void) {
 				cin >> result;
 			}
 			if (result == "N" || result == "n") {
+				
 				round = false;
 			}
 		}
@@ -605,8 +616,8 @@ void GameEngine::issueOrdersPhase(void) {
 	}
 
 }
-
-//Executes top order from each player in a round-robin fashion
+//3.3.4
+//3.2.5 Executes top order from each player in a round-robin fashion
 void GameEngine::executeOrdersPhase(void) {
 	bool playing = true;
 	int doneCount = 0;
@@ -650,6 +661,7 @@ void GameEngine::executeOrdersPhase(void) {
 				//Remove executed order:
 				OrdersList* toDeleteFrom = p->getOrders();
 				toDeleteFrom->remove(0);
+				// if there is a winner, return to mainGameLoop(), where players are removed and output the winner's name
 				if (isThereAwinnerS()) {
 					cout << "/////////////////////////////////////" << endl;
 					return;
@@ -657,6 +669,8 @@ void GameEngine::executeOrdersPhase(void) {
 			}
 			else {
 				//Draw card if the player has conquered a territory over their round
+				//A  player  receives  a  card  at  the  end  of  his  turn  if  they  successfully  conquered  at  least  one  territory 
+				//during their turn.
 				if (p->getConquered() == true) {
 					deck->draw(p);
 					p->setConquered(false);

@@ -45,7 +45,7 @@ ostream& operator << (ostream& out, const Command& c) {
 	return out;
 }
 
-//The Command::saveEffect() method can be used to save the effect of the command as a string. 
+//1.3.6 The Command::saveEffect() method can be used to save the effect of the command as a string. 
 void Command::saveEffect(string input) {
 
 	string theEffect;
@@ -126,7 +126,7 @@ ostream& operator << (ostream& out, const CommandProcessor& cp) {
 	return out;
 }
 
-//The protected CommandProcessor::readCommand() method reads a string from the console. 
+//1.3.4 The protected CommandProcessor::readCommand() method reads a string from the console. 
 string CommandProcessor::readCommand(void) {
 	string input;
 	// get the whole line from user's input
@@ -134,7 +134,7 @@ string CommandProcessor::readCommand(void) {
 	return input;
 }
 
-//The protected CommandProcessor::saveCommand() method saves the command in the list of commands.
+//1.3.5 The protected CommandProcessor::saveCommand() method saves the command in the list of commands.
 Command* CommandProcessor::saveCommand(string command) {
 	Command* temp = new Command(command);
 	commandVector.push_back(temp);
@@ -142,7 +142,7 @@ Command* CommandProcessor::saveCommand(string command) {
 	return temp;
 }
 
-// The public CommandProcessor::getCommand() method can be used by the GameEngine to read and save a command when needed.
+// 1.3.3 The public CommandProcessor::getCommand() method can be used by the GameEngine to read and save a command when needed.
 Command* CommandProcessor::getCommand(void)
 {
 	string input = readCommand();
@@ -150,7 +150,7 @@ Command* CommandProcessor::getCommand(void)
 	return temp;
 }
 
-//The CommandProcessor::validate() command can be used to validate if a given command is valid in the current game state.
+//1.3.7 The CommandProcessor::validate() command can be used to validate if a given command is valid in the current game state.
 bool CommandProcessor::validate(string input, string currentState) {
 
 	const string commandArr[6] = { "loadmap", "validatemap", "addplayer", "gamestart", "replay", "quit" };

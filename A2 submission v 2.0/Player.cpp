@@ -393,6 +393,8 @@ int Player::deployArmies(void) {
 		return 1;
 	}
 }
+
+//3.2.4 A player can create any kind of order, inlcuding those that can only be created using cards.
 //Given a string, issue the corresponding order
 Order* Player::discoverOrderType(string x) {
 	vector<Territory*> defend = toDefend();
