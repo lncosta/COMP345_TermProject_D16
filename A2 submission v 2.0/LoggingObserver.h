@@ -26,7 +26,7 @@ public:
 class Observer {
 public:
 	virtual ~Observer();
-	virtual void Update(string log) = 0;
+	virtual void Update(ILoggable* loggable) = 0;
 protected:
 	Observer();
 };
@@ -66,5 +66,5 @@ public:
 	friend ostream& operator<<(ostream& output, const LogObserver& order);
 
 	//Notify() will call Update()
-	virtual void Update(string log); 
+	virtual void Update(ILoggable* loggable);
 };

@@ -87,9 +87,7 @@ void Subject::Detach(Observer* obsView) {
 void Subject::Notify() {
 	list<Observer*>::iterator i = _observers->begin();
 	for (; i != _observers->end(); ++i) {
-		string log = stringToLog();
-		cout << log << endl; //if it doesnt go here, it's because it's not attached
-		(*i)->Update(log);
+		(*i)->Update(this); //if it doesnt go here, it's because it's not attached
 	}
 }
 /*
@@ -138,10 +136,10 @@ LogObserver::~LogObserver() {
 /*
 	LogObserver Update function.
 	It will append to the gamelog.txt file with any new string log given to it.
-	We were having issues trying to pass a Subject pointer as a parameter to Update() so we decided to call stringToLog() inside Notify().
 */
-void LogObserver::Update(string nextLog) {
+void LogObserver::Update(ILoggable* loggable) {
 	//get the string to log from the subject from "nextLog"
+	string nextLog = loggable->stringToLog();
 
 	//then add the string to the log
 	ofstream filewriting;
