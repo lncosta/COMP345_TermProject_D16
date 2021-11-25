@@ -160,11 +160,17 @@ void GameEngine::startupPhase()
 		else
 		{
 			//2.2.1 In the start state, the loadmap command results in successfully loading a readable map, transitioning to the maploaded state
-			if (input == "tournament") {				
-				// process tournament input
-				processor->processTournamentInput(s);
-				// data member is stored, now we can validate tournament input
-				bool isOkay = processor->validateTournamentParameters();
+			if (input == "tournament") {	
+				bool isOkay = false;
+				
+				if (source == "console") { 
+					processor->processTournamentInput(s); // process tournament input		 			
+					isOkay = processor->validateTournamentParameters(); // data member is stored, now we can validate tournament input
+				}
+				else if (source == "file") {
+					adapter->processTournamentInput(s);
+					isOkay = adapter->validateTournamentParameters(); 
+				}
 				
 				if (!isOkay) {
 					cout << "Parameters of tournament command are NOT valid. Exit game." << endl;
