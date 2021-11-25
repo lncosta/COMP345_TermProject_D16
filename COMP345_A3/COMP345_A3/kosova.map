@@ -1,0 +1,81 @@
+; map: kosova.map, by Fatos Berisha
+; map made with the map maker
+; yura.net Risk 1.0.9.7
+
+[files]
+pic kosova_pic.png
+map kosova_map.gif
+crd kosova.cards
+
+[continents]
+Mitrovicë 5 #666666
+Prishtinë 7 #000066
+Gjilan 2 #660066
+Ferizaj 2 #663300
+Prizren 4 #006600
+Drenicë 5 #660000
+Dukagjin 3 #cccc33
+
+[countries]
+1 Albanik 1 309 33
+2 Zveçan 1 316 93
+3 Zubin_Potok 1 276 104
+4 Mitrovica 1 350 96
+5 Vushtrri 1 354 140
+6 Besianë 2 408 129
+7 Kastriot 2 378 163
+8 Fushë_Kosovë 2 366 194
+9 Graçanicë 2 383 220
+10 Prishtina 2 420 174
+11 Dardanë 3 488 195
+12 Artanë 3 435 204
+13 Gjilani 3 452 243
+14 Viti 4 434 280
+15 Kaçanik 4 404 308
+16 Ferizaji 4 391 263
+17 Shtimje 4 358 248
+18 Therandë 5 326 267
+19 Shtërpcë 5 360 308
+20 Prizreni 5 296 304
+21 Dragash 5 291 357
+22 Malishevë 6 299 223
+23 Drenas 6 330 194
+24 Skënderaj 6 301 158
+25 Klinë 6 272 193
+26 Burim 7 251 147
+27 Peja 7 208 175
+28 Deçan 7 202 217
+29 Gjakova 7 233 259
+30 Rahovec 7 281 253
+
+[borders]
+1 2 4 6
+2 1 4 3
+3 2 4 26 24
+4 1 5 2 6 3 24
+5 4 6 7 24 23
+6 4 1 5 7 10
+7 6 8 10 5 23
+8 9 7 23 10
+9 12 13 16 10 8 23 22 18 17
+10 6 11 12 9 8 7
+11 10 13
+12 13 10 9
+13 11 12 14 16 9
+14 13 15 16
+15 14 16 19
+16 13 14 15 19 18 17 9
+17 16 18 9
+18 16 9 30 20 19 22 17
+19 16 20 18 15
+20 29 30 21 19 18
+21 20
+22 9 24 25 30 18 23
+23 9 8 5 24 22 7
+24 3 5 26 25 23 22 4
+25 24 26 27 22 30 29
+26 3 24 25 27
+27 26 28 25
+28 27 29
+29 25 28 30 20
+30 25 29 22 18 20
