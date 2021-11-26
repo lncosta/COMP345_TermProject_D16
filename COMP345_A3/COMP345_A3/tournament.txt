@@ -1,0 +1,2 @@
+tournament M europe.map kosova.map P Cheater Neutral Aggressive Benevolent G 2 D 10
+
