@@ -29,11 +29,14 @@ private:
 	vector<Player*> players;
 	Map* map;
 	Deck* deck;
+	
 
 
 public:
 	//Neutral Player:
 	Player* neutral;
+	vector<string> winnersPerMap;
+	vector< vector<string> > winnersTournament;
 
 	//Constructors
 	GameEngine(void);
@@ -55,7 +58,7 @@ public:
 	//Methods	
 	virtual string stringToLog(void);
 	void startupPhase(void);
-	int mainGameLoop(void);
+	int mainGameLoop(int);
 	bool isThereAwinner(void);
 	bool isThereAwinnerS(void);
 	void transition(string newState);

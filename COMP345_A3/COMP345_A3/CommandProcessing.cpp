@@ -1,5 +1,6 @@
 #pragma once
 #include "CommandProcessing.h"
+#include "Map.h"
 #include <limits>
 using namespace std;
 
@@ -66,7 +67,10 @@ ostream& operator << (ostream& out, const Command& c) {
 void Command::saveEffect(string input) {
 
 	string theEffect;
-	if (input == "loadmap") {
+	if (input == "tournament") {
+		theEffect = "Tournament Mode activated.";
+	}
+	else if (input == "loadmap") {
 		theEffect = "Map has been successfully loaded.";
 	}
 	else if (input == "validatemap") {
@@ -225,7 +229,6 @@ bool CommandProcessor::validate(string input, string currentState) {
 }
 
 void CommandProcessor::processTournamentInput(string input) {
-	cout << input << endl;
 	vector<string> v = split(input, " "); 
 	int i = 1; // skip "tournament"
 	while (i < v.size()) {
@@ -313,10 +316,11 @@ bool CommandProcessor::validateTournamentParameters() {
 		isOkay = false;
 	}
 
-
 	return isOkay;
 		
 }
+
+
 
 // redefine the virtual method inherited from Subject class
 string CommandProcessor::stringToLog() {
@@ -402,6 +406,7 @@ FileCommandProcessorAdapter::FileCommandProcessorAdapter() {
 }
 
 FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileLineReader* processor) {
+	cout << "constructor in adapter" << endl;
 	fprocessor = processor;
 }
 

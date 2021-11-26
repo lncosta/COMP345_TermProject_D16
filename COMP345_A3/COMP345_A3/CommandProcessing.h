@@ -53,17 +53,21 @@ class CommandProcessor : public Subject {
 private:
 	// Data member
 	vector<Command*> commandVector;
-
-	vector <string> listOfMapFiles;
-	vector <string> listOfPlayerStrategies;
-	int numberOfGames = 0;
-	int maxNumberOfTurns = 0;
+	
+	
 
 protected:
 	//Method
 	string readCommand(void);
 	Command* saveCommand(string command);
+
+
 public:
+	vector <string> listOfMapFiles;
+	vector <string> listOfPlayerStrategies;
+	int numberOfGames = 0;
+	int maxNumberOfTurns = 0;
+
 	//Constructor
 	CommandProcessor(void);
 	CommandProcessor(const CommandProcessor& other);
@@ -72,7 +76,7 @@ public:
 	~CommandProcessor(void);
 
 	//Getter
-	vector<Command*> getCommandVector();
+	vector<Command*> getCommandVector();	
 
 	//Assignment operator
 	CommandProcessor& operator =(const CommandProcessor& other);
@@ -81,10 +85,10 @@ public:
 	friend ostream& operator << (ostream& out, const CommandProcessor& cp);
 
 	//Method
-	Command* getCommand(void);
-	bool validate(string input, string currentState);
-	bool validateTournamentParameters();
+	virtual Command* getCommand(void);
+	bool validate(string input, string currentState);	
 	void processTournamentInput(string);
+	bool validateTournamentParameters();
 	virtual string stringToLog();
 };
 

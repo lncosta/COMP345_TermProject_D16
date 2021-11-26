@@ -54,7 +54,7 @@ GameEngine& GameEngine::operator =(const GameEngine& other) {
 
 // Stream insertion
 ostream& operator<<(ostream& out, const GameEngine& g) {
-	out << "The current State is [ " << g.state << " ]" << endl;
+	out << "\nThe current State is [ " << g.state << " ]" << endl;
 	return out;
 }
 
@@ -81,12 +81,10 @@ void GameEngine::startupPhase()
 	Command* c{};
 	LogObserver* processorObserver{};
 	LogObserver* commandObserver{};
-	bool isValid{};
 
 	// create pointers of the target, adaptee and adapter
 	CommandProcessor* processor{};
-	FileLineReader* fprocessor{};
-	FileCommandProcessorAdapter* adapter{};
+	FileLineReader* fprocessor{};	
 
 
 	do {
@@ -98,7 +96,6 @@ void GameEngine::startupPhase()
 		// 1.2.2 Commands can be read from the console 
 		if (source == "console") {
 			processor = new CommandProcessor();
-			processorObserver = new LogObserver(processor);
 		}
 		// 1.2.3 Commands can be read from a file
 		else if (source == "file") {
@@ -111,12 +108,14 @@ void GameEngine::startupPhase()
 			inFile.close();
 			outFile.close();
 			fprocessor = new FileLineReader("copy.txt"); // adaptee
-			adapter = new FileCommandProcessorAdapter(fprocessor);// adapter (inherited from target)
-			processorObserver = new LogObserver(adapter);
+			processor = new FileCommandProcessorAdapter(fprocessor);// adapter (inherited from target)			 
+			
 		}
 
 	} while (source != "console" && source != "file");
 
+	
+	processorObserver = new LogObserver(processor);
 	// remove the "enter" from the cin buffer
 	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
@@ -136,7 +135,7 @@ void GameEngine::startupPhase()
 		}
 		else if (source == "file") {
 			string str;
-			c = adapter->getCommand(); // call readLineFromfile()
+			c = processor->getCommand(); // call readLineFromfile()
 			s = c->returnCommand();
 			cout << "-----------------The input from the file is------------------ " << s << endl;
 		}
@@ -151,31 +150,116 @@ void GameEngine::startupPhase()
 			parameter = v[1];
 
 		//1.2.5 Commands are validated by the command processor
-		isValid = processor->validate(input, currentState);
+		bool isValid = processor->validate(input, currentState);
 
 		if (!isValid) {
 			//2.2.9 Invalid commands for the current state are rejected(no effect). 
 			continue;
 		}
 		else
-		{
-			//2.2.1 In the start state, the loadmap command results in successfully loading a readable map, transitioning to the maploaded state
-			if (input == "tournament") {	
-				bool isOkay = false;
-				
-				if (source == "console") { 
-					processor->processTournamentInput(s); // process tournament input		 			
-					isOkay = processor->validateTournamentParameters(); // data member is stored, now we can validate tournament input
-				}
-				else if (source == "file") {
-					adapter->processTournamentInput(s);
-					isOkay = adapter->validateTournamentParameters(); 
-				}
+		{			
+			if (input == "tournament") {
+
+				c->saveEffect(input);
+
+				processor->processTournamentInput(s); // process tournament input		 			
+				bool isOkay = processor->validateTournamentParameters(); // data member is stored, now we can validate tournament input				
 				
 				if (!isOkay) {
 					cout << "Parameters of tournament command are NOT valid. Exit game." << endl;
 					exit(0);
 				}
+
+				// loadamps 
+				for (int i = 0; i < processor->listOfMapFiles.size(); i++) {
+					
+					// load maps one by one
+					cout << "\n-------Loading Map " << i+1 << " ---------------" << endl;
+					bool res = loadMap(processor->listOfMapFiles[i]);
+					
+					// if one of the files cannot be loaded, exit game
+					if (!res) {
+						cout << "Cannot play tournament due to the invalid file: " << processor->listOfMapFiles[i] << " Exit game." << endl;
+						exit(0);
+					}
+					else {
+						// if the map can be loaded, validate map's connectivity
+						transition("maploaded");
+						map->validateWrapper();
+
+						// if one of the map's connectiviy is invalid, exit game
+						if (!map->getValidity()) {							
+							cout << "Cannot play tournament due to the invalid file: " << processor->listOfMapFiles[i] << " Exit game." << endl;
+							exit(0);
+						}
+						transition("mapvalidated");
+
+						
+						// play the game with the same setting for 1-5 times
+						for (int j = 0; j < processor->numberOfGames; j++) {
+
+							//Now the map is valid, add player to GameEngines's data member "players", Player's name is their strategy
+							/*for (int i = 0; i < processor->listOfPlayerStrategies.size(); i++) {
+								string s = processor->listOfPlayerStrategies[i];
+								addPlayer(s);
+							}*/
+
+							//set strategies for the players 
+							/*for (int i = 0; i < players.size(); i++) {
+								players[i]->determineStrategy(processor->listOfPlayerStrategies[i]);
+							}*/
+						
+							addPlayer("yu");
+							addPlayer("st");
+							addPlayer("mi");
+							addPlayer("Je");
+							transition("playersadded");						
+
+							// Game starts 
+							assignTerritories();
+							transition("assignreinforcement");
+
+							mainGameLoop(processor->maxNumberOfTurns);
+							players.clear();
+							// how to do this? Player::playersCreated = 0 
+
+							// if the tournament is not finished, go to mapvalidated
+							// else, go to start
+							if (i == processor->listOfMapFiles.size() - 1 && j == processor->numberOfGames - 1)
+								transition("exitprogram");
+							else
+								transition("mapvalidated");
+						}						
+
+					}
+					
+					// save the result of current map
+					winnersTournament.push_back(winnersPerMap);
+
+					// clear the winnersPerMap to save next map's result
+					winnersPerMap.clear();
+				}
+
+				// print the whole tournament result
+				cout << "------------The follownig should be output to the log file--------------------" << endl;
+				cout << "Tournament mode:" <<endl;
+				cout << "M: ";
+				for (string s : processor->listOfMapFiles)
+					cout << s << '\t';
+				cout << "\nP: ";
+				for (string s : processor->listOfPlayerStrategies)
+					cout << s << '\t';
+				cout << "\nG: " << processor->numberOfGames << endl;
+				cout << "D: " << processor->maxNumberOfTurns << endl;
+
+				cout << "\nResults: " << endl;
+				for (int i = 0; i < winnersTournament.size(); i++) {
+					for (int j = 0; j < winnersTournament[0].size(); j++) {
+						cout << winnersTournament[i][j] << '\t';
+					}
+					cout << endl << endl;
+				}
+				
 			}
 		
 			else if (input == "loadmap") {
@@ -234,7 +318,7 @@ void GameEngine::startupPhase()
 					c->saveEffect(input);
 					transition("assignreinforcement");
 					//2.2.8 the gamestart command results transiting to the play phase
-					mainGameLoop();
+					mainGameLoop(10000);
 				}
 				else {
 					if (source == "console")
@@ -262,15 +346,10 @@ void GameEngine::startupPhase()
 	}
 	delete processorObserver;
 	processorObserver = nullptr;
-
-	if (source == "console") {
-		delete processor;
-		processor = nullptr;
-	}
-	else if (source == "file") {
-		delete adapter;
-		adapter = nullptr;
-	}
+	
+	delete processor;
+	processor = nullptr;
+	
 }
 
 // This method removes players who do not own any territories and checks if there is a winner who controls all the territories
@@ -294,7 +373,7 @@ bool GameEngine::isThereAwinner() {
 	}
 	// if there is only one player in the the players vector because other players are removed from the game, that player is the winner
 	else if (players.size() <= 1) {
-		cout << "Player " << players[0]->getName() << " has won!" << endl;
+		cout << "Player " << players[0]->getName() << " has won!" << endl;		
 		return true;
 	}
 	else {
@@ -340,22 +419,27 @@ bool GameEngine::isThereAwinnerS(void) {
 
 
 // The methods implemnts the play phase, where players can issue orders and the system executes orders 
-int GameEngine::mainGameLoop(void)
+int GameEngine::mainGameLoop(int maxNumOfTurns)
 {
-	bool loopstop = false;
+	bool loopstop = false;	
+	int counter = 0;
 
-	while (!loopstop) {
+	while (!loopstop && counter < maxNumOfTurns) {
 
 		cout << *this << endl;
-
+		counter++;
+		cout << "---------------ROUND " << counter << "--------------" << endl;
 
 		if (state == "assignreinforcement") {
 			if (isThereAwinner()) {
 				transition("win");
 				loopstop = true;
 			}
-			reinforcementPhase();
-			transition("issueorders");
+			else {
+				reinforcementPhase();
+				transition("issueorders");
+			}
+			
 		}
 		else if (state == "issueorders") {
 			issueOrdersPhase();
@@ -380,6 +464,16 @@ int GameEngine::mainGameLoop(void)
 				transition("assignreinforcement");
 		}
 	}
+
+	if (counter < maxNumOfTurns) {
+		this->winnersPerMap.push_back(players[0]->getName());
+	}
+	else {
+		cout << "Reach max number of turns. It is a draw." << endl;
+		this->winnersPerMap.push_back("Draw");
+	}
+
+
 	return 0;
 }
 
