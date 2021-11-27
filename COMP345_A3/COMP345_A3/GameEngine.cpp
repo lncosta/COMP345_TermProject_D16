@@ -64,12 +64,13 @@ ostream& operator<<(ostream& out, const GameEngine& g) {
 void GameEngine::transition(string newState) {
 	this->setState(newState);
 	cout << "You are transited to state: " << this->getState() << endl;
+	strToLog = "Transitioned to state: " + state;
 	Notify(); //5.2.4 When the game engine state changes, the new state is written into the log file. 
 }
 
 // redefine the virtual method inherited from Subject class
 string GameEngine::stringToLog() {
-	return "Transitioned to state: " + state;
+	return strToLog;
 }
 
 //This method implements the WarZone game flow, which includes a command-based user interaction mechanism 
@@ -241,25 +242,28 @@ void GameEngine::startupPhase()
 				}
 
 				// print the whole tournament result
-				cout << "------------The follownig should be output to the log file--------------------" << endl;
-				cout << "Tournament mode:" <<endl;
-				cout << "M: ";
-				for (string s : processor->listOfMapFiles)
-					cout << s << '\t';
-				cout << "\nP: ";
-				for (string s : processor->listOfPlayerStrategies)
-					cout << s << '\t';
-				cout << "\nG: " << processor->numberOfGames << endl;
-				cout << "D: " << processor->maxNumberOfTurns << endl;
+				strToLog = "----Tournament mode----\nM: ";
+				for (string s : processor->listOfMapFiles) {
+					strToLog += s + "\t";
+				}
+				strToLog += "\nP: ";
+				for (string s : processor->listOfPlayerStrategies) {
+					strToLog += s + "\t";
+				}
+				strToLog += "\nG: ";
+				strToLog += to_string(processor->numberOfGames);
+				strToLog += "\nD: ";
+				strToLog += to_string(processor->maxNumberOfTurns);
 
-				cout << "\nResults: " << endl;
+				strToLog += "\nResults: \n";
 				for (int i = 0; i < winnersTournament.size(); i++) {
 					for (int j = 0; j < winnersTournament[0].size(); j++) {
-						cout << winnersTournament[i][j] << '\t';
+						strToLog += winnersTournament[i][j] + '\t';
 					}
-					cout << endl << endl;
+					strToLog += "\n\n";
 				}
-				
+				cout << strToLog;
+				Notify();
 			}
 		
 			else if (input == "loadmap") {

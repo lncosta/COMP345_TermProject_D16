@@ -30,7 +30,7 @@ private:
 	Map* map;
 	Deck* deck;
 	
-
+	string strToLog;
 
 public:
 	//Neutral Player:
