@@ -1,10 +1,10 @@
 #pragma once
 #include "Player.h"
 
-class Order; 
+class Order;
 class Player;
 
- 
+
 class PlayerStrategy {
 public:
 	Player* p;
@@ -14,15 +14,15 @@ public:
 
 	PlayerStrategy();
 	PlayerStrategy(Player* player);
-	virtual ~PlayerStrategy(); 
+	virtual ~PlayerStrategy();
 
 	void setPlayer(Player* player);
-	Player* getPlayer(void); 
+	Player* getPlayer(void);
 };
 
 class Neutral : public PlayerStrategy {
 public:
-	Neutral(); 
+	Neutral();
 	Neutral(Player* player);
 	void issueOrder();
 	vector<Territory*> toDefend();
@@ -52,7 +52,7 @@ public:
 	Order* discoverOrderType(string x);
 	void determineTarget(int state, Order* order);
 	void determineSource(int state, Order* order);
-	
+
 
 };
 class Aggressive : public PlayerStrategy {
@@ -63,8 +63,12 @@ public:
 	vector<Territory*> toDefend();
 	vector<Territory*> toAttack();
 
+	//Auxilliary:
+	Order* discoverOrderType(string x);
+	void printOrderList(void);
+
 };
-class Benevolent: public PlayerStrategy {
+class Benevolent : public PlayerStrategy {
 public:
 	Benevolent();
 	Benevolent(Player* player);
@@ -72,4 +76,7 @@ public:
 	vector<Territory*> toDefend();
 	vector<Territory*> toAttack();
 
+	// Auxilliary:
+	void printOrderList(void);
+	Order* discoverOrderType(string x);
 };
