@@ -200,29 +200,22 @@ void GameEngine::startupPhase()
 						for (int j = 0; j < processor->numberOfGames; j++) {
 
 							//Now the map is valid, add player to GameEngines's data member "players", Player's name is their strategy
-							/*for (int i = 0; i < processor->listOfPlayerStrategies.size(); i++) {
+							for (int i = 0; i < processor->listOfPlayerStrategies.size(); i++) {
 								string s = processor->listOfPlayerStrategies[i];
 								addPlayer(s);
-							}*/
+							}
 
-							//set strategies for the players 
-							/*for (int i = 0; i < players.size(); i++) {
-								players[i]->determineStrategy(processor->listOfPlayerStrategies[i]);
-							}*/
-						
-							addPlayer("yu");
-							addPlayer("st");
-							addPlayer("mi");
-							addPlayer("Je");
-							transition("playersadded");						
-
+							////set strategies for the players 
+							//for (int i = 0; i < players.size(); i++) {
+							//	players[i]->determineStrategy(processor->listOfPlayerStrategies[i]);
+							//}
+									
 							// Game starts 
 							assignTerritories();
 							transition("assignreinforcement");
 
 							mainGameLoop(processor->maxNumberOfTurns);
-							players.clear();
-							// how to do this? Player::playersCreated = 0 
+							players.clear();							
 
 							// if the tournament is not finished, go to mapvalidated
 							// else, go to start
