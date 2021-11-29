@@ -249,7 +249,13 @@ void GameEngine::startupPhase()
 				strToLog += to_string(processor->maxNumberOfTurns);
 
 				strToLog += "\nResults: \n";
+				strToLog += "\t";
+				for (int i = 0; i < processor->numberOfGames; i++) {
+					strToLog += "Game "+to_string(i+1)+"\t";
+				}
+				strToLog += "\n\n";
 				for (int i = 0; i < winnersTournament.size(); i++) {
+					strToLog += "Map "+to_string(i+1)+"\t";
 					for (int j = 0; j < winnersTournament[0].size(); j++) {
 						strToLog += winnersTournament[i][j] + '\t';
 					}
