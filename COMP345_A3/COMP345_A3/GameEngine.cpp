@@ -148,8 +148,13 @@ void GameEngine::startupPhase()
 		vector<string> v = split(s, " ");
 		string input = v[0];
 		string parameter = "";
+		string pstrategy = "";
 		if (v.size() == 2)
 			parameter = v[1];
+		else if (v.size() == 3) {
+			parameter = v[1];
+			pstrategy = v[2];
+		}
 
 		//1.2.5 Commands are validated by the command processor
 		bool isValid = processor->validate(input, currentState);
@@ -202,14 +207,10 @@ void GameEngine::startupPhase()
 
 							//Now the map is valid, add player to GameEngines's data member "players", Player's name is their strategy
 							for (int i = 0; i < processor->listOfPlayerStrategies.size(); i++) {
-								string s = processor->listOfPlayerStrategies[i];
-								if (s == "Neutral") { //Create the Neutral Player
-									addPlayer(s, "Neutral2");
-								}
-								if (s == "Human") { //Human player was created
-									hasHuman = true;
-									addPlayer(s, s);
-								}
+								string s = processor->listOfPlayerStrategies[i];								
+								if (s == "Neutral") { 
+									addPlayer("Neutral2", s); //Create another Neutral Player which uses a strategy
+								}								
 								else {
 									addPlayer(s, s);
 								}
@@ -287,25 +288,39 @@ void GameEngine::startupPhase()
 			}
 			//2.2.3 In the mapValidated state, the addplayer command can be used to create new players and insert them in the game (2-6 players). 
 			else if (input == "addplayer") {
+				// validate parameters 
 				if (source == "console") {
 					if (parameter == "") {
 						cout << "Please add the player's name after the space." << endl;
+						continue;
+					}
+					else if (pstrategy == "") {
+						cout << "Please add the player's strategy after the player's name with a space in between." << endl;
+						continue;
+					}
+					else if (pstrategy != "Aggressive" && pstrategy != "Benevolent" && pstrategy != "Neutral" && pstrategy != "Cheater" && pstrategy != "Human") {
+						cout << "Please enter a valid strategy among Human, Aggressive, Benevolent, Neutral, Cheater." << endl;
 						continue;
 					}
 				}
 
 				// check number of players, only 2-6 are allowed
 				if (players.size() == 0) {
-					string strategy = "Human";
-					hasHuman = true;
-					//create new players and insert them in the game. 
-					addPlayer(parameter);
+					//string strategy = "Human";
+					//hasHuman = true; // QUESTION: addPlayer (parameter, strategy) ; which was addPlayer(parameter)
+					if (pstrategy == "Human") {
+						hasHuman = true;
+					}
+					addPlayer(parameter,pstrategy);  
 					c->saveEffect(input);
-					transition("playersadded");
+					transition("playersadded"); //  the phase is transited only when the first player is created
 				}
 
 				else if (players.size() < 6) {
-					addPlayer(parameter);
+					if (pstrategy == "Human") {
+						hasHuman = true;
+					}
+					addPlayer(parameter, pstrategy);
 					c->saveEffect(input);
 				}
 				else {
@@ -319,6 +334,7 @@ void GameEngine::startupPhase()
 					//2.2.5 randomly determine the order of play of the players in the game
 					//2.2.6 giving 50 initial armies to each player
 					//2.2.7 Each player draws 2 cards each from the deck
+					//cout << "THe"
 					assignTerritories();
 					c->saveEffect(input);
 					transition("assignreinforcement");
@@ -431,11 +447,12 @@ int GameEngine::mainGameLoop(int maxNumOfTurns)
 
 	while (!loopstop && counter < maxNumOfTurns) {
 
-		cout << *this << endl;
-		counter++;
-		cout << "---------------ROUND " << counter << "--------------" << endl;
+		cout << *this << endl;	
 
 		if (state == "assignreinforcement") {
+			counter++;
+			cout << "---------------ROUND " << counter << "--------------" << endl;
+
 			if (isThereAwinner()) {
 				transition("win");
 				loopstop = true;
@@ -529,7 +546,7 @@ void GameEngine::addPlayer(string name, string strategy) {
 	Player* temp = new Player();
 	temp->setName(name);
 	temp->determineStrategy(strategy); 
-	cout << "Welcome to Warzone, " << name << "!" << endl;
+	cout << "Welcome to Warzone, " << name << "!" << " Your strategy is " << strategy << endl;
 	players.push_back(temp);
 }
 
@@ -595,7 +612,9 @@ bool GameEngine::assignTerritories(void) {
 	//Print out players:
 	cout << "All players have been added! Here is who will be playing:" << endl;
 	for (Player* p : players) {
-		cout << "Player " << p->getPlayerID() << " - " << p->getName() << endl;
+		// print names
+		cout << "Player " << p->getPlayerID() << " - " << p->getName() <<endl;
+
 		if (intl) { //Sets intelligence modifier for all players (demo purposes):
 			p->intelligent = true;
 		}
