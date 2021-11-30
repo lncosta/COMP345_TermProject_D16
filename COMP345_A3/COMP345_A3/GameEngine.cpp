@@ -87,6 +87,7 @@ void GameEngine::startupPhase()
 	CommandProcessor* processor{};
 	FileLineReader* fprocessor{};	
 
+	hasHuman = false;
 
 	do {
 
@@ -202,14 +203,19 @@ void GameEngine::startupPhase()
 							//Now the map is valid, add player to GameEngines's data member "players", Player's name is their strategy
 							for (int i = 0; i < processor->listOfPlayerStrategies.size(); i++) {
 								string s = processor->listOfPlayerStrategies[i];
-								addPlayer(s);
+								if (s == "Neutral") { //Create the Neutral Player
+									addPlayer(s, "Neutral2");
+								}
+								if (s == "Human") { //Human player was created
+									hasHuman = true;
+									addPlayer(s, s);
+								}
+								else {
+									addPlayer(s, s);
+								}
+								
 							}
 
-							////set strategies for the players 
-							//for (int i = 0; i < players.size(); i++) {
-							//	players[i]->determineStrategy(processor->listOfPlayerStrategies[i]);
-							//}
-									
 							// Game starts 
 							assignTerritories();
 							transition("assignreinforcement");
@@ -249,13 +255,7 @@ void GameEngine::startupPhase()
 				strToLog += to_string(processor->maxNumberOfTurns);
 
 				strToLog += "\nResults: \n";
-				strToLog += "\t";
-				for (int i = 0; i < processor->numberOfGames; i++) {
-					strToLog += "Game "+to_string(i+1)+"\t";
-				}
-				strToLog += "\n\n";
 				for (int i = 0; i < winnersTournament.size(); i++) {
-					strToLog += "Map "+to_string(i+1)+"\t";
 					for (int j = 0; j < winnersTournament[0].size(); j++) {
 						strToLog += winnersTournament[i][j] + '\t';
 					}
@@ -296,6 +296,8 @@ void GameEngine::startupPhase()
 
 				// check number of players, only 2-6 are allowed
 				if (players.size() == 0) {
+					string strategy = "Human";
+					hasHuman = true;
 					//create new players and insert them in the game. 
 					addPlayer(parameter);
 					c->saveEffect(input);
@@ -520,6 +522,16 @@ void GameEngine::addPlayer(string name) {
 	cout << "Welcome to Warzone, " << name << "!" << endl;
 	players.push_back(temp);
 }
+// This method takes player's name as the parameter to create a player object 
+void GameEngine::addPlayer(string name, string strategy) {
+
+	//Creating Player Objects:
+	Player* temp = new Player();
+	temp->setName(name);
+	temp->determineStrategy(strategy); 
+	cout << "Welcome to Warzone, " << name << "!" << endl;
+	players.push_back(temp);
+}
 
 // This method asks player's name from the console to create a player object 
 void GameEngine::addPlayer(void) {
@@ -557,9 +569,15 @@ bool GameEngine::assignTerritories(void) {
 	bool intl = false;
 	vector<Territory*> copy = map->getTerritoyVector();
 	std::shuffle(std::begin(copy), std::end(copy), rng);
-	//Determine whether user input will be used:
-	cout << "Would you like to use console input to play the game? Y/N" << endl;
-	cin >> result;
+	if (hasHuman) {
+		//Determine whether user input will be used:
+		cout << "Would you like to use console input to play the game? Y/N" << endl;
+		cin >> result;
+	}
+	else {
+		result = "n"; 
+	}
+
 	while (result != "N" && result != "n" && result != "y" && result != "Y") {
 		cin >> result;
 	}
@@ -568,15 +586,21 @@ bool GameEngine::assignTerritories(void) {
 	}
 
 
-	//Create neutral player:
-	neutral = new Player();
-	neutral->setName("Neutral");
+	//Create neutral player if it doesn't already exist:
+	if (neutral == NULL) {
+		neutral = new Player();
+		neutral->setName("Neutral");
+	}
+	
 	//Print out players:
 	cout << "All players have been added! Here is who will be playing:" << endl;
 	for (Player* p : players) {
 		cout << "Player " << p->getPlayerID() << " - " << p->getName() << endl;
 		if (intl) { //Sets intelligence modifier for all players (demo purposes):
 			p->intelligent = true;
+		}
+		else {
+			p->intelligent = false; 
 		}
 		//Associate the neutral player with all players:
 		p->neutral = neutral;
@@ -697,16 +721,17 @@ void GameEngine::issueOrdersPhase(void) {
 	for (auto p : players) {
 		cout << "Player - " << p->getName() << endl;
 		round = true;
+		p->doneIssuingOrders = false; 
 		while (round) {
 			p->issueOrder();
 
 			cout << "Would you like to issue more orders? Y/N" << endl;
-			if (!p->intelligent && p->getOrders()->getOrderList().size() < 5) {	//Non-intelligent player issues 5 orders per turn
-				result = "Y";
-			}
-			else if (!p->intelligent) {
+			 if (p->doneIssuingOrders || p->getOrders()->getOrderList().size() > 5) {
 				result = "N";
 			}
+			 else if (!p->intelligent && (!p->doneIssuingOrders || p->getOrders()->getOrderList().size() < 5)) {	//Non-intelligent player issues 5 orders per turn
+				 result = "Y";
+			 }
 			else {
 				cin >> result;
 			}

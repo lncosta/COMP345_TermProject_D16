@@ -33,6 +33,9 @@ private:
 	string strToLog;
 
 public:
+	//Has Human Player:
+	
+	bool hasHuman = false; 
 	//Neutral Player:
 	Player* neutral;
 	vector<string> winnersPerMap;
@@ -65,6 +68,7 @@ public:
 	bool loadMap(string fileName);
 	void addPlayer(void);
 	void addPlayer(string name);
+	void addPlayer(string name, string strategy);
 	void removePlayer(Player* toRemove);
 	bool assignTerritories(void);
 	void reinforcementPhase(void);

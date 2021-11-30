@@ -16,6 +16,8 @@ Neutral::Neutral(Player* player) : PlayerStrategy(player)
 }
 void Neutral::issueOrder()
 {
+	cout << "The Neutral Player cannot issue any orders." << endl;
+	p->doneIssuingOrders = true;
 }
 
 vector<Territory*> Neutral::toAttack()
@@ -34,13 +36,13 @@ Cheater::Cheater()
 {
 }
 
-Cheater::Cheater(Player* player)
+Cheater::Cheater(Player* player): PlayerStrategy(player)
 {
 }
 
 void Cheater::issueOrder()
 {
-
+	p->doneIssuingOrders = true;
 }
 
 vector<Territory*> Cheater::toAttack()
@@ -231,7 +233,7 @@ void Human::printOrderList(void) {
 	cout << "NEGOTIATE: prevent attacks between the current player and another player until the end of the turn." << endl;
 	cout << "----------------------------------" << endl;
 
-	cout << p->getPlayerHand();
+	p->printHand(); 
 }
 //Sets the number of armies to be deployed
 int Human::deployArmies(void) {
@@ -468,6 +470,8 @@ void Human::issueOrder()
 
 	if (issued == NULL) {
 		cout << "Invalid Order. Could not add it to the list." << endl;
+		
+		p->doneIssuingOrders = true;
 	}
 	else { //Add order to OrdersList
 		p->orders->addOrder(issued);
@@ -495,7 +499,7 @@ Aggressive::Aggressive(Player* player) : PlayerStrategy(player)
 Order* Aggressive::discoverOrderType(string x) {
 	vector<Territory*> defend = toDefend();
 	vector<Territory*> attack = toAttack();
-
+	cout << "Got here." << endl;
 	string options[] = { "reinforcement", "advance", "bomb", "blockade", "airlift", "diplomacy", "unspecified" };
 	Order* newOrder;
 	//Create the correct order based on command:
@@ -512,9 +516,10 @@ Order* Aggressive::discoverOrderType(string x) {
 			newOrder = NULL;
 			return newOrder;
 		}
-		newOrder = new DeployOrder();
-		newOrder->setTarget(defend[defend.size()]); // Deploys to the Territory with most armies, ie the last entry of toDefend
-		int armiesToPlace = 10;		// Set to 10 by default but can change
+		newOrder = new DeployOrder();	
+		newOrder->setOwner(p);
+		newOrder->setTarget(defend.back()); // Deploys to the Territory with most armies, ie the last entry of toDefend
+		int armiesToPlace = p->armiesHeld;		// Deploy all armies to strongest country
 
 		if (armiesToPlace <= p->armiesHeld) {
 			newOrder->setModifier(armiesToPlace);
@@ -540,31 +545,25 @@ Order* Aggressive::discoverOrderType(string x) {
 			else
 				cmd = "advance";
 		}
-		/*else {
-			cout << "You have issued an advance order. Please indicate whether you would like to attack another player's territory or defend one of your own:" << endl;
-			cin >> cmd;
-			while (cmd != "attack" && cmd != "defend") {
-				cout << "You have issued an advance order. Please indicate whether you would like to attack another player's territory or defend one of your own:" << endl;
-				cin >> cmd;
-			}
-		}*/
-
-		if (cmd == "attack") {
+		if (cmd == "attack" && attack.size() > 0 && defend.size() > 0) {
 			newOrder = new AdvanceOrder();
 			newOrder->setOwner(p);
-			newOrder->setTarget(attack[0]); // Player will always attack the lowest army count territory
+			newOrder->setTarget(attack.front()); // Player will always attack the lowest army count territory
 			newOrder->setSource(defend.back()); // Deploys From Last Entry of Defend Since the Player always deploys to one place
 			newOrder->setModifier(0);	//Advance set to attack mode
 			newOrder->armyModifier = 10; // THE PLAYER WILL SEND AN AMOUNT BASED ON WHAT IS DEFENDING
 
 		}
-		else { // TODO: When the player needs to advance units to its main force
+		else if (cmd == "advance" && attack.size() > 0 && defend.size() > 2) { // TODO: When the player needs to advance units to its main force
 			newOrder = new AdvanceOrder();
 			newOrder->setOwner(p);
 			newOrder->setTarget(defend.back());
 			newOrder->setSource(defend.end()[-2]); // The Second Last Entry of Defend
 			newOrder->setModifier(1); //Advance set to defend mode
 			newOrder->armyModifier = newOrder->getSource()->getArmiesPlaced(); // Transfers all available units
+		}
+		else {
+			newOrder = NULL; 
 		}
 
 
@@ -648,35 +647,10 @@ void Aggressive::issueOrder()
 		issued = discoverOrderType("reinforcement");
 	}
 	else { //Attack and Card phase.
-		printOrderList();
-		cout << "0 - ADVANCE" << endl;
-		if (!p->intelligent) {
 
-			if (p->getHandOfCards().size() < 1) {
-				x = "advance";
-				played = new Card();
-			}
-			else {
-				index = 1 + (rand() % static_cast<int>(p->getHandOfCards().size() - 1 + 1));
-				played = p->getPlayerHand()->getHandOfCards()[index - 1];
-				x = played->orderType();
-			}
-		}
-		//else {
-		//	cout << "Please select a card to play (type the correct integer)." << endl;
-
-		//	cin >> index;
-		//	// If the given index is out of range, an advance order is issued by default
-		//	if (index == 0 || index < 0 || index > p->getPlayerHand()->getHandOfCards().size()) {
-		//		x = "advance";
-		//		played = new Card();
-		//	}
-		//	else {
-		//		played = p->getPlayerHand()->getHandOfCards()[index - 1];
-		//		x = played->orderType();
-		//	}
-		//}
-
+		//Attack 
+		x = "advance";
+	
 		vector<string> options2;
 		for (auto name : p->getPlayerHand()->getHandOfCards()) {	//Check which commands are available based on player's hand of cards
 			if (name->getType() == 0) {
@@ -707,7 +681,7 @@ void Aggressive::issueOrder()
 			issued = discoverOrderType(x);
 			if (index != 0) {
 				//Remove correspondent card if order was issued through a card.
-				played->play(p);
+				//played->play(p);
 
 			}
 
@@ -717,6 +691,7 @@ void Aggressive::issueOrder()
 
 	if (issued == NULL) {
 		cout << "Invalid Order. Could not add it to the list." << endl;
+		p->doneIssuingOrders = true; 
 	}
 	else { //Add order to OrdersList
 		p->orders->addOrder(issued);
@@ -761,12 +736,11 @@ vector<Territory*> Aggressive::toDefend()
 	for (auto t : p->towned) {
 		defense.push_back(t);
 	}
-
-
-	// Now the vector will be sorted from lowest number of armies to highest
-	// Since the player will always deploy or advance to its strongest country, only need the last entry
+	
 	sort(defense.begin(), defense.end());
 
+	//For testing purposes while priority definition is still not implemented, priority is set to random:
+	//std::shuffle(std::begin(defense), std::end(defense), rng);
 	return defense;
 }
 
@@ -974,6 +948,7 @@ void Benevolent::issueOrder()
 
 	if (issued == NULL) {
 		cout << "Invalid Order. Could not add it to the list." << endl;
+		p->doneIssuingOrders = true;
 	}
 	else { //Add order to OrdersList
 		p->orders->addOrder(issued);

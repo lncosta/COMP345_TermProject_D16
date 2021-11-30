@@ -195,6 +195,10 @@ vector<Card*> Player::getHandOfCards() {
 Hand* Player::getPlayerHand() {
 	return playerHand;
 }
+void Player::printHand()
+{
+	cout << *getPlayerHand() << endl;
+}
 //Creates a player strategy based on input string
 void Player::determineStrategy(string strategy)
 {
@@ -204,21 +208,27 @@ void Player::determineStrategy(string strategy)
 	}
 	if (strategy == "Human") {
 		ps = new Human(this);
+		intelligent = true;
 	}
 	else if (strategy == "Aggressive") {
 		ps = new Aggressive(this);
+		intelligent = false;
 	}
 	else if (strategy == "Benevolent") {
 		ps = new Benevolent(this);
+		intelligent = false;
 	}
 	else if (strategy == "Neutral") {
 		ps = new Neutral(this);
+		intelligent = false;
 	}
 	else if (strategy == "Cheater") {
 		ps = new Cheater(this);
+		intelligent = false;
 	}
 	else {
 		ps = new Human(this);
+		intelligent = false;
 	}
 }
 

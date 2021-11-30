@@ -106,6 +106,7 @@ public:
 	void addOrder(Order* order);
 	vector<Card*> getHandOfCards();
 	Hand* getPlayerHand();
+	void printHand(); 
 
 	//Intelligent player:
 	bool intelligent;
@@ -128,7 +129,7 @@ public:
 
 	//Determine Player Strategy:
 	void determineStrategy(string strategy); 
-
+	bool doneIssuingOrders; 
 	
 };
 

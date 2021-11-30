@@ -1,5 +1,6 @@
 #include "Orders.h"
 #include <iostream>
+#include <typeinfo>
 using namespace std;
 
 /*
@@ -491,6 +492,11 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 					cout << "There is a Negotiate Order Active Between the Two Players. The Attack has been Canceled." << endl;
 					return;
 				}
+			}
+			Neutral t;
+			//Change non-standard Neutral Player into Aggressive if they are attacked.
+			if (getTarget()->getOwner()->getName() != "Neutral" && typeid(getTarget()->getOwner()) == typeid(t)) {
+				getTarget()->getOwner()->setStrategy(new Aggressive());
 			}
 			// Loop continues as long as there are attackers left
 			while (armyModifier > 0) {
