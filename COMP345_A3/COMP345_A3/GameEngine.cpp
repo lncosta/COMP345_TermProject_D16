@@ -306,8 +306,7 @@ void GameEngine::startupPhase()
 
 				// check number of players, only 2-6 are allowed
 				if (players.size() == 0) {
-					//string strategy = "Human";
-					//hasHuman = true; // QUESTION: addPlayer (parameter, strategy) ; which was addPlayer(parameter)
+					
 					if (pstrategy == "Human") {
 						hasHuman = true;
 					}
