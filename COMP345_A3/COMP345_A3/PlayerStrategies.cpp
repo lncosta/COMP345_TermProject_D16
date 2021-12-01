@@ -36,7 +36,7 @@ Cheater::Cheater()
 {
 }
 
-Cheater::Cheater(Player* player): PlayerStrategy(player)
+Cheater::Cheater(Player* player) : PlayerStrategy(player)
 {
 }
 Order* Cheater::discoverOrderType(string x) {
@@ -413,7 +413,7 @@ void Human::printOrderList(void) {
 	cout << "NEGOTIATE: prevent attacks between the current player and another player until the end of the turn." << endl;
 	cout << "----------------------------------" << endl;
 
-	p->printHand(); 
+	p->printHand();
 }
 //Sets the number of armies to be deployed
 int Human::deployArmies(void) {
@@ -650,7 +650,7 @@ void Human::issueOrder()
 
 	if (issued == NULL) {
 		cout << "Invalid Order. Could not add it to the list." << endl;
-		
+
 		p->doneIssuingOrders = true;
 	}
 	else { //Add order to OrdersList
@@ -670,7 +670,7 @@ void Human::issueOrder()
 /*
 	Aggressive Player Methods
 */
-Aggressive::Aggressive() : PlayerStrategy( )
+Aggressive::Aggressive() : PlayerStrategy()
 {
 }
 Aggressive::Aggressive(Player* player) : PlayerStrategy(player)
@@ -679,7 +679,6 @@ Aggressive::Aggressive(Player* player) : PlayerStrategy(player)
 Order* Aggressive::discoverOrderType(string x) {
 	vector<Territory*> defend = toDefend();
 	vector<Territory*> attack = toAttack();
-	cout << "Got here." << endl;
 	string options[] = { "reinforcement", "advance", "bomb", "blockade", "airlift", "diplomacy", "unspecified" };
 	Order* newOrder;
 	//Create the correct order based on command:
@@ -696,7 +695,7 @@ Order* Aggressive::discoverOrderType(string x) {
 			newOrder = NULL;
 			return newOrder;
 		}
-		newOrder = new DeployOrder();	
+		newOrder = new DeployOrder();
 		newOrder->setOwner(p);
 		newOrder->setTarget(defend.back()); // Deploys to the Territory with most armies, ie the last entry of toDefend
 		int armiesToPlace = p->armiesHeld;		// Deploy all armies to strongest country
@@ -715,35 +714,67 @@ Order* Aggressive::discoverOrderType(string x) {
 
 		}
 	}
-	else if (x.compare(options[1]) == 0) { 
+	else if (x.compare(options[1]) == 0) {
+		cout << "Issued advance order" << endl;
 		string cmd;
 		if (!p->intelligent) {
 			// Creating a 50/50 Chance for the Player to Advance or Attack
 			int randNum = (rand() % 10) + 1;
-			if (randNum >= 6)
+			if (randNum >= 2)
 				cmd = "attack";
 			else
 				cmd = "advance";
 		}
 		if (cmd == "attack" && attack.size() > 0 && defend.size() > 0) {
+			cout << "Advance Order in Attack Mode" << endl;
 			newOrder = new AdvanceOrder();
 			newOrder->setOwner(p);
-			newOrder->setTarget(attack.front()); // Player will always attack the lowest army count territory
-			newOrder->setSource(defend.back()); // Deploys From Last Entry of Defend Since the Player always deploys to one place
+
+			int indexHighestArmies = 0;
+			for (int i = 1; i < defend.size(); i++) {
+				int temp = i;
+				if (defend[temp]->getArmiesPlaced() > defend[indexHighestArmies]->getArmiesPlaced())
+					indexHighestArmies = temp;
+			}
+			newOrder->setSource(defend[indexHighestArmies]);
+
+			newOrder->setTarget(attack[0]); // Player will always attack the lowest army count territory
+			//newOrder->setSource(defend[0]); // Deploys From Last Entry of Defend Since the Player always deploys to one place
 			newOrder->setModifier(0);	//Advance set to attack mode
 			newOrder->armyModifier = 10; // THE PLAYER WILL SEND AN AMOUNT BASED ON WHAT IS DEFENDING
 
 		}
 		else if (cmd == "advance" && attack.size() > 0 && defend.size() > 2) { // TODO: When the player needs to advance units to its main force
+			cout << "Advance Order in Advance Mode" << endl;
 			newOrder = new AdvanceOrder();
 			newOrder->setOwner(p);
-			newOrder->setTarget(defend.back());
-			newOrder->setSource(defend.end()[-2]); // The Second Last Entry of Defend
+
+			// Searching Inside toDefend for the highest armycount territory
+			int indexHighestArmies = 0;
+			for (int i = 1; i < defend.size(); i++) {
+				int temp = i;
+				if (defend[temp]->getArmiesPlaced() > defend[indexHighestArmies]->getArmiesPlaced())
+					indexHighestArmies = temp;
+			}
+			newOrder->setTarget(defend[indexHighestArmies]);
+
+			Territory* tempTarget = defend[indexHighestArmies];
+
+			for (Territory* p : defend) {
+				if (p != newOrder->getTarget() && p->getArmiesPlaced() > 0) {
+					newOrder->setSource(p);
+					newOrder->armyModifier = p->getArmiesPlaced(); // Transfers all available units
+					cout << "Loop check" << endl;
+				}
+				else { // If There are No Other Territories with Armies, the advance will not go through
+					newOrder->setSource(nullptr);
+					cout << "Source is Null" << endl;
+				}
+			}
 			newOrder->setModifier(1); //Advance set to defend mode
-			newOrder->armyModifier = newOrder->getSource()->getArmiesPlaced(); // Transfers all available units
 		}
 		else {
-			newOrder = NULL; 
+			newOrder = NULL;
 		}
 
 
@@ -830,7 +861,7 @@ void Aggressive::issueOrder()
 
 		//Attack 
 		x = "advance";
-	
+
 		vector<string> options2;
 		for (auto name : p->getPlayerHand()->getHandOfCards()) {	//Check which commands are available based on player's hand of cards
 			if (name->getType() == 0) {
@@ -871,7 +902,7 @@ void Aggressive::issueOrder()
 
 	if (issued == NULL) {
 		cout << "Invalid Order. Could not add it to the list." << endl;
-		p->doneIssuingOrders = true; 
+		p->doneIssuingOrders = true;
 	}
 	else { //Add order to OrdersList
 		p->orders->addOrder(issued);
@@ -891,8 +922,8 @@ vector<Territory*> Aggressive::toAttack()
 {
 	//Returns enemy territories player has access to through adjacent territories. 
 	vector<Territory*> attack;
-	for (auto t : p->towned) {
-		for (auto d : t->getAdjTerritories()) {
+	for (Territory* t : p->towned) {
+		for (Territory* d : t->getAdjTerritories()) {
 			if (!(find(attack.begin(), attack.end(), d) != attack.end())) {
 				if (d->getOwner() != p && t->getArmiesPlaced() > 0) { // Checks that the player owned territory has units to deploy
 					attack.push_back(d);
@@ -904,7 +935,7 @@ vector<Territory*> Aggressive::toAttack()
 	}
 
 	// Now the vector is sorted from best to worst target, uses the overloaded < operator from Map file
-	sort(attack.begin(), attack.end());
+	//sort(attack.begin(), attack.end());
 
 	return attack;
 }
@@ -914,10 +945,19 @@ vector<Territory*> Aggressive::toDefend()
 	//Returns territories owned by the player:
 	vector<Territory*> defense;
 	for (auto t : p->towned) {
-		defense.push_back(t);
+		if (t != nullptr)
+			defense.push_back(t);
 	}
-	
-	sort(defense.begin(), defense.end());
+
+
+	cout << "Checking contents on defend" << endl;
+	for (auto t : defense)
+		cout << t << endl;
+	cout << "Done Checking contents on defend" << endl;
+
+
+
+	//sort(defense.begin(), defense.end());
 
 	//For testing purposes while priority definition is still not implemented, priority is set to random:
 	//std::shuffle(std::begin(defense), std::end(defense), rng);
@@ -955,6 +995,7 @@ Order* Benevolent::discoverOrderType(string x) {
 			return newOrder;
 		}
 		newOrder = new DeployOrder();
+		newOrder->setOwner(p);
 		newOrder->setTarget(defend[0]);
 		int armiesToPlace = 10;		// Set to 10 by default but can change
 
@@ -985,8 +1026,8 @@ Order* Benevolent::discoverOrderType(string x) {
 		else { // TODO: When the player needs to advance units to its main force
 			newOrder = new AdvanceOrder();
 			newOrder->setOwner(p);
-			newOrder->setTarget(defend[0]); 
-			newOrder->setSource(defend[1]); 
+			newOrder->setTarget(defend[0]);
+			newOrder->setSource(defend[1]);
 			newOrder->setModifier(1); //Advance set to defend mode
 			newOrder->armyModifier = 10; // Transfers 10 units at a time to keep them spread out
 		}
@@ -1011,7 +1052,7 @@ Order* Benevolent::discoverOrderType(string x) {
 		newOrder = new AirliftOrder();
 		newOrder->setOwner(p);
 		newOrder->setTarget(defend[0]);
-		newOrder->setSource(defend[1]); 
+		newOrder->setSource(defend[1]);
 		newOrder->armyModifier = 10; // Will send 10 armies at once
 	}
 	else if (x.compare(options[5]) == 0) { // Initiates a Negotiation with a Player in the Attack List
@@ -1151,7 +1192,7 @@ vector<Territory*> Benevolent::toAttack()
 	for (auto t : p->towned) {
 		for (auto d : t->getAdjTerritories()) {
 			if (!(find(attack.begin(), attack.end(), d) != attack.end())) {
-				if (d->getOwner() != p) { 
+				if (d->getOwner() != p) {
 					attack.push_back(d);
 				}
 
