@@ -517,6 +517,22 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 					break;
 				}
 
+				/// <Cheater player implementation test>
+				Cheater c;
+				if (typeid(getSource()->getOwner()) == typeid(c)) {
+					cout << "The Territory Has Been Conquered. The Cheater always wins." << endl;
+					//indicate if a player conconquered a territory
+					this->getOwner()->setConquered(true);
+					//Remove territory from original owner:
+					(getTarget()->getOwner())->removeTerritory(getTarget());
+					//Make territory transfer and give the cheater 50 armies on that new territory:
+					getTarget()->setOwner(getOwner());
+					getOwner()->addTerritory(getTarget());
+					getTarget()->setArmiesPlaced(50);
+					break;
+				}
+				/// </Cheater player implementation test>
+
 				int attackerRoll = (rand() % 10) + 1;
 				int defenderRoll = (rand() % 10) + 1;
 				// Checking if a defender gets killed
