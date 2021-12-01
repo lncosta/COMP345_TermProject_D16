@@ -37,6 +37,10 @@ public:
 	vector<Territory*> toDefend();
 	vector<Territory*> toAttack();
 
+	//Auxilliary:
+	Order* discoverOrderType(string x);
+	void printOrderList(void);
+
 };
 class Human : public PlayerStrategy {
 public:
