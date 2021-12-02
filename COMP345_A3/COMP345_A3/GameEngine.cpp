@@ -791,7 +791,8 @@ void GameEngine::executeOrdersPhase(void) {
 		//First execute deploy orders:
 		for (auto p : players) {
 			cout << "DEBUG: EXECUTIONS DEPLOY FOR PLAYER: " << *p << endl;
-			if (!(p->getName() == "Cheater")) {
+			Cheater c;
+			if (typeid(p) != typeid(c)) {
 				OrdersList* toDeleteFrom = p->getOrders();
 				vector<Order*> toexc = toDeleteFrom->getOrderList();
 				for (auto o : toexc) {
@@ -802,7 +803,7 @@ void GameEngine::executeOrdersPhase(void) {
 
 						o->execute();
 
-						cout << "DEBUG: EXECUTING DEPLOY - AFTER EXECUTE " << endl;
+						//cout << "DEBUG: EXECUTING DEPLOY - AFTER EXECUTE " << endl;
 						delete orderObserver; //delete the observer before deleting the order
 						orderObserver = nullptr; //if we used smart pointers we wouldn't have to do this deletion here
 
@@ -831,7 +832,7 @@ void GameEngine::executeOrdersPhase(void) {
 
 					o->execute();
 
-					cout << "DEBUG: EXECUTING - AFTER EXECUTE " << endl;
+					//cout << "DEBUG: EXECUTING - AFTER EXECUTE " << endl;
 					delete orderObserver; //delete the observer before deleting the order
 					orderObserver = nullptr; //if we used smart pointers we wouldn't have to do this deletion here
 					//Remove executed order:

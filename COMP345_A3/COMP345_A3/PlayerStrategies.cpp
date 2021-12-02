@@ -80,8 +80,8 @@ void Cheater::issueOrder()
 	
 	cout << "----------------------------------" << endl;
 	cout << "Cheater will now advance on all adjacent enemy territories." << endl;
-	cout << "DEBUG: CHEATER - ATTACK SIZE: " << attack.size() << endl;
-	cout << "DEBUG: CHEATER - DEFEND SIZE: " << defend.size() << endl;
+	//cout << "DEBUG: CHEATER - ATTACK SIZE: " << attack.size() << endl;
+	//cout << "DEBUG: CHEATER - DEFEND SIZE: " << defend.size() << endl;
 	for (Territory* pt : attack) { //Adding advance orders for all adjacent territories
 		// Issue the order:
 		if (attack.size() > 0 && defend.size() > 0) {
@@ -89,8 +89,8 @@ void Cheater::issueOrder()
 			issued->setOwner(p);
 			issued->setTarget(pt);
 			issued->setSource(defend.front());
-			cout << "DEBUG: CHEATER - TARGET " << (*pt).getTerritoryName() << endl;
-			cout << "DEBUG: CHEATER - SOURCE " << (*defend.back()).getTerritoryName() << endl;
+			//cout << "DEBUG: CHEATER - TARGET " << (*pt).getTerritoryName() << endl;
+			//cout << "DEBUG: CHEATER - SOURCE " << (*defend.back()).getTerritoryName() << endl;
 			issued->setModifier(0);	//Advance set to attack mode
 			issued->armyModifier = 1000; // Huge number of armies so that it can conquer any territory 
 		}
