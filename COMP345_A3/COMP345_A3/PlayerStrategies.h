@@ -27,7 +27,7 @@ public:
 	void issueOrder();
 	vector<Territory*> toDefend();
 	vector<Territory*> toAttack();
-
+	Order* discoverOrderType(string x);
 };
 class Cheater : public PlayerStrategy {
 public:
@@ -40,7 +40,6 @@ public:
 	//Auxilliary:
 	Order* discoverOrderType(string x);
 	void printOrderList(void);
-
 };
 class Human : public PlayerStrategy {
 public:

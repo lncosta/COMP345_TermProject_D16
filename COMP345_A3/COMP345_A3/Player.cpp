@@ -254,7 +254,8 @@ std::default_random_engine rng(rd());
 vector<Territory*> Player::toDefend()
 {
 	//Returns territories owned by the player:
-	vector<Territory*> defense;
+	vector<Territory*> defense = ps->toDefend();
+	/* CODE TO DELETE:
 	for (auto t : towned) {
 		defense.push_back(t);
 	}
@@ -263,6 +264,7 @@ vector<Territory*> Player::toDefend()
 
 	//For testing purposes while priority definition is still not implemented, priority is set to random:
 	std::shuffle(std::begin(defense), std::end(defense), rng);
+	*/
 	return defense;
 }
 
@@ -270,7 +272,8 @@ vector<Territory*> Player::toDefend()
 vector<Territory*> Player::toAttack()
 {
 	//Returns enemy territories player has access to through adjacent territories. 
-	vector<Territory*> attack;
+	vector<Territory*> attack = ps->toAttack();
+	/* CODE TO DELETE:
 	for (auto t : towned) {
 		for (auto d : t->getAdjTerritories()) {
 			if (!(find(attack.begin(), attack.end(), d) != attack.end())) {
@@ -287,11 +290,13 @@ vector<Territory*> Player::toAttack()
 
 	//For testing purposes while priority definition is still not implemented, priority is set to random:
 	std::shuffle(std::begin(attack), std::end(attack), rng);
+	*/
 	return attack;
 }
 
 //Determines order target based on toDefend or toAttack methods
 void Player::determineTarget(int state, Order* order) {
+
 	vector<Territory*> defend = toDefend();
 	vector<Territory*> attack = toAttack();
 	Territory* target;
@@ -446,11 +451,12 @@ int Player::deployArmies(void) {
 //3.2.4 A player can create any kind of order, inlcuding those that can only be created using cards.
 //Given a string, issue the corresponding order
 Order* Player::discoverOrderType(string x) {
+	Order* newOrder;
 	vector<Territory*> defend = toDefend();
 	vector<Territory*> attack = toAttack();
 
 	string options[] = { "reinforcement", "advance", "bomb", "blockade", "airlift", "diplomacy", "unspecified" };
-	Order* newOrder;
+	
 	//Create the correct order based on command:
 	if (x.compare(options[0]) == 0) { //Deployment orders and reinforcement.
 		cout << "You have issued a deploy order." << endl;
@@ -552,7 +558,7 @@ Order* Player::discoverOrderType(string x) {
 	else {
 		newOrder = NULL;
 	}
-
+	
 	return newOrder;
 }
 

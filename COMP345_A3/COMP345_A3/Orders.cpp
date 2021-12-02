@@ -316,7 +316,7 @@ bool DeployOrder::validate() {
 	bool armiesOK = (modifier <= reinforcementPool); // checking if the player's reinforcement pool has enough armies****************************************;
 	bool sourceOK = false;
 
-	if (target != NULL) {
+	if (target != nullptr) {
 		vector<Territory*> tOwned = orderOwner->getTowned();
 		for (Territory* p : tOwned) {
 			if (target == p)
@@ -418,7 +418,7 @@ bool AdvanceOrder::validate() {
 	bool targetIsAdjacent = false;
 	bool notEnoughArmies = false;
 
-	if (getSource() != NULL && getTarget() != NULL) {
+	if (getSource() != nullptr && getTarget() != nullptr) {
 		// Checking that the player owns the source territory
 		vector<Territory*> playerOwnedT = orderOwner->getTowned();
 		string name = getSource()->getTerritoryName();
@@ -439,6 +439,12 @@ bool AdvanceOrder::validate() {
 		}
 		if (getSource()->getArmiesPlaced() < armyModifier)
 			notEnoughArmies = true;
+		//Cheater bypasses the need to specify the source or the number of armies, and targets are already adjacent to some source
+		if (orderOwner->getName() == "Cheater") {
+			targetIsAdjacent = true;
+			sourceBelongsToPlayer = true;
+			notEnoughArmies = false;
+		}
 
 		if (sourceBelongsToPlayer == false) {
 			cout << "The Order is Invalid: The Source Territory is Not Owned By You. " << endl;
@@ -622,7 +628,7 @@ bool BombOrder::validate() {
 	bool targetBelongsToPlayer = false;
 	bool targetIsAdjacent = false;
 
-	if (target != NULL) {
+	if (target != nullptr) {
 		// If the target belongs to the player that issued the order, the order is invalid.
 		vector<Territory*> playerOwnedT = this->getOwner()->getTowned();
 		for (Territory* p : playerOwnedT) {
@@ -631,7 +637,7 @@ bool BombOrder::validate() {
 			}
 		}
 		// If the target territory is not adjacent to one of the territory owned by the player issuing the order, then the order is invalid.
-		if (getTarget() != NULL) {
+		if (getTarget() != nullptr) {
 			vector<Territory*> adjT = getTarget()->getAdjTerritories();
 			for (Territory* p : adjT) {
 				if (p->getOwner() == getOwner())
@@ -742,7 +748,7 @@ BlockadeOrder::BlockadeOrder(const Order& order) {
 */
 bool BlockadeOrder::validate() {
 	bool targetOK = false;
-	if (target != NULL) {
+	if (target != nullptr) {
 		targetOK = this->isTerritoryMine(target->getTerritoryName()); // checking if the player owns the target territory
 	}
 	else {
@@ -767,7 +773,7 @@ void BlockadeOrder::execute() {
 		//Set army number to double:
 		getTarget()->setArmiesPlaced(2 * getTarget()->getArmiesPlaced());
 		// create a neutral player, give them the target territory and double the armies on it
-		if (neutralPlayer == NULL) {
+		if (neutralPlayer == nullptr) {
 			neutralPlayer = new Player();
 			neutralPlayer->setName("Neutral");
 		}
@@ -846,7 +852,7 @@ bool AirliftOrder::validate() {
 	int numberOfArmies = armyModifier;
 
 	//If the source or target does not belong to the player that issued the order, the order is invalid. 
-	if (getTarget() != NULL && getSource() != NULL) {
+	if (getTarget() != nullptr && getSource() != nullptr) {
 		sourceOK = this->isTerritoryMine(sourceTerritory); // checking if the player owns the source territory
 		targetOK = this->isTerritoryMine(targetTerritory); // checking if the player owns the target territory
 
@@ -940,7 +946,7 @@ NegotiateOrder::NegotiateOrder(const Order& order) {
 
 */
 bool NegotiateOrder::validate() {
-	if (getTarget() != NULL) {
+	if (getTarget() != nullptr) {
 		Player* targetPlayer = getTarget()->getOwner();
 		// Checking that the Player who called the order isnt the target
 		if (getOwner() == targetPlayer) {

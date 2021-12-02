@@ -256,7 +256,13 @@ void GameEngine::startupPhase()
 				strToLog += to_string(processor->maxNumberOfTurns);
 
 				strToLog += "\nResults: \n";
+				strToLog += "\t";
+				for (int i = 0; i < processor->numberOfGames; i++) {
+					strToLog += "Game " + to_string(i + 1) + "\t";
+				}
+				strToLog += "\n\n";
 				for (int i = 0; i < winnersTournament.size(); i++) {
+					strToLog += "Map " + to_string(i + 1) + "\t";
 					for (int j = 0; j < winnersTournament[0].size(); j++) {
 						strToLog += winnersTournament[i][j] + '\t';
 					}
@@ -776,40 +782,48 @@ void GameEngine::executeOrdersPhase(void) {
 		LogObserver* orderObserver;
 		//First execute deploy orders:
 		for (auto p : players) {
-			OrdersList* toDeleteFrom = p->getOrders();
-			vector<Order*> toexc = toDeleteFrom->getOrderList();
-			for (auto o : toexc) {
-				if (o->getOrderType() == OrderType::Deploy) { //Execute all deploy orders first.
-					cout << "Executing order " << o->getName() << endl; 
-					orderObserver = new LogObserver(o);
+			cout << "DEBUG: EXECUTIONS DEPLOY FOR PLAYER: " << *p << endl;
+			if (!(p->getName() == "Cheater")) {
+				OrdersList* toDeleteFrom = p->getOrders();
+				vector<Order*> toexc = toDeleteFrom->getOrderList();
+				for (auto o : toexc) {
+					cout << "DEBUG: EXECUTING DEPLOY - ORDER: " << *o << endl;
+					if (o->getOrderType() == OrderType::Deploy) { //Execute all deploy orders first.
+						cout << "Executing order " << o->getName() << endl;
+						orderObserver = new LogObserver(o);
 
-					o->execute();
+						o->execute();
 
-					delete orderObserver; //delete the observer before deleting the order
-					orderObserver = nullptr; //if we used smart pointers we wouldn't have to do this deletion here
+						cout << "DEBUG: EXECUTING DEPLOY - AFTER EXECUTE " << endl;
+						delete orderObserver; //delete the observer before deleting the order
+						orderObserver = nullptr; //if we used smart pointers we wouldn't have to do this deletion here
 
-					toDeleteFrom->remove(0); //Remove top order
-					if (isThereAwinnerS()) {
-						cout << "/////////////////////////////////////" << endl;
-						return;
+						toDeleteFrom->remove(0); //Remove top order
+						if (isThereAwinnerS()) {
+							cout << "/////////////////////////////////////" << endl;
+							return;
+						}
 					}
-				}
 
+				}
 			}
+			cout << "DEBUG: EXECUTING DEPLOY - FINISHED EXECUTING" << endl;
 
 		}
 		//Then, execute regular orders:
 		for (auto p : players) {
+			cout << "DEBUG: EXECUTIONS FOR PLAYER: " << *p << endl;
 			vector<Order*> toexc = p->getOrders()->getOrderList();
 			int terrOwned = p->getTowned().size();
 			if (toexc.size() > 0) {
 				for (auto o : toexc) {
+					cout << "DEBUG: EXECUTING - ORDER: " << *o << endl;
 					cout << "Executing order " << o->getName() << endl;
 					orderObserver = new LogObserver(o);
 
 					o->execute();
 
-
+					cout << "DEBUG: EXECUTING - AFTER EXECUTE " << endl;
 					delete orderObserver; //delete the observer before deleting the order
 					orderObserver = nullptr; //if we used smart pointers we wouldn't have to do this deletion here
 					//Remove executed order:
@@ -832,7 +846,7 @@ void GameEngine::executeOrdersPhase(void) {
 				}
 				doneCount++;
 			}
-
+			cout << "DEBUG: EXECUTING DEPLOY - FINISHED EXECUTING" << endl;
 		}
 		if (doneCount >= players.size()) {	//Return to main game loop once all orders have been executed
 			playing = false;

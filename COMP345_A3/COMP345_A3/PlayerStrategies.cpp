@@ -19,6 +19,10 @@ void Neutral::issueOrder()
 	cout << "The Neutral Player cannot issue any orders." << endl;
 	p->doneIssuingOrders = true;
 }
+Order* Neutral::discoverOrderType(string x) {
+	Order* newOrder = nullptr;
+	return newOrder;
+}
 
 vector<Territory*> Neutral::toAttack()
 {
@@ -43,57 +47,9 @@ Order* Cheater::discoverOrderType(string x) {
 	vector<Territory*> defend = toDefend();
 	vector<Territory*> attack = toAttack();
 	string options[] = { "reinforcement", "advance", "bomb", "blockade", "airlift", "diplomacy", "unspecified" };
-	Order* newOrder;
-	//Create the correct order based on command:
-	if (x.compare(options[0]) == 0) { //Deployment orders and reinforcement.
-		cout << "You have issued a deploy order." << endl;
-		if (p->armiesHeld <= 0) {
-			cout << "Player does not own enough armies to deploy to a new territory." << endl;
-			newOrder = NULL;
-			return newOrder;
-
-		}
-		if (toDefend().size() == 0) {
-			cout << "Player does not own a territory." << endl;
-			newOrder = NULL;
-			return newOrder;
-		}
-		newOrder = new DeployOrder();
-		newOrder->setOwner(p);
-		newOrder->setTarget(defend.back()); // Deploys to the Territory with most armies, ie the last entry of toDefend
-		int armiesToPlace = p->armiesHeld;		// Deploy all armies to strongest country
-
-		if (armiesToPlace <= p->armiesHeld) {
-			newOrder->setModifier(armiesToPlace);
-			newOrder->armyModifier = armiesToPlace;
-			p->armiesHeld -= armiesToPlace;
-
-		}
-		else {
-			cout << "Only the remaining armies will be deployed." << endl;
-			newOrder->setModifier(p->armiesHeld);
-			newOrder->armyModifier = p->armiesHeld;
-			p->armiesHeld = 0;
-
-		}
-	}
-	else if (x.compare(options[1]) == 0) {
-		if (attack.size() > 0 && defend.size() > 0) {
-			newOrder = new AdvanceOrder();
-			newOrder->setOwner(p);
-			newOrder->setTarget(attack.front()); // Player will always attack the lowest army count territory
-			newOrder->setSource(defend.back()); // Deploys From Last Entry of Defend Since the Player always deploys to one place
-			newOrder->setModifier(0);	//Advance set to attack mode
-			newOrder->armyModifier = 1000; // Huge number of armies so that it can conquer any territory 
-
-		}
-		else {
-			newOrder = NULL;
-		}
-	}
-	else {
-		newOrder = NULL;
-	}
+	Order* newOrder = nullptr;
+	
+	//Since the cheater only issues one type of order, we do not need to call this method to figure out the type.
 
 	return newOrder;
 }
@@ -116,89 +72,51 @@ void Cheater::printOrderList(void) {
 void Cheater::issueOrder()
 {
 	Order* issued;
-	string x;
 	Card* played;
 	LogObserver* orderObserver = new LogObserver(p->orders);
-	int index = 0;
 
-	vector<Territory*> defend = toDefend();
-	vector<Territory*> attack = toAttack();
-	/*cout << "----------------------------------" << endl;
-	cout << "Territories available to defend:" << endl;
-	for (auto t : defend) {
-		cout << *t << "Army count: " << t->getArmiesPlaced() << endl;
-	}
+	vector<Territory*> defend = this->toDefend();
+	vector<Territory*> attack = this->toAttack();
+	
 	cout << "----------------------------------" << endl;
-	cout << "Territories available to attack: " << endl;
-	for (auto t : attack) {
-		cout << *t << "Owner: " << (t->getOwner())->getName() << endl;
-	}*/
-	cout << "----------------------------------" << endl;
-	if (p->armiesHeld > 0 && toDefend().size() > 0) { //Deployment phase.
-
-		cout << "Player must deploy armies." << endl;
-		cout << "Armies held: " << p->armiesHeld << endl;
-		issued = discoverOrderType("reinforcement");
-	}
-	else { //Attack and Card phase.
-
-		//Attack 
-		x = "advance";
-
-		vector<string> options2;
-		for (auto name : p->getPlayerHand()->getHandOfCards()) {	//Check which commands are available based on player's hand of cards
-			if (name->getType() == 0) {
-				options2.push_back("bomb");
-			}
-			else if (name->getType() == 1) {
-				options2.push_back("reinforcement");
-			}
-			else if (name->getType() == 2) {
-				options2.push_back("blockade");
-			}
-			else if (name->getType() == 3) {
-				options2.push_back("airlift");
-			}
-			else if (name->getType() == 4) {
-				options2.push_back("diplomacy");
-			}
-
-		}
-		options2.push_back("advance");
-		if (!(find(options2.begin(), options2.end(), x) != options2.end())) {	//If the player does not have the necessary card to issue to requested order, return null
-			cout << "The command you requested is not available at the time. " << endl;
-			issued = NULL;
+	cout << "Cheater will now advance on all adjacent enemy territories." << endl;
+	cout << "DEBUG: CHEATER - ATTACK SIZE: " << attack.size() << endl;
+	cout << "DEBUG: CHEATER - DEFEND SIZE: " << defend.size() << endl;
+	for (Territory* pt : attack) { //Adding advance orders for all adjacent territories
+		// Issue the order:
+		if (attack.size() > 0 && defend.size() > 0) {
+			issued = new AdvanceOrder();
+			issued->setOwner(p);
+			issued->setTarget(pt);
+			issued->setSource(defend.front());
+			cout << "DEBUG: CHEATER - TARGET " << (*pt).getTerritoryName() << endl;
+			cout << "DEBUG: CHEATER - SOURCE " << (*defend.back()).getTerritoryName() << endl;
+			issued->setModifier(0);	//Advance set to attack mode
+			issued->armyModifier = 1000; // Huge number of armies so that it can conquer any territory 
 		}
 		else {
-			// Issue the order:
+			issued = nullptr;
+		}
 
-			issued = discoverOrderType(x);
-			if (index != 0) {
-				//Remove correspondent card if order was issued through a card.
-				//played->play(p);
-
-			}
-
+		if (issued == nullptr) {
+			cout << "Invalid Order. Could not add it to the list." << endl;
+			p->doneIssuingOrders = true;
+		}
+		else { //Add order to OrdersList
+			p->orders->addOrder(issued);
+			cout << "Order was issued: " << issued->getName() << endl;
 		}
 	}
 
-
-	if (issued == NULL) {
-		cout << "Invalid Order. Could not add it to the list." << endl;
-		p->doneIssuingOrders = true;
+	cout << "Current Player orders: " << endl;
+	for (auto p : p->orders->getOrderList()) {
+		cout << *p;
 	}
-	else { //Add order to OrdersList
-		p->orders->addOrder(issued);
-		cout << "Order was issued: " << issued->getName() << endl;
 
-		cout << "Current Player orders: " << endl;
-		for (auto p : p->orders->getOrderList()) {
-			cout << *p;
-		}
-	}
 	cout << "----------------------------------" << endl;
 	delete orderObserver;
 	orderObserver = nullptr;
+	p->doneIssuingOrders = true;
 }
 
 
@@ -209,7 +127,7 @@ vector<Territory*> Cheater::toAttack()
 	for (auto t : p->towned) {
 		for (auto d : t->getAdjTerritories()) {
 			if (!(find(attack.begin(), attack.end(), d) != attack.end())) {
-				if (d->getOwner() != p && t->getArmiesPlaced() > 0) { // Checks that the player owned territory has units to deploy
+				if (d->getOwner() != p ) { 
 					attack.push_back(d);
 				}
 
@@ -949,13 +867,13 @@ vector<Territory*> Aggressive::toDefend()
 			defense.push_back(t);
 	}
 
-
+	/*
 	cout << "Checking contents on defend" << endl;
 	for (auto t : defense)
 		cout << t << endl;
 	cout << "Done Checking contents on defend" << endl;
 
-
+*/
 
 	//sort(defense.begin(), defense.end());
 
@@ -1003,14 +921,14 @@ Order* Benevolent::discoverOrderType(string x) {
 			newOrder->setModifier(armiesToPlace);
 			newOrder->armyModifier = armiesToPlace;
 			p->armiesHeld -= armiesToPlace;
-
+			//newOrder->setOwner(p);
 		}
 		else {
 			cout << "Only the remaining armies will be deployed." << endl;
 			newOrder->setModifier(p->armiesHeld);
 			newOrder->armyModifier = p->armiesHeld;
 			p->armiesHeld = 0;
-
+			//newOrder->setOwner(p);
 		}
 	}
 	else if (x.compare(options[1]) == 0) { //Still requires the moving from current to target mechanism
