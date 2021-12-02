@@ -66,7 +66,7 @@ void Cheater::printOrderList(void) {
 	cout << "NEGOTIATE: prevent attacks between the current player and another player until the end of the turn." << endl;
 	cout << "----------------------------------" << endl;
 
-	cout << p->getPlayerHand();
+	p->printHand();
 }
 // deploys or advances armies on its strongest country, then always advances to enemy territories until it cannot do so anymore
 void Cheater::issueOrder()
@@ -657,9 +657,8 @@ Order* Aggressive::discoverOrderType(string x) {
 			newOrder->setSource(defend[indexHighestArmies]);
 
 			newOrder->setTarget(attack[0]); // Player will always attack the lowest army count territory
-			//newOrder->setSource(defend[0]); // Deploys From Last Entry of Defend Since the Player always deploys to one place
 			newOrder->setModifier(0);	//Advance set to attack mode
-			newOrder->armyModifier = 10; // THE PLAYER WILL SEND AN AMOUNT BASED ON WHAT IS DEFENDING
+			newOrder->armyModifier = defend[indexHighestArmies]->getArmiesPlaced(); // The Player will send all available units to attack
 
 		}
 		else if (cmd == "advance" && attack.size() > 0 && defend.size() > 2) { // TODO: When the player needs to advance units to its main force
@@ -745,7 +744,7 @@ void Aggressive::printOrderList(void) {
 	cout << "NEGOTIATE: prevent attacks between the current player and another player until the end of the turn." << endl;
 	cout << "----------------------------------" << endl;
 
-	cout << p->getPlayerHand();
+	p->printHand();
 }
 // deploys or advances armies on its strongest country, then always advances to enemy territories until it cannot do so anymore
 void Aggressive::issueOrder()
@@ -758,16 +757,7 @@ void Aggressive::issueOrder()
 
 	vector<Territory*> defend = toDefend();
 	vector<Territory*> attack = toAttack();
-	/*cout << "----------------------------------" << endl;
-	cout << "Territories available to defend:" << endl;
-	for (auto t : defend) {
-		cout << *t << "Army count: " << t->getArmiesPlaced() << endl;
-	}
-	cout << "----------------------------------" << endl;
-	cout << "Territories available to attack: " << endl;
-	for (auto t : attack) {
-		cout << *t << "Owner: " << (t->getOwner())->getName() << endl;
-	}*/
+	
 	cout << "----------------------------------" << endl;
 	if (p->armiesHeld > 0 && toDefend().size() > 0) { //Deployment phase.
 
@@ -806,14 +796,8 @@ void Aggressive::issueOrder()
 		}
 		else {
 			// Issue the order:
-
 			issued = discoverOrderType(x);
-			if (index != 0) {
-				//Remove correspondent card if order was issued through a card.
-				//played->play(p);
-
-			}
-
+			
 		}
 	}
 
@@ -853,7 +837,7 @@ vector<Territory*> Aggressive::toAttack()
 	}
 
 	// Now the vector is sorted from best to worst target, uses the overloaded < operator from Map file
-	//sort(attack.begin(), attack.end());
+	sort(attack.begin(), attack.end());
 
 	return attack;
 }
@@ -867,18 +851,10 @@ vector<Territory*> Aggressive::toDefend()
 			defense.push_back(t);
 	}
 
-	/*
-	cout << "Checking contents on defend" << endl;
-	for (auto t : defense)
-		cout << t << endl;
-	cout << "Done Checking contents on defend" << endl;
+	
+	sort(defense.begin(), defense.end());
 
-*/
-
-	//sort(defense.begin(), defense.end());
-
-	//For testing purposes while priority definition is still not implemented, priority is set to random:
-	//std::shuffle(std::begin(defense), std::end(defense), rng);
+	
 	return defense;
 }
 
@@ -907,7 +883,7 @@ Order* Benevolent::discoverOrderType(string x) {
 			newOrder = NULL;
 			return newOrder;
 		}
-		if (toDefend().size() == 0) {
+		if (defend.size() <= 0) {
 			cout << "Player does not own a territory." << endl;
 			newOrder = NULL;
 			return newOrder;
@@ -915,37 +891,42 @@ Order* Benevolent::discoverOrderType(string x) {
 		newOrder = new DeployOrder();
 		newOrder->setOwner(p);
 		newOrder->setTarget(defend[0]);
-		int armiesToPlace = 10;		// Set to 10 by default but can change
+		int armiesToPlace = 10;		// Set to 10 by default
 
 		if (armiesToPlace <= p->armiesHeld) {
 			newOrder->setModifier(armiesToPlace);
 			newOrder->armyModifier = armiesToPlace;
 			p->armiesHeld -= armiesToPlace;
-			//newOrder->setOwner(p);
 		}
 		else {
 			cout << "Only the remaining armies will be deployed." << endl;
 			newOrder->setModifier(p->armiesHeld);
 			newOrder->armyModifier = p->armiesHeld;
 			p->armiesHeld = 0;
-			//newOrder->setOwner(p);
+			
 		}
 	}
 	else if (x.compare(options[1]) == 0) { //Still requires the moving from current to target mechanism
 		string cmd;
 		if (!p->intelligent) {
-			cmd = "attack";
+			cmd = "defend";
 		}
 
 		if (cmd == "attack") { // Benevolent Player Will Never Attack
 			cout << "Benevolent Type Player Does Not Issue Attack Orders" << endl;
 			newOrder = NULL;
+			return newOrder; 
+		}
+		else if (defend.size() < 2) {
+			cout << "Benevolent Type Player Does Not Own Enough Territories To Move Armies." << endl;
+			newOrder = NULL;
+			return newOrder; 
 		}
 		else { // TODO: When the player needs to advance units to its main force
 			newOrder = new AdvanceOrder();
 			newOrder->setOwner(p);
-			newOrder->setTarget(defend[0]);
-			newOrder->setSource(defend[1]);
+			newOrder->setTarget(defend.front());
+			newOrder->setSource(defend.back());
 			newOrder->setModifier(1); //Advance set to defend mode
 			newOrder->armyModifier = 10; // Transfers 10 units at a time to keep them spread out
 		}
@@ -956,7 +937,7 @@ Order* Benevolent::discoverOrderType(string x) {
 		cout << "Benevolent Type Player Does Not Issue Bomb Orders" << endl;
 		newOrder = NULL;
 	}
-	else if (x.compare(options[3]) == 0) { // Transfers the territory with fewest Units to the Neutral Player
+	else if (x.compare(options[3]) == 0 && defend.size() > 1) { // Transfers the territory with fewest Units to the Neutral Player
 		cout << "You have issued a blockade order:" << endl;
 		newOrder = new BlockadeOrder();
 		newOrder->setOwner(p);
@@ -965,7 +946,7 @@ Order* Benevolent::discoverOrderType(string x) {
 		newOrder->neutralPlayer = p->neutral;
 
 	}
-	else if (x.compare(options[4]) == 0) {
+	else if (x.compare(options[4]) == 0 && defend.size() > 1) {
 		cout << "You have issued an airlift order." << endl;
 		newOrder = new AirliftOrder();
 		newOrder->setOwner(p);
@@ -998,13 +979,13 @@ void Benevolent::printOrderList(void) {
 	cout << "NEGOTIATE: prevent attacks between the current player and another player until the end of the turn." << endl;
 	cout << "----------------------------------" << endl;
 
-	cout << p->getPlayerHand();
+	p->printHand();
 }
 void Benevolent::issueOrder()
 {
 	Order* issued;
 	string x;
-	Card* played;
+	Card* played = nullptr;
 	LogObserver* orderObserver = new LogObserver(p->orders);
 	int index = 0;
 
@@ -1018,8 +999,7 @@ void Benevolent::issueOrder()
 		issued = discoverOrderType("reinforcement");
 	}
 	else { //Attack and Card phase.
-		printOrderList();
-		cout << "0 - ADVANCE" << endl;
+		
 		if (!p->intelligent) {
 
 			if (p->getHandOfCards().size() < 1) {
@@ -1028,20 +1008,6 @@ void Benevolent::issueOrder()
 			}
 			else {
 				index = 1 + (rand() % static_cast<int>(p->getHandOfCards().size() - 1 + 1));
-				played = p->getPlayerHand()->getHandOfCards()[index - 1];
-				x = played->orderType();
-			}
-		}
-		else {
-			cout << "Please select a card to play (type the correct integer)." << endl;
-
-			cin >> index;
-			// If the given index is out of range, an advance order is issued by default
-			if (index == 0 || index < 0 || index > p->getPlayerHand()->getHandOfCards().size()) {
-				x = "advance";
-				played = new Card();
-			}
-			else {
 				played = p->getPlayerHand()->getHandOfCards()[index - 1];
 				x = played->orderType();
 			}
@@ -1118,6 +1084,7 @@ vector<Territory*> Benevolent::toAttack()
 
 		}
 	}
+	sort(attack.begin(), attack.end());
 
 	return attack;
 }
@@ -1129,11 +1096,8 @@ vector<Territory*>Benevolent::toDefend()
 	for (auto t : p->towned) {
 		defense.push_back(t);
 	}
-	//At a later development stage, priority will be determined using sorting and the player profile:
-	//sort(defense.begin(), defense.end());
-
-	//For testing purposes while priority definition is still not implemented, priority is set to random:
-	std::shuffle(std::begin(defense), std::end(defense), rng);
+	sort(defense.begin(), defense.end());
+	
 	return defense;
 }
 
