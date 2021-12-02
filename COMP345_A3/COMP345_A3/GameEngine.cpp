@@ -391,15 +391,18 @@ bool GameEngine::isThereAwinner() {
 	// if there is only one player in the the winningPlayers vector, that player is the winner
 	if (winningPlayers.size() == 1) {
 		cout << "Player " << winningPlayers[0]->getName() << " has won!" << endl;
+		winner = winningPlayers[0];
 		return true;
 	}
 	else if (winningPlayers.size() == 0) { //Handles the case where all available territories belong to the Neutral player
 		cout << "The game has resulted in a tie. Better luck next time!" << endl;
+		winner = nullptr;
 		return true;
 	}
 	// if there is only one player in the the players vector because other players are removed from the game, that player is the winner
 	else if (players.size() <= 1) {
-		cout << "Player " << players[0]->getName() << " has won!" << endl;		
+		cout << "Player " << players[0]->getName() << " has won!" << endl;	
+		winner = winningPlayers[0];
 		return true;
 	}
 	else {
@@ -439,6 +442,8 @@ bool GameEngine::isThereAwinnerS(void) {
 	}
 	// if there is only one player in the the players vector because other players are removed from the game, that player is the winner
 	else if (players.size() <= 1) {
+		if(players.back() <= 0) 
+			winner = players.back();
 		return true;
 	}
 
@@ -790,8 +795,8 @@ void GameEngine::executeOrdersPhase(void) {
 		//First execute deploy orders:
 		for (auto p : players) {
 			cout << "DEBUG: EXECUTIONS DEPLOY FOR PLAYER: " << *p << endl;
-			Cheater c;
-			if (typeid(p) != typeid(c)) {
+			//Cheater c;
+			//if (typeid(p) != typeid(c)) {
 				OrdersList* toDeleteFrom = p->getOrders();
 				vector<Order*> toexc = toDeleteFrom->getOrderList();
 				for (auto o : toexc) {
@@ -814,7 +819,7 @@ void GameEngine::executeOrdersPhase(void) {
 					}
 
 				}
-			}
+			//}
 			cout << "DEBUG: EXECUTING DEPLOY - FINISHED EXECUTING" << endl;
 
 		}

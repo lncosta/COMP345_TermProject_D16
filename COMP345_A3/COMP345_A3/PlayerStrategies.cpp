@@ -82,6 +82,7 @@ void Cheater::issueOrder()
 	cout << "Cheater will now advance on all adjacent enemy territories." << endl;
 	//cout << "DEBUG: CHEATER - ATTACK SIZE: " << attack.size() << endl;
 	//cout << "DEBUG: CHEATER - DEFEND SIZE: " << defend.size() << endl;
+	/*
 	for (Territory* pt : attack) { //Adding advance orders for all adjacent territories
 		// Issue the order:
 		if (attack.size() > 0 && defend.size() > 0) {
@@ -107,15 +108,17 @@ void Cheater::issueOrder()
 			cout << "Order was issued: " << issued->getName() << endl;
 		}
 	}
-
-	cout << "Current Player orders: " << endl;
-	for (auto p : p->orders->getOrderList()) {
-		cout << *p;
+*/
+	for (Territory* t : attack) {
+		//Remove territory from original owner:
+		(t->getOwner())->removeTerritory(t);
+		//Make territory transfer and move armies:
+		t->setOwner(p);
+		p->addTerritory(t);
 	}
 
-	cout << "----------------------------------" << endl;
-	delete orderObserver;
-	orderObserver = nullptr;
+	cout << "Cheater player has conquered " << attack.size() << " territories." << endl;
+	p->setConquered(true);
 	p->doneIssuingOrders = true;
 }
 

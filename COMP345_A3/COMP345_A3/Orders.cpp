@@ -439,13 +439,7 @@ bool AdvanceOrder::validate() {
 		}
 		if (getSource()->getArmiesPlaced() < armyModifier)
 			notEnoughArmies = true;
-		//Cheater bypasses the need to specify the source or the number of armies, and targets are already adjacent to some source
-		if (orderOwner->getName() == "Cheater") {
-			targetIsAdjacent = true;
-			sourceBelongsToPlayer = true;
-			notEnoughArmies = false;
-		}
-
+		
 		if (sourceBelongsToPlayer == false) {
 			cout << "The Order is Invalid: The Source Territory is Not Owned By You. " << endl;
 			return false;
@@ -499,9 +493,9 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 					return;
 				}
 			}
-			Neutral t;
+			Neutral* t;
 			//Change non-standard Neutral Player into Aggressive if they are attacked.
-			if (getTarget()->getOwner()->getName() != "Neutral" && typeid(getTarget()->getOwner()) == typeid(t)) {
+			if (getTarget()->getOwner()->getName() != "Neutral" && typeid(getTarget()->getOwner()->getStrategy()) == typeid(t)) {
 				cout << "The Neutral player has become Aggressive!" << endl;
 				getTarget()->getOwner()->determineStrategy("Aggressive");
 			}
@@ -523,23 +517,7 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 					getTarget()->setArmiesPlaced(targetArmiesAfter);
 					break;
 				}
-
-				/// <Cheater player implementation test>
-				Cheater c;
-				if (typeid(getSource()->getOwner()) == typeid(c)) {
-					cout << "The Territory Has Been Conquered. The Cheater always wins." << endl;
-					//indicate if a player conconquered a territory
-					this->getOwner()->setConquered(true);
-					//Remove territory from original owner:
-					(getTarget()->getOwner())->removeTerritory(getTarget());
-					//Make territory transfer and give the cheater 50 armies on that new territory:
-					getTarget()->setOwner(getOwner());
-					getOwner()->addTerritory(getTarget());
-					getTarget()->setArmiesPlaced(50);
-					break;
-				}
-				/// </Cheater player implementation test>
-
+				
 				int attackerRoll = (rand() % 10) + 1;
 				int defenderRoll = (rand() % 10) + 1;
 				// Checking if a defender gets killed
