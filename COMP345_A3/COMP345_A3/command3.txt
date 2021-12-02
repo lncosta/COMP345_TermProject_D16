@@ -1,0 +1,7 @@
+start
+loadmap europe.map
+validatemap
+addplayer luiza Human
+addplayer tomas Neutral
+gamestart
+quit
