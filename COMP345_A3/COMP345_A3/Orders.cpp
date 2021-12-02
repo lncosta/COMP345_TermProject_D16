@@ -502,6 +502,7 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 			Neutral t;
 			//Change non-standard Neutral Player into Aggressive if they are attacked.
 			if (getTarget()->getOwner()->getName() != "Neutral" && typeid(getTarget()->getOwner()) == typeid(t)) {
+				cout << "The Neutral player has become Aggressive!" << endl;
 				getTarget()->getOwner()->setStrategy(new Aggressive());
 			}
 			// Loop continues as long as there are attackers left

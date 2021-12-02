@@ -430,9 +430,11 @@ bool GameEngine::isThereAwinnerS(void) {
 	}
 	// if there is only one player in the the winningPlayers vector, that player is the winner
 	if (winningPlayers.size() == 1) {
+		winner = winningPlayers[0];
 		return true;
 	}
 	else if (winningPlayers.size() == 0) { //Handles the case where all available territories belong to the Neutral player
+		winner = neutral;
 		return true;
 	}
 	// if there is only one player in the the players vector because other players are removed from the game, that player is the winner
@@ -493,7 +495,13 @@ int GameEngine::mainGameLoop(int maxNumOfTurns)
 	}
 
 	if (counter < maxNumOfTurns) {
-		this->winnersPerMap.push_back(players[0]->getName());
+		if (winner != NULL) {
+			this->winnersPerMap.push_back(winner->getName());
+		}
+		else {
+			this->winnersPerMap.push_back(players[0]->getName());
+		}
+		
 	}
 	else {
 		cout << "Reach max number of turns. It is a draw." << endl;

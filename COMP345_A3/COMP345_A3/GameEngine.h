@@ -40,7 +40,7 @@ public:
 	Player* neutral;
 	vector<string> winnersPerMap;
 	vector< vector<string> > winnersTournament;
-
+	Player* winner; 
 	//Constructors
 	GameEngine(void);
 	GameEngine(const GameEngine& other);

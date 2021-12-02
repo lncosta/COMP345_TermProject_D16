@@ -1,10 +1,10 @@
 start
 loadmap europe.map
 validatemap
-addplayer Human Human
-addplayer Aggressive Aggressive
-addplayer Benevolent Benevolent
-addplayer Neutral Neutral
-addplayer Cheater Cheater
+addplayer luiza Human
+addplayer sarah Human
+addplayer tomas Human
+addplayer yupei Human
+addplayer arie Human
 gamestart
 quit
