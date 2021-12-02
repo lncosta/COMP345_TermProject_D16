@@ -225,7 +225,7 @@ void GameEngine::startupPhase()
 							players.clear();							
 
 							// if the tournament is not finished, go to mapvalidated
-							// else, go to start
+							// else, exitprogram
 							if (i == processor->listOfMapFiles.size() - 1 && j == processor->numberOfGames - 1)
 								transition("exitprogram");
 							else
@@ -628,12 +628,10 @@ bool GameEngine::assignTerritories(void) {
 		// print names
 		cout << "Player " << p->getPlayerID() << " - " << p->getName() <<endl;
 
-		if (intl) { //Sets intelligence modifier for all players (demo purposes):
-			p->intelligent = true;
+		if (!intl) { //Sets intelligence modifier for all players (demo purposes):
+			p->intelligent = false;
 		}
-		else {
-			p->intelligent = false; 
-		}
+		
 		//Associate the neutral player with all players:
 		p->neutral = neutral;
 		//Associate Map with players:
@@ -760,6 +758,7 @@ void GameEngine::issueOrdersPhase(void) {
 			cout << "Would you like to issue more orders? Y/N" << endl;
 			 if (p->doneIssuingOrders || p->getOrders()->getOrderList().size() > 5) {
 				result = "N";
+				round = false;
 			}
 			 else if (!p->intelligent && (!p->doneIssuingOrders || p->getOrders()->getOrderList().size() < 5)) {	//Non-intelligent player issues 5 orders per turn
 				 result = "Y";
