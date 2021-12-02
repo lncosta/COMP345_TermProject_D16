@@ -4,7 +4,11 @@
 class Order;
 class Player;
 
+// 1.2.9 Not all classes implement a copy constructor, assignment operator, and stream insertion operator.
+// due to redundancy as discussed in class
 
+//1.3.3 Presence of a PlayerStrategy abstract class that is a superclass of all the player strategy behavioral classes.
+//1.3.5 Each of the ConcreteStrategy classes implement their own version of the issueOrder(), toAttack(), and toDefend() methods.
 class PlayerStrategy {
 public:
 	Player* p;
@@ -20,6 +24,9 @@ public:
 	Player* getPlayer(void);
 };
 
+// 1.3.4 For each strategy as described above, you have a ConcreteStrategy class: HumanPlayerStrategy, AggressivePlayerStrategy, 
+// BenevolentPlayerStrategy, and NeutralPlayerStrategy that are subclasses of the PlayerStrategy class.
+// 1.2.4 Neutral player: computer player that never issues any order. 
 class Neutral : public PlayerStrategy {
 public:
 	Neutral();
@@ -29,6 +36,8 @@ public:
 	vector<Territory*> toAttack();
 	Order* discoverOrderType(string x);
 };
+
+// 1.2.5 Cheater player: computer player that automatically conquers all territories that are adjacent to its own territories (only once per turn).
 class Cheater : public PlayerStrategy {
 public:
 	Cheater();
@@ -41,6 +50,8 @@ public:
 	Order* discoverOrderType(string x);
 	void printOrderList(void);
 };
+
+// 1.2.1 Human player: requires user interactions to make decisions
 class Human : public PlayerStrategy {
 public:
 	Human();
@@ -58,6 +69,9 @@ public:
 
 
 };
+
+// 1.2.2 Aggressive player : computer player that focuses on attack(deploys or advances armies on its strongest country, 
+//then always advances to enemy territories until it cannot do so anymore).
 class Aggressive : public PlayerStrategy {
 public:
 	Aggressive();
@@ -71,6 +85,9 @@ public:
 	void printOrderList(void);
 
 };
+
+// 1.2.3 Benevolent player : computer player that focuses on protecting its weak countries
+//(deploys or advances armies on its weakest countries, never advances to enemy territories).
 class Benevolent : public PlayerStrategy {
 public:
 	Benevolent();

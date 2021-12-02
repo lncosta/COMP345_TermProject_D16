@@ -126,7 +126,7 @@ Hand& Hand::operator =(const Hand& h) {
 
 // Basic add card/order methods
 void Hand::addCard(Card* card) {
-	// cout << *card;                  <-- This was added to my code, not sure if it's important or not so I'm leaving it commented out for now 
+	
 	handOfCards.push_back(card);
 }
 void Deck::addCard(Card* card) {

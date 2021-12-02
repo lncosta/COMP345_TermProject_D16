@@ -338,8 +338,7 @@ void GameEngine::startupPhase()
 					//2.2.4 fairly distributing the territories among all players
 					//2.2.5 randomly determine the order of play of the players in the game
 					//2.2.6 giving 50 initial armies to each player
-					//2.2.7 Each player draws 2 cards each from the deck
-					//cout << "THe"
+					//2.2.7 Each player draws 2 cards each from the deck					
 					assignTerritories();
 					c->saveEffect(input);
 					transition("assignreinforcement");
@@ -442,8 +441,13 @@ bool GameEngine::isThereAwinnerS(void) {
 	}
 	// if there is only one player in the the players vector because other players are removed from the game, that player is the winner
 	else if (players.size() <= 1) {
-		if(players.back() <= 0) 
+		if (players.size() <= 0) {
+			winner = neutral;
+		}
+		else {
 			winner = players.back();
+		}
+			
 		return true;
 	}
 
@@ -668,29 +672,7 @@ bool GameEngine::assignTerritories(void) {
 
 		//2.2.7 Each player draws 2 cards each from the deck
 		deck->draw(p);
-		deck->draw(p);
-		//For demo purposes, add a card of each type to the player:
-		int counter = 0;
-		if (!p->intelligent) {
-			for (int types = 0; types < 5; types++) {
-				for (int cards = 0; cards < 5; cards++) { // creates 3 cards (1 card for the demo only) per player per type of card
-					counter++; // the first card has ID == 1
-
-					Card* pointer = new Card(types, counter);
-					p->addCard(pointer);
-				}
-			}
-		}
-		else {
-			for (int types = 0; types < 5; types++) {
-				for (int cards = 0; cards < 1; cards++) { // creates 3 cards (1 card for the demo only) per player per type of card
-					counter++; // the first card has ID == 1
-
-					Card* pointer = new Card(types, counter);
-					p->addCard(pointer);
-				}
-			}
-		}
+		deck->draw(p);		
 
 		cout << "Player " << p->getName() + " has received the following cards: " << endl;
 		for (auto c : p->getHandOfCards()) {
@@ -794,20 +776,18 @@ void GameEngine::executeOrdersPhase(void) {
 		LogObserver* orderObserver;
 		//First execute deploy orders:
 		for (auto p : players) {
-			cout << "DEBUG: EXECUTIONS DEPLOY FOR PLAYER: " << *p << endl;
-			//Cheater c;
-			//if (typeid(p) != typeid(c)) {
+			
 				OrdersList* toDeleteFrom = p->getOrders();
 				vector<Order*> toexc = toDeleteFrom->getOrderList();
 				for (auto o : toexc) {
-					cout << "DEBUG: EXECUTING DEPLOY - ORDER: " << *o << endl;
+					
 					if (o->getOrderType() == OrderType::Deploy) { //Execute all deploy orders first.
 						cout << "Executing order " << o->getName() << endl;
 						orderObserver = new LogObserver(o);
 
 						o->execute();
 
-						//cout << "DEBUG: EXECUTING DEPLOY - AFTER EXECUTE " << endl;
+						
 						delete orderObserver; //delete the observer before deleting the order
 						orderObserver = nullptr; //if we used smart pointers we wouldn't have to do this deletion here
 
@@ -819,24 +799,23 @@ void GameEngine::executeOrdersPhase(void) {
 					}
 
 				}
-			//}
-			cout << "DEBUG: EXECUTING DEPLOY - FINISHED EXECUTING" << endl;
+		
 
 		}
 		//Then, execute regular orders:
 		for (auto p : players) {
-			cout << "DEBUG: EXECUTIONS FOR PLAYER: " << *p << endl;
+			
 			vector<Order*> toexc = p->getOrders()->getOrderList();
 			int terrOwned = p->getTowned().size();
 			if (toexc.size() > 0) {
 				for (auto o : toexc) {
-					cout << "DEBUG: EXECUTING - ORDER: " << *o << endl;
+					
 					cout << "Executing order " << o->getName() << endl;
 					orderObserver = new LogObserver(o);
 
 					o->execute();
 
-					//cout << "DEBUG: EXECUTING - AFTER EXECUTE " << endl;
+					
 					delete orderObserver; //delete the observer before deleting the order
 					orderObserver = nullptr; //if we used smart pointers we wouldn't have to do this deletion here
 					//Remove executed order:
@@ -859,7 +838,7 @@ void GameEngine::executeOrdersPhase(void) {
 				}
 				doneCount++;
 			}
-			cout << "DEBUG: EXECUTING DEPLOY - FINISHED EXECUTING" << endl;
+			
 		}
 		if (doneCount >= players.size()) {	//Return to main game loop once all orders have been executed
 			playing = false;

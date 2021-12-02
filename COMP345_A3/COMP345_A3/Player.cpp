@@ -256,21 +256,15 @@ void Player::addOrder(Order* order) {
 std::random_device rd;
 std::default_random_engine rng(rd());
 
+
+// 1.3.7 The issueOrder(), toDefend(), and toAttack() methods of the player do not implement behavior and simply delegate their call 
+// to the corresponding methods in the PlayerStrategy member of the Player. 
 //Returns territories owned by the player
 vector<Territory*> Player::toDefend()
 {
 	//Returns territories owned by the player:
 	vector<Territory*> defense = ps->toDefend();
-	/* CODE TO DELETE:
-	for (auto t : towned) {
-		defense.push_back(t);
-	}
-	//At a later development stage, priority will be determined using sorting and the player profile:
-	//sort(defense.begin(), defense.end());
-
-	//For testing purposes while priority definition is still not implemented, priority is set to random:
-	std::shuffle(std::begin(defense), std::end(defense), rng);
-	*/
+	
 	return defense;
 }
 
@@ -278,25 +272,7 @@ vector<Territory*> Player::toDefend()
 vector<Territory*> Player::toAttack()
 {
 	//Returns enemy territories player has access to through adjacent territories. 
-	vector<Territory*> attack = ps->toAttack();
-	/* CODE TO DELETE:
-	for (auto t : towned) {
-		for (auto d : t->getAdjTerritories()) {
-			if (!(find(attack.begin(), attack.end(), d) != attack.end())) {
-				if (d->getOwner() != this) {
-					attack.push_back(d);
-				}
-
-			}
-
-		}
-	}
-	//At a later development stage, priority will be determined using sorting and the player profile:
-	//sort(attack.begin(), attack.end());
-
-	//For testing purposes while priority definition is still not implemented, priority is set to random:
-	std::shuffle(std::begin(attack), std::end(attack), rng);
-	*/
+	vector<Territory*> attack = ps->toAttack();	
 	return attack;
 }
 

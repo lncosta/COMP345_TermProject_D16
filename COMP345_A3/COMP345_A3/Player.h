@@ -51,7 +51,7 @@ private:
 	Hand* playerHand;
 	OrdersList* playerOrders;
 
-	//Player Strategy:
+	//1.3.6 The Player class contains a data member of type PlayerStrategy. 
 	PlayerStrategy* ps;
 
 

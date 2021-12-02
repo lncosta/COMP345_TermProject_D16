@@ -14,6 +14,8 @@ Neutral::Neutral() : PlayerStrategy()
 Neutral::Neutral(Player* player) : PlayerStrategy(player)
 {
 }
+
+//1.2.4 Neutral player: computer player that never issues any order. 
 void Neutral::issueOrder()
 {
 	cout << "The Neutral Player cannot issue any orders." << endl;
@@ -69,6 +71,8 @@ void Cheater::printOrderList(void) {
 	p->printHand();
 }
 // deploys or advances armies on its strongest country, then always advances to enemy territories until it cannot do so anymore
+// 1.2.5 Cheater player : computer player that automatically conquers all territories that are adjacent to
+//its own territories(only once per turn).
 void Cheater::issueOrder()
 {
 	Order* issued;
@@ -80,35 +84,7 @@ void Cheater::issueOrder()
 	
 	cout << "----------------------------------" << endl;
 	cout << "Cheater will now advance on all adjacent enemy territories." << endl;
-	//cout << "DEBUG: CHEATER - ATTACK SIZE: " << attack.size() << endl;
-	//cout << "DEBUG: CHEATER - DEFEND SIZE: " << defend.size() << endl;
-	/*
-	for (Territory* pt : attack) { //Adding advance orders for all adjacent territories
-		// Issue the order:
-		if (attack.size() > 0 && defend.size() > 0) {
-			issued = new AdvanceOrder();
-			issued->setOwner(p);
-			issued->setTarget(pt);
-			issued->setSource(defend.front());
-			//cout << "DEBUG: CHEATER - TARGET " << (*pt).getTerritoryName() << endl;
-			//cout << "DEBUG: CHEATER - SOURCE " << (*defend.back()).getTerritoryName() << endl;
-			issued->setModifier(0);	//Advance set to attack mode
-			issued->armyModifier = 1000; // Huge number of armies so that it can conquer any territory 
-		}
-		else {
-			issued = nullptr;
-		}
-
-		if (issued == nullptr) {
-			cout << "Invalid Order. Could not add it to the list." << endl;
-			p->doneIssuingOrders = true;
-		}
-		else { //Add order to OrdersList
-			p->orders->addOrder(issued);
-			cout << "Order was issued: " << issued->getName() << endl;
-		}
-	}
-*/
+	
 	for (Territory* t : attack) {
 		//Remove territory from original owner:
 		(t->getOwner())->removeTerritory(t);
@@ -167,9 +143,7 @@ vector<Territory*> Human::toDefend()
 	for (auto t : p->towned) {
 		defense.push_back(t);
 	}
-	//At a later development stage, priority will be determined using sorting and the player profile:
-	//sort(defense.begin(), defense.end());
-
+	
 	//For testing purposes while priority definition is still not implemented, priority is set to random:
 	std::shuffle(std::begin(defense), std::end(defense), rng);
 	return defense;
@@ -191,9 +165,7 @@ vector<Territory*> Human::toAttack()
 
 		}
 	}
-	//At a later development stage, priority will be determined using sorting and the player profile:
-	//sort(attack.begin(), attack.end());
-
+	
 	//For testing purposes while priority definition is still not implemented, priority is set to random:
 	std::shuffle(std::begin(attack), std::end(attack), rng);
 	return attack;
@@ -472,8 +444,7 @@ Human::Human() :PlayerStrategy()
 Human::Human(Player* player) : PlayerStrategy(player)
 {
 }
-
-//Issues a order for the Player
+//1.2.1 Human player: requires user interactions to make decisions
 void Human::issueOrder()
 {
 	Order* issued;
@@ -749,7 +720,9 @@ void Aggressive::printOrderList(void) {
 
 	p->printHand();
 }
-// deploys or advances armies on its strongest country, then always advances to enemy territories until it cannot do so anymore
+
+// 1.2.2 Aggressive player : computer player that focuses on attack(deploys or advances armies on its strongest country, 
+// then always advances to enemy territories until it cannot do so anymore).
 void Aggressive::issueOrder()
 {
 	Order* issued;
@@ -984,6 +957,9 @@ void Benevolent::printOrderList(void) {
 
 	p->printHand();
 }
+
+//1.2.3 Benevolent player : computer player that focuses on protecting its weak countries
+//!deploys or advances armies on its weakest countries, never advances to enemy territories).
 void Benevolent::issueOrder()
 {
 	Order* issued;

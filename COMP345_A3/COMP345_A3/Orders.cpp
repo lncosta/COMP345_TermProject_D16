@@ -493,11 +493,14 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 					return;
 				}
 			}
-			//Change non-standard Neutral Player into Aggressive if they are attacked.
+			//1.2.6 Change non-standard Neutral Player into Aggressive if they are attacked.
 			if (getTarget()->getOwner()->getName() != "Neutral" && getTarget()->getOwner()->isNeutral) {
 				cout << "The Neutral player has become Aggressive!" << endl;
+				//1.2.12 Driver that demonstrates that the strategy adopted by a player can be changed dynamically during play.				
+				system("pause"); // added it to visualize the strategy changed
 				getTarget()->getOwner()->determineStrategy("Aggressive");
-				system("pause");
+
+			
 			}
 			// Loop continues as long as there are attackers left
 			while (armyModifier > 0) {
