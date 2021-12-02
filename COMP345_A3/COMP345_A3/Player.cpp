@@ -209,26 +209,32 @@ void Player::determineStrategy(string strategy)
 	if (strategy == "Human") {
 		ps = new Human(this);
 		intelligent = true;
+		isNeutral = false;
 	}
 	else if (strategy == "Aggressive") {
 		ps = new Aggressive(this);
 		intelligent = false;
+		isNeutral = false;
 	}
 	else if (strategy == "Benevolent") {
 		ps = new Benevolent(this);
 		intelligent = false;
+		isNeutral = false;
 	}
 	else if (strategy == "Neutral") {
 		ps = new Neutral(this);
 		intelligent = false;
+		isNeutral = true;
 	}
 	else if (strategy == "Cheater") {
 		ps = new Cheater(this);
 		intelligent = false;
+		isNeutral = false;
 	}
 	else {
 		ps = new Human(this);
 		intelligent = false;
+		isNeutral = false;
 	}
 }
 

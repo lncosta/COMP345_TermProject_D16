@@ -493,11 +493,11 @@ void AdvanceOrder::execute() {											// Last Step is to Give the Player a ca
 					return;
 				}
 			}
-			Neutral* t;
 			//Change non-standard Neutral Player into Aggressive if they are attacked.
-			if (getTarget()->getOwner()->getName() != "Neutral" && typeid(getTarget()->getOwner()->getStrategy()) == typeid(t)) {
+			if (getTarget()->getOwner()->getName() != "Neutral" && getTarget()->getOwner()->isNeutral) {
 				cout << "The Neutral player has become Aggressive!" << endl;
 				getTarget()->getOwner()->determineStrategy("Aggressive");
+				system("pause");
 			}
 			// Loop continues as long as there are attackers left
 			while (armyModifier > 0) {
@@ -661,6 +661,13 @@ void BombOrder::execute() {
 		int currentArmies = getTarget()->getArmiesPlaced();
 		int newNumArmies = currentArmies / 2; // Removes half of the armies from the territory
 		getTarget()->setArmiesPlaced(newNumArmies);
+		
+		//Change non-standard Neutral Player into Aggressive if they are attacked.
+		if (getTarget()->getOwner()->getName() != "Neutral" && getTarget()->getOwner()->isNeutral) {
+			cout << "The Neutral player has become Aggressive!" << endl;
+			getTarget()->getOwner()->determineStrategy("Aggressive");
+			system("pause");
+		}
 		cout << "This execution was successful!" << endl;
 		Notify(); // 5.2.3 When an order is executed, its effect is written into the log file.
 	}

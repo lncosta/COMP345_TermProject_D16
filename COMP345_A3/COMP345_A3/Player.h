@@ -130,7 +130,7 @@ public:
 	//Determine Player Strategy:
 	void determineStrategy(string strategy); 
 	bool doneIssuingOrders; 
-	
+	bool isNeutral;
 };
 
 //Randomizer:
