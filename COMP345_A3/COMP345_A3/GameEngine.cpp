@@ -448,7 +448,7 @@ bool GameEngine::isThereAwinnerS(void) {
 			winner = neutral;
 		}
 		else {
-			winner = players.back();
+			winner = players[0];
 		}
 			
 		return true;

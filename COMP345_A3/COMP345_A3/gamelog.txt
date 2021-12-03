@@ -1,48 +1,9 @@
-Inputted command: start
-Inputted command: loadmap europe.map
-Current effect: Map has been successfully loaded.
+Inputted command: tournament M europe.map kosova.map P Neutral Aggressive Benevolent G 2 D 10
+Current effect: Tournament Mode activated.
 Transitioned to state: maploaded
-Inputted command: validatemap
-Current effect: Map has been validated.
 Transitioned to state: mapvalidated
-Inputted command: addplayer luiza Human
-Current effect: The player has been added. 
-Transitioned to state: playersadded
-Inputted command: addplayer sarah Human
-Current effect: The player has been added. 
-Inputted command: addplayer tomas Human
-Current effect: The player has been added. 
-Inputted command: addplayer yupei Human
-Current effect: The player has been added. 
-Inputted command: addplayer arie Human
-Current effect: The player has been added. 
-Inputted command: gamestart
-Current effect: Reinforcement has been assigned.
 Transitioned to state: assignreinforcement
 Transitioned to state: issueorders
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
 Order Added: Deploy
 Order Added: Deploy
 Order Added: Deploy
@@ -65,382 +26,13 @@ Order Executed: Deploy
 Deploy: Place some armies on one of the current player's territories.
 Order Executed: Deploy
 Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Transitioned to state: assignreinforcement
-Transitioned to state: issueorders
-Order Added: Deploy
-Order Added: Airlift
-Order Added: Negotiate
-Order Added: Deploy
-Order Added: Bomb
-Order Added: Bomb
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Negotiate
-Order Added: Airlift
-Order Added: Bomb
-Order Added: Airlift
-Order Added: Airlift
-Order Added: Deploy
-Transitioned to state: executeorders
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Transitioned to state: assignreinforcement
-Transitioned to state: issueorders
-Order Added: Deploy
-Order Added: Airlift
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Blockade
-Order Added: Negotiate
-Order Added: Airlift
-Order Added: Blockade
-Order Added: Negotiate
-Order Added: Deploy
-Order Added: Bomb
-Order Added: Blockade
-Order Added: Negotiate
-Order Added: Deploy
-Order Added: Blockade
-Order Added: Airlift
-Order Added: Airlift
-Order Added: Bomb
-Order Added: Bomb
-Transitioned to state: executeorders
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Transitioned to state: assignreinforcement
-Transitioned to state: issueorders
-Order Added: Deploy
-Order Added: Airlift
-Order Added: Deploy
-Order Added: Bomb
-Order Added: Deploy
-Order Added: Negotiate
-Order Added: Deploy
-Order Added: Negotiate
-Order Added: Blockade
-Order Added: Airlift
-Order Added: Bomb
-Order Added: Deploy
-Transitioned to state: executeorders
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
 Transitioned to state: assignreinforcement
 Transitioned to state: issueorders
 Order Added: Deploy
 Order Added: Blockade
-Order Added: Airlift
-Order Added: Negotiate
-Order Added: Bomb
-Order Added: Negotiate
 Order Added: Deploy
-Order Added: Airlift
-Order Added: Bomb
-Order Added: Airlift
-Order Added: Negotiate
-Order Added: Airlift
-Order Added: Deploy
-Order Added: Blockade
-Order Added: Blockade
-Order Added: Deploy
-Order Added: Bomb
-Order Added: Negotiate
-Order Added: Blockade
-Order Added: Bomb
-Order Added: Blockade
-Order Added: Deploy
-Order Added: Blockade
-Transitioned to state: executeorders
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Transitioned to state: assignreinforcement
-Transitioned to state: issueorders
-Order Added: Deploy
-Order Added: Blockade
-Order Added: Bomb
-Order Added: Bomb
-Order Added: Negotiate
-Order Added: Bomb
-Order Added: Deploy
-Order Added: Blockade
-Order Added: Bomb
-Order Added: Deploy
-Order Added: Bomb
-Order Added: Airlift
-Order Added: Airlift
-Order Added: Deploy
-Order Added: Airlift
-Order Added: Deploy
-Order Added: Bomb
-Order Added: Blockade
-Order Added: Negotiate
-Order Added: Blockade
-Order Added: Negotiate
-Transitioned to state: executeorders
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Transitioned to state: assignreinforcement
-Transitioned to state: issueorders
-Order Added: Deploy
-Order Added: Airlift
-Order Added: Blockade
-Order Added: Deploy
-Order Added: Blockade
-Order Added: Bomb
-Order Added: Blockade
-Order Added: Blockade
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Negotiate
-Order Added: Airlift
-Order Added: Negotiate
-Order Added: Airlift
-Order Added: Bomb
-Transitioned to state: executeorders
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Transitioned to state: assignreinforcement
-Transitioned to state: issueorders
-Order Added: Deploy
-Order Added: Blockade
-Order Added: Blockade
-Order Added: Blockade
-Order Added: Negotiate
-Order Added: Bomb
-Order Added: Deploy
-Order Added: Negotiate
-Order Added: Airlift
-Order Added: Blockade
-Order Added: Negotiate
-Order Added: Airlift
-Order Added: Deploy
-Order Added: Bomb
-Order Added: Blockade
-Order Added: Negotiate
-Order Added: Bomb
-Order Added: Negotiate
-Order Added: Deploy
-Order Added: Negotiate
-Order Added: Deploy
-Order Added: Airlift
-Order Added: Airlift
-Transitioned to state: executeorders
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Blockade
-Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Transitioned to state: assignreinforcement
-Transitioned to state: issueorders
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Negotiate
-Order Added: Bomb
-Transitioned to state: executeorders
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Deploy
-Deploy: Place some armies on one of the current player's territories.
-Order Executed: Negotiate
-Negotiate: Prevent attacks between the current player and another player until the end of the turn.
-Transitioned to state: assignreinforcement
-Transitioned to state: issueorders
-Order Added: Deploy
-Order Added: Deploy
-Order Added: Blockade
-Order Added: Airlift
+Order Added: Advance
+Order Added: Advance
 Order Added: Advance
 Order Added: Advance
 Order Added: Advance
@@ -451,7 +43,889 @@ Order Executed: Deploy
 Deploy: Place some armies on one of the current player's territories.
 Order Executed: Blockade
 Blockade: Triple the number of armies on one of the current player's territories and make it a neutral territory.
-Transitioned to state: win
-Inputted command: quit
-Current effect: Program exits
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Transitioned to state: mapvalidated
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Transitioned to state: mapvalidated
+Transitioned to state: maploaded
+Transitioned to state: mapvalidated
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Deploy
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Transitioned to state: mapvalidated
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Order Executed: Advance
+Advance: Move some armies from one of the current player's territories (source) to an adjacent territory (target).
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Airlift
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Airlift
+Airlift: Advance some armies from one of the current player's territories to any another territory.
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Deploy
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Order Added: Advance
+Transitioned to state: executeorders
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Order Executed: Deploy
+Deploy: Place some armies on one of the current player's territories.
+Transitioned to state: assignreinforcement
+Transitioned to state: issueorders
 Transitioned to state: exitprogram
+----Tournament mode----
+M: europe.map	kosova.map	
+P: Neutral	Aggressive	Benevolent	
+G: 2
+D: 10
+Results: 
+	Game 1	Game 2	
+
+Map 1	Draw	Draw	
+
+Map 2	Draw	Draw	
+
+

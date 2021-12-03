@@ -845,7 +845,7 @@ bool AirliftOrder::validate() {
 		sourceOK = this->isTerritoryMine(sourceTerritory); // checking if the player owns the source territory
 		targetOK = this->isTerritoryMine(targetTerritory); // checking if the player owns the target territory
 
-		if (sourceOK) armiesOK = (numberOfArmies >= this->findTerritory(sourceTerritory)->getArmiesPlaced()); // checking if the source has enough armies
+		if (sourceOK) armiesOK = (numberOfArmies >= getSource()->getArmiesPlaced()); // checking if the source has enough armies
 	}
 
 	return (sourceOK && targetOK && armiesOK);
@@ -863,18 +863,20 @@ void AirliftOrder::execute() {
 		return;
 	}
 	else {
-		int sourceArmies = this->findTerritory(sourceTerritory)->getArmiesPlaced();
-		int targetArmies = this->findTerritory(targetTerritory)->getArmiesPlaced();
+		Territory* source = getSource(); 
+		Territory* target = getTarget();
+		int sourceArmies = source->getArmiesPlaced();
+		int targetArmies = target->getArmiesPlaced();
 
 		if (sourceArmies - numberOfArmies >= 0) {
-			this->findTerritory(sourceTerritory)->setArmiesPlaced(sourceArmies - numberOfArmies);
-			this->findTerritory(targetTerritory)->setArmiesPlaced(targetArmies + numberOfArmies);
+			source->setArmiesPlaced(sourceArmies - numberOfArmies);
+			target->setArmiesPlaced(targetArmies + numberOfArmies);
 		}
 		else {
 			// if number subtracted is less than 0, set to 0.
-			this->findTerritory(sourceTerritory)->setArmiesPlaced(0);
+			source->setArmiesPlaced(0);
 			// so then we add only what is available from the sourceArmies
-			this->findTerritory(targetTerritory)->setArmiesPlaced(targetArmies + sourceArmies);
+			target->setArmiesPlaced(targetArmies + sourceArmies);
 		}
 
 		cout << "This execution was successful!" << endl;

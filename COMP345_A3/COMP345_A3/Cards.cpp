@@ -139,6 +139,10 @@ Card Deck::draw(Player& p) {
 
 	// Fisher-Yates shuffle algorithm
 	int size = deckOfCards.size();
+	if (size == 0) {
+		Card ret;
+		return ret;
+	}
 	for (int i = 0; i < (size - 1); i++) {
 		int j = i + rand() % (size - i);
 		std::swap(deckOfCards[i], deckOfCards[j]);
@@ -156,6 +160,10 @@ Card* Deck::draw(Player* p) {
 
 	// Fisher-Yates shuffle algorithm
 	int size = deckOfCards.size();
+	if (size == 0) {
+		Card* ret = new Card(1);
+		return ret;
+	}
 	for (int i = 0; i < (size - 1); i++) {
 		int j = i + rand() % (size - i);
 		std::swap(deckOfCards[i], deckOfCards[j]);
