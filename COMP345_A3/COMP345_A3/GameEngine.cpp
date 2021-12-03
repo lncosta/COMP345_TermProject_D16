@@ -129,6 +129,7 @@ void GameEngine::startupPhase()
 		string s;
 
 		// 1.2.4 getCommand() reads commands and save commands in a list via commandProcessor object or Adapter object 
+		// A3 2.2.1 The tournament command can be entered either from the console or from a file. 
 		if (source == "console") {
 			string str;
 			cout << "Enter your command" << endl;
@@ -169,15 +170,16 @@ void GameEngine::startupPhase()
 
 				c->saveEffect(input);
 
-				processor->processTournamentInput(s); // process tournament input		 			
+				processor->processTournamentInput(s); // process tournament input	
+				// A3 2.2.2 Invalid tournament commands are rejected. 
 				bool isOkay = processor->validateTournamentParameters(); // data member is stored, now we can validate tournament input				
 				
 				if (!isOkay) {
 					cout << "Parameters of tournament command are NOT valid. Exit game." << endl;
 					exit(0);
 				}
-
-				// loadamps 
+				
+				//A3 2.2.3 Map files are loaded and validated as a result of executing a tournament command.
 				for (int i = 0; i < processor->listOfMapFiles.size(); i++) {
 					
 					// load maps one by one
@@ -201,10 +203,10 @@ void GameEngine::startupPhase()
 						}
 						transition("mapvalidated");
 
-						
-						// play the game with the same setting for 1-5 times
+						// A3 2.2.5 The specified number of games are executed with all the players specified as a result of executing a tournament command.  
+						// play the game with the same setting for 1-5 times						
 						for (int j = 0; j < processor->numberOfGames; j++) {
-
+							// A3 2.2.4 Players are created as a result of executing a tournament command. 
 							//Now the map is valid, add player to GameEngines's data member "players", Player's name is their strategy
 							for (int i = 0; i < processor->listOfPlayerStrategies.size(); i++) {
 								string s = processor->listOfPlayerStrategies[i];								
@@ -503,6 +505,7 @@ int GameEngine::mainGameLoop(int maxNumOfTurns)
 		}
 	}
 
+	// A3 2.2.6 The played games end as a draw after the specified number of turns have been played without a winner.	
 	if (counter < maxNumOfTurns) {
 		if (winner != NULL) {
 			this->winnersPerMap.push_back(winner->getName());

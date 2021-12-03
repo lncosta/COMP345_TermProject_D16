@@ -228,6 +228,7 @@ bool CommandProcessor::validate(string input, string currentState) {
 	return false;
 }
 
+// This method processes the tournament command and extract the parameters
 void CommandProcessor::processTournamentInput(string input) {
 	vector<string> v = split(input, " "); 
 	int i = 1; // skip "tournament"
@@ -281,7 +282,7 @@ void CommandProcessor::processTournamentInput(string input) {
 
 }
 
-
+// This method validates tournament parameters
 bool CommandProcessor::validateTournamentParameters() {
 	bool isOkay = true;
 	if (listOfMapFiles.size() < 1 || listOfMapFiles.size() > 5) {
