@@ -303,13 +303,13 @@ bool CommandProcessor::validateTournamentParameters() {
 
 	// validate strategy
 	string strategy[4] = { "Aggressive" , "Benevolent" , "Neutral", "Cheater" };
-	bool isStrategyValid = false;
+	bool isStrategyValid = true;
 	for (int i = 0; i < listOfPlayerStrategies.size(); i++) {
-		for (int j = 0; j < 4; j++) {
-			if (listOfPlayerStrategies[i] == strategy[j])
-				isStrategyValid = true;
-		}
+		if (listOfPlayerStrategies[i] != strategy[0] && listOfPlayerStrategies[i] != strategy[1] && listOfPlayerStrategies[i] != strategy[2] && listOfPlayerStrategies[i] != strategy[3])
+			isStrategyValid = false;
 	}
+
+	
 
 	if (!isStrategyValid) {
 		cout << "The Players Strategies entered are not all valid" << endl;

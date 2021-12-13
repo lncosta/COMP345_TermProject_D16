@@ -170,6 +170,9 @@ void GameEngine::startupPhase()
 
 				c->saveEffect(input);
 
+				// A3 2.2.12 Driver clearly demonstrates the tournament command can be processed and validated by the CommandProcessor, 
+				//and executed by the GameEngine
+
 				processor->processTournamentInput(s); // process tournament input		 			
 				bool isOkay = processor->validateTournamentParameters(); // data member is stored, now we can validate tournament input				
 				// A3 2.2.2 Invalid tournament commands are rejected. 
