@@ -1,8 +1,0 @@
-﻿  Cards.cpp
-C:\Users\Arie\source\repos\Assignment1_Cards\Cards.cpp(11,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\Arie\source\repos\Assignment1_Cards\Cards.cpp(12,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  CardsDriver.cpp
-C:\Users\Arie\source\repos\Assignment1_Cards\CardsDriver.cpp(17,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  Generating Code...
-C:\Users\Arie\source\repos\Assignment1_Cards\Cards.cpp(185): warning C4715: 'Hand::eraseCard': not all control paths return a value
-  Assignment1_Cards.vcxproj -> C:\Users\Arie\source\repos\Assignment1_Cards\Debug\Assignment1_Cards.exe

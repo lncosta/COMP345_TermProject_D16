@@ -1,7 +1,0 @@
-﻿  Map.cpp
-C:\Users\luiza\Desktop\COMP345_A1_Submission\Part 1 - Map\Map.cpp(184,7): warning C4101: 'wasVisited': unreferenced local variable
-C:\Users\luiza\Desktop\COMP345_A1_Submission\Part 1 - Map\Map.cpp(373,26): warning C4018: '<': signed/unsigned mismatch
-  MapDriver.cpp
-C:\Users\luiza\Desktop\COMP345_A1_Submission\Part 1 - Map\MapDriver.cpp(43,34): warning C4101: 'e': unreferenced local variable
-  Generating Code...
-  COMP345_A1_Maps2.vcxproj -> C:\Users\luiza\Desktop\COMP345_A1_Submission\Part 1 - Map\Debug\COMP345_A1_Maps2.exe

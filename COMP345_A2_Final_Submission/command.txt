@@ -1,0 +1,12 @@
+start
+loadmap europe.map
+validatemap
+addplayer yupei
+addplayer steve
+addplayer sarah
+addplayer tomas
+addplayer luiza
+addplayer arie
+gamestart
+quit
+

@@ -1,9 +1,0 @@
-﻿  Cards.cpp
-D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 4 - Cards\Cards.cpp(11,10): warning C4067:  unexpected tokens following preprocessor directive - expected a newline
-D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 4 - Cards\Cards.cpp(12,10): warning C4067:  unexpected tokens following preprocessor directive - expected a newline
-D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 4 - Cards\Cards.cpp(161,31): warning C4267:  'initializing': conversion from 'size_t' to 'int', possible loss of data
-  CardsDriver.cpp
-D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 4 - Cards\Cards.cpp(180,13): warning C4244:  'initializing': conversion from '__int64' to 'int', possible loss of data
-  Generating Code...
-D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 4 - Cards\CardsDriver.cpp(17,8): error C3861:  'time': identifier not found
-D:\Documents\Concordia\Semester4-Fall2021\comp345\TeamProject\COMP345_TermProject_D16\Part 4 - Cards\Cards.cpp(185): warning C4715:  'Hand::eraseCard': not all control paths return a value
